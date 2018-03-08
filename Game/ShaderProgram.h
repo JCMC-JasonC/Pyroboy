@@ -11,7 +11,7 @@ public:
 
 	//loads a vertex and fragment shader
 	bool load(const std::string &vertFile, const std::string &fragFile);
-	bool load(const std::string &vertFile, const std::string &fragFile, const std::string &geoFile);
+	void load(const std::string &vertFile, const std::string &fragFile, const std::string &geoFile);
 
 	bool isLoaded() const;
 

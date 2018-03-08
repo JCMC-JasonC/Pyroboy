@@ -18,8 +18,8 @@
 #include <map>
 #include <memory>
 
-#define WINDOW_WIDTH 800
-#define WINDOW_HEIGHT 432
+#define WINDOW_WIDTH 1280
+#define WINDOW_HEIGHT 720
 #define FRAME_PER_SECOND 60
 
 enum GameStates {
@@ -50,6 +50,8 @@ public:
 	void drawHUD();
 	void pauseMenu();
 	void pauseUpdate();
+	void initializeParticles();
+
 	GameStates getState() { return state; }
 
 	//Input callback funct
@@ -85,7 +87,7 @@ public:
 	Mesh  insectMesh, trapMesh, run1,run2,run3,run4,run5,run6,run7,run8,run9,run10,run11,run12,run13,run14,run15,run16,run17,run18,run19
 		,run20,run21,run22,run23,run24,run25,run26;
 	Mesh bulletMesh, alienMesh, fenceMesh, rockMesh, chestMesh, heartMesh, uiMesh;
-	Texture fenceTex, p_healthTex, t_healthTex, uiTex, ui2Tex;
+	Texture fenceTex, p_healthTex, t_healthTex, uiTex, ui2Tex,smoke;
 
 	Obstacles fence, fence2, fence3, fence4, fence5, fence6, fence7, fence8, fence9, fence10, rock, rock2, rock3,
 		rock4, rock5, chest, chest2;
@@ -117,6 +119,13 @@ public:
 	ShaderProgram lutShader;
 	ShaderProgram geoShader;
 
+	std::map<std::string, std::shared_ptr<Texture>> textures;
+
+	// Materials
+	std::map<std::string, std::shared_ptr<ShaderProgram>> materials;
+
+
+	Camera camera;
 	glm::mat4 originalCameraTransform;
 	glm::mat4 cameraTransform;
 	glm::mat4 cameraProjection;

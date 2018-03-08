@@ -4,8 +4,8 @@
 #include<GL/freeglut.h>
 #include"Game.h"
 
-#define WINDOW_WIDTH 800
-#define WINDOW_HEIGHT 432
+#define WINDOW_WIDTH 1280
+#define WINDOW_HEIGHT 720
 #define FRAMES_PER_SECOND 60
 
 const int FRAME_DELAY = 1000 / FRAMES_PER_SECOND;

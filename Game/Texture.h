@@ -13,7 +13,7 @@ public:
 	Texture();
 	~Texture();
 
-	bool load(const std::string &file);
+	void load(const std::string &file);
 	void unload();
 
 	void bind();

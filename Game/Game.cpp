@@ -109,12 +109,13 @@ void Game::startUp()
 	startupBack.rotate = glm::rotate(background.rotate, glm::pi<float>() *1.5f, glm::vec3(1.0f, 0.f, 0.f));
 	//startupBack.rotate = glm::rotate(background.rotate, glm::pi<float>() /2.f, glm::vec3(0.0f, 0.f, 1.f));
 
-	cameraTransform = glm::lookAt(glm::vec3(0.f, 0.f, -25.f),
-		glm::vec3(0.f, 0.f, 0.f), glm::vec3(0.f, -1.f, 0.f));
+	camera.cameraPosition = glm::vec3(0.f, 0.f, -25.f);
+	cameraTransform = glm::lookAt(camera.cameraPosition,
+		glm::vec3(0.f, 0.f, 0.f), camera.upVector);
 	originalCameraTransform = cameraTransform;
 
-
-	cameraProjection = glm::perspective(90.f, (float)WINDOW_WIDTH / (float)WINDOW_HEIGHT, 0.1f, 1000.f);
+	camera.angle = 90.f;
+	cameraProjection = glm::perspective(camera.angle, (float)WINDOW_WIDTH / (float)WINDOW_HEIGHT, 0.1f, 1000.f);
 	glViewport(0, 0, 20.f, 20.f);
 
 	//state = GameStates::MAIN_MENU;
@@ -172,8 +173,7 @@ void Game::mainMenu()
 		std::cout << "Shaders failed to initialize." << std::endl;
 		system("pause");
 		exit(0);
-	}
-
+	} 
 	monkey.loadMesh("meshes/background.obj");
 	monkey.loadTexture(TextureType::Diffuse,"textures/Model Textures/menu.PNG");
 	monkey.loadTexture(TextureType::Specular, "textures/noSpecular.png");
@@ -193,7 +193,19 @@ void Game::mainMenu()
 	
 	
 }
-
+void Game::initializeParticles()
+{
+	// Init particle emitter
+	// Set the emitter properties
+	emitter.lifeRange = glm::vec3(1.0f, 3.0f, 0.0f);
+	emitter.initialForceMin = glm::vec3(-3.0f, 5.0f, -4.0f);
+	emitter.initialForceMax = glm::vec3(3.0f, 15.0f, -10.0f);
+	
+	emitter.material = materials["particles"];
+	emitter.texture = textures["smoke"];
+	emitter.initialize(10000);
+	emitter.play();
+}
 //load everything in here
 void Game::initializeGame()
 {
@@ -239,8 +251,8 @@ void Game::initializeGame()
 		system("pause");
 		exit(0);
 	}
-
-
+	materials["particles"] = std::make_shared<ShaderProgram>();
+	materials["particles"]->load("shaders/passThru_v.glsl", "shaders/unlitTexture_f.glsl", "shaders/particles_g.glsl");
 
 	// MAKE SURE TO RUN AT x86
 	// LOADING MODELS
@@ -252,9 +264,15 @@ void Game::initializeGame()
 	// If it works, but looks weird, dont worry. I just need to change code for the rotation for each enemy.
 	// Dont need to worry about drawing the enemies, as long as you add it to the vector of enemies.
 
+	textures["smoke"] = std::make_shared<Texture>();
+	textures["smoke"]->load("textures/smoke_256_dm.png");
+	buffer.createFrameBuffer(WINDOW_WIDTH, WINDOW_HEIGHT, 1, true);
+
+	initializeParticles();
+
 	tree.loadMesh("meshes/GreenTree.obj");
 	tree.loadTexture(TextureType::Diffuse, "textures/Model Textures/theWholeTree.png");
-	tree.loadTexture(TextureType::Specular, "Textures/noSpecular.png");
+	tree.loadTexture(TextureType::Specular, "textures/noSpecular.png");
 
 	trap.push_back(&trap1);
 	trap.push_back(&trap2);
@@ -760,7 +778,6 @@ void Game::createBullet(glm::vec3 pos, glm::vec3 dir)
 		bullets.push_back(new Bullet(bulletMesh, pos, 1.f, 100.f, 15.f, dir));
 		
 	}
-	std::cout << bulletTime << std::endl;
 }
 
 void Game::uiUpdate()
@@ -870,6 +887,7 @@ void Game::update()
 		result = se.system->update();
 		FmodErrorCheck(result);
 
+		camera.update();
 		player.update(deltaTime);
 		player.animate(deltaTime);
 
@@ -1226,7 +1244,8 @@ void Game::update()
 			treeHearts[i]->transform = player.translate * treeHearts[i]->originalTransform;
 		}
 		
-		cameraTransform = glm::lookAt(cameraEye, cameraCtr, glm::vec3(0.f,-1.f,0.f));
+		camera.cameraPosition = cameraEye;
+		cameraTransform = glm::lookAt(cameraEye, cameraCtr, camera.upVector);
 		originalCameraTransform = cameraTransform;
 
 		player.transform = player.translate * player.rotate * glm::scale(glm::mat4(), glm::vec3(player.scale));
@@ -1252,9 +1271,17 @@ void Game::update()
 			{
 				hearts[i]->active = true;
 			}
-			cameraTransform = glm::lookAt(glm::vec3(0.f, 0.f, -25.f),
-				glm::vec3(0.f, 0.f, 0.f), glm::vec3(0.f, -1.f, 0.f));
+			camera.cameraPosition = glm::vec3(0.f, 0.f, -25.f);
+			cameraTransform = glm::lookAt(camera.cameraPosition,
+				glm::vec3(0.f, 0.f, 0.f), camera.upVector);
 			originalCameraTransform = cameraTransform;
+
+			draw();
+
+			emitter.initialPosition = player.position;
+			emitter.update(deltaTime);
+
+			emitter.draw(&camera);
 
 			for (int i = 0; i < enemies.size(); i++)
 			{
@@ -1268,7 +1295,8 @@ void Game::update()
 			player.position = glm::vec3(0.f, -10.f, 0.f);
 			player.translate = glm::translate(player.translate, player.position);
 			player.transform = player.translate * player.rotate * glm::scale(glm::mat4(), glm::vec3(player.scale));
-			cameraProjection = glm::perspective(90.f, (float)WINDOW_WIDTH / (float)WINDOW_HEIGHT, 0.1f, 1000.f);
+			camera.angle = 90.f;
+			cameraProjection = glm::perspective(camera.angle, (float)WINDOW_WIDTH / (float)WINDOW_HEIGHT, 0.1f, 1000.f);
 			state = GameStates::LOSE;
 			treeDead = false;
 		}
@@ -1407,11 +1435,14 @@ void Game::keyboardDown(unsigned char key, int mouseX, int mouseY)
 		{
 			state = GameStates::PLAYING;
 			background.scale = 20.f;
+			camera.cameraPosition = cameraEye;
+
 			cameraTransform = glm::lookAt(cameraEye,
-				cameraCtr, glm::vec3(0.f, -1.f, 0.f));
+				cameraCtr, camera.upVector);
 			originalCameraTransform = cameraTransform;
 
-			cameraProjection = glm::perspective(150.f, (float)WINDOW_WIDTH / (float)WINDOW_HEIGHT, 0.1f, 1000.f);
+			camera.angle = 150.f;
+			cameraProjection = glm::perspective(camera.angle, (float)WINDOW_WIDTH / (float)WINDOW_HEIGHT, 0.1f, 1000.f);
 			glViewport(0, 0, 20.f, 20.f);
 		}
 
@@ -1448,22 +1479,27 @@ void Game::keyboardDown(unsigned char key, int mouseX, int mouseY)
 		{
 			state = GameStates::PAUSE;
 			pauseback.scale = 3.f;
-			cameraTransform = glm::lookAt(glm::vec3(0.f, 0.f, -25.f),
-				glm::vec3(0.f, 0.f, 0.f), glm::vec3(0.f, -1.f, 0.f));
+			camera.cameraPosition = glm::vec3(0.f, 0.f, -25.f);
+			cameraTransform = glm::lookAt(camera.cameraPosition,
+				glm::vec3(0.f, 0.f, 0.f),camera.upVector);
 			originalCameraTransform = cameraTransform;
 
-			cameraProjection = glm::perspective(90.f, (float)WINDOW_WIDTH / (float)WINDOW_HEIGHT, 0.1f, 1000.f);
+			camera.angle = 90.f;
+			cameraProjection = glm::perspective(camera.angle, (float)WINDOW_WIDTH / (float)WINDOW_HEIGHT, 0.1f, 1000.f);
 			glViewport(0, 0, 20.f, 20.f);
 		}
 		if (!pause)
 		{
 			state = GameStates::PLAYING;
 			background.scale = 30.f;
+			camera.cameraPosition = cameraEye;
+
 			cameraTransform = glm::lookAt(cameraEye,
-				cameraCtr, glm::vec3(0.f, -1.f, 0.f));
+				cameraCtr, camera.upVector);
 			originalCameraTransform = cameraTransform;
 
-			cameraProjection = glm::perspective(150.f, (float)WINDOW_WIDTH / (float)WINDOW_HEIGHT, 0.1f, 1000.f);
+			camera.angle = 150.f;
+			cameraProjection = glm::perspective(camera.angle, (float)WINDOW_WIDTH / (float)WINDOW_HEIGHT, 0.1f, 1000.f);
 		}
 
 		break;

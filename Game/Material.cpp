@@ -22,18 +22,10 @@ void Material::loadTexture(TextureType type, const std::string &texFile)
 	switch (type)
 	{
 	case Diffuse:
-		if (!diffuse.load(texFile))
-		{
-			system("pause");
-			exit(0);
-		}
+		diffuse.load(texFile);
 		break;
 	case Specular:
-		if (!specular.load(texFile))
-		{
-			system("pause");
-			exit(0);
-		}
+		specular.load(texFile);
 		break;
 	default:
 	{

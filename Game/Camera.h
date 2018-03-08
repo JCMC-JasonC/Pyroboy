@@ -8,10 +8,10 @@ class Camera
 {
 public:
 	Camera()
-		: cameraPosition(15.0f),
+		: cameraPosition((0.f, 0.f, -25.f)),
 		forwardVector(-10.0f),
 		movementScalar(0.5f),
-		upVector(0.0f, 1.0f, 0.0f),
+		upVector(0.0f, -1.0f, 0.0f),
 		yaw(0.0f),
 		pitch(0.0f),
 		winWidth(1280.0f),
@@ -24,7 +24,7 @@ public:
 	void update()
 	{
 		viewMatrix = glm::lookAt(cameraPosition, cameraPosition + forwardVector, upVector);
-		projMatrix = glm::perspective(glm::radians(60.0f), winWidth / winHeight, 0.01f, 100.0f);
+		projMatrix = glm::perspective(glm::radians(angle), winWidth / winHeight, 0.01f, 100.0f);
 
 		viewProjMatrix = projMatrix * viewMatrix;
 	}
@@ -95,7 +95,7 @@ public:
 	glm::vec3 rightVector;
 	glm::vec3 upVector;
 	float movementScalar;
-	float yaw, pitch;
+	float yaw, pitch, angle = 90.f;
 
 	glm::mat4 viewMatrix;
 	glm::mat4 projMatrix;

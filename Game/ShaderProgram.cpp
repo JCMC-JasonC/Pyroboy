@@ -15,7 +15,7 @@ ShaderProgram::~ShaderProgram()
 	}
 }
 
-bool ShaderProgram::load(const std::string &vertFile, const std::string &fragFile, const std::string &geoFile)
+void ShaderProgram::load(const std::string &vertFile, const std::string &fragFile, const std::string &geoFile)
 {
 	vertexShader = glCreateShader(GL_VERTEX_SHADER);
 	fragShader = glCreateShader(GL_FRAGMENT_SHADER);
@@ -41,8 +41,6 @@ bool ShaderProgram::load(const std::string &vertFile, const std::string &fragFil
 
 		outputShaderLog(vertexShader);
 		unload();
-
-		return false;
 	}
 	if (!compileShader(fragShader))
 	{
@@ -50,8 +48,6 @@ bool ShaderProgram::load(const std::string &vertFile, const std::string &fragFil
 
 		outputShaderLog(fragShader);
 		unload();
-
-		return false;
 	}
 	if (!compileShader(geoShader))
 	{
@@ -59,8 +55,6 @@ bool ShaderProgram::load(const std::string &vertFile, const std::string &fragFil
 
 		outputShaderLog(fragShader);
 		unload();
-
-		return false;
 	}
 
 	glAttachShader(program, vertexShader);
@@ -73,12 +67,9 @@ bool ShaderProgram::load(const std::string &vertFile, const std::string &fragFil
 
 		outputProgramLog();
 		unload();
-
-		return false;
 	}
 
 	loaded = true;
-	return true;
 }
 //loads a vertex and fragment shader
 bool ShaderProgram::load(const std::string &vertFile, const std::string &fragFile)
