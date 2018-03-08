@@ -101,7 +101,7 @@ void Game::startUp()
 	directionalLight.specularExponent = 50.f;
 
 	startupBack.loadMesh("meshes/background.obj");
-	startupBack.loadTexture(TextureType::Diffuse, "textures/testtitle.png");
+	startupBack.loadTexture(TextureType::Diffuse, "textures/Model Textures/testtitle.png");
 	startupBack.loadTexture(TextureType::Specular, "textures/noSpecular.png");
 	startupBack.scale = 4.f;
 
@@ -175,7 +175,7 @@ void Game::mainMenu()
 	}
 
 	monkey.loadMesh("meshes/background.obj");
-	monkey.loadTexture(TextureType::Diffuse,"textures/menu.PNG");
+	monkey.loadTexture(TextureType::Diffuse,"textures/Model Textures/menu.PNG");
 	monkey.loadTexture(TextureType::Specular, "textures/noSpecular.png");
 
 	monkey.scale = 4.f;
@@ -253,7 +253,7 @@ void Game::initializeGame()
 	// Dont need to worry about drawing the enemies, as long as you add it to the vector of enemies.
 
 	tree.loadMesh("meshes/GreenTree.obj");
-	tree.loadTexture(TextureType::Diffuse, "textures/theWholeTree.png");
+	tree.loadTexture(TextureType::Diffuse, "textures/Model Textures/theWholeTree.png");
 	tree.loadTexture(TextureType::Specular, "Textures/noSpecular.png");
 
 	trap.push_back(&trap1);
@@ -265,7 +265,7 @@ void Game::initializeGame()
 	for (int i = 0; i < trap.size(); i++)
 	{
 		trap[i]->loadMesh("meshes/GDW_Landmine.obj");
-		trap[i]->loadTexture(TextureType::Diffuse, "textures/GDW_LandmineTexture.png");
+		trap[i]->loadTexture(TextureType::Diffuse, "textures/Model Textures/GDW_LandmineTexture.png");
 		trap[i]->loadTexture(TextureType::Specular, "textures/noSpecular.png");
 	}
 
@@ -281,7 +281,7 @@ void Game::initializeGame()
 	fences.push_back(&fence9);
 	fences.push_back(&fence10);
 	fenceMesh.loadFromFile("meshes/woodFence.obj");
-	fenceTex.load("textures/GDW_WoodFenceTexture.png");
+	fenceTex.load("textures/Model Textures/GDW_WoodFenceTexture.png");
 	float ar[2];
 	ar[0] = 25.f;
 	ar[1] = -37.f;
@@ -290,7 +290,7 @@ void Game::initializeGame()
 	{
 		//fences[i]->loadMesh("meshes/woodFence.obj");
 		fences[i]->applyMesh(fenceMesh);
-		fences[i]->loadTexture(TextureType::Diffuse, "textures/GDW_WoodFenceTexture.png");
+		fences[i]->loadTexture(TextureType::Diffuse, "textures/Model Textures/GDW_WoodFenceTexture.png");
 		fences[i]->loadTexture(TextureType::Specular, "textures/noSpecular.png");
 		fences[i]->scale = 1.2f;
 		if (i == (fences.size()-1) / 2.0f)
@@ -323,7 +323,7 @@ void Game::initializeGame()
 	{
 		//rocks[i]->loadMesh("meshes/Rock.obj");
 		rocks[i]->applyMesh(rockMesh);
-		rocks[i]->loadTexture(TextureType::Diffuse, "textures/GDW_RockTexture.png");
+		rocks[i]->loadTexture(TextureType::Diffuse, "textures/Model Textures/GDW_RockTexture.png");
 		rocks[i]->loadTexture(TextureType::Specular, "textures/noSpecular.png");
 		rocks[i]->scale = 2.2f;
 		rocks[i]->position = rockPos[i];
@@ -332,11 +332,11 @@ void Game::initializeGame()
 	}
 
 	background.loadMesh("meshes/A_Background.obj");
-	background.loadTexture(TextureType::Diffuse, "textures/Background.png");
+	background.loadTexture(TextureType::Diffuse, "textures/Model Textures/Background.png");
 	background.loadTexture(TextureType::Specular, "textures/noSpecular.png");
 
 	gameOver.loadMesh("meshes/background.obj");
-	gameOver.loadTexture(TextureType::Diffuse, "textures/gameovertemp.png");
+	gameOver.loadTexture(TextureType::Diffuse, "textures/Model Textures/gameovertemp.png");
 	gameOver.loadTexture(TextureType::Specular, "textures/noSpecular.png"); 
 
 	//
@@ -346,11 +346,11 @@ void Game::initializeGame()
 	gameOver.transform = gameOver.translate * gameOver.rotate * glm::scale(glm::mat4(), glm::vec3(gameOver.scale));
 
 	pauseback.loadMesh("meshes/background.obj");
-	pauseback.loadTexture(TextureType::Diffuse, "textures/pause.png");
+	pauseback.loadTexture(TextureType::Diffuse, "textures/Model Textures/pause.png");
 	pauseback.loadTexture(TextureType::Specular, "textures/noSpecular.png");
 
 	WeaponSprite.loadMesh("meshes/background.obj");
-	WeaponSprite.loadTexture(TextureType::Diffuse, "textures/WeaponSprite.png");
+	WeaponSprite.loadTexture(TextureType::Diffuse, "textures/Model Textures/WeaponSprite.png");
 	WeaponSprite.loadTexture(TextureType::Specular, "textures/noSpecular.png");
 
 	bulletMesh.loadFromFile("meshes/cube.obj");
@@ -403,7 +403,7 @@ void Game::initializeGame()
 	player.playerMesh.push_back(run18);
 	player.playerMesh.push_back(run19);
 
-	player.loadTexture(TextureType::Diffuse, "textures/GDW_PyroboyTexture.png");
+	player.loadTexture(TextureType::Diffuse, "textures/Model Textures/GDW_PyroboyTexture.png");
 	player.loadTexture(TextureType::Specular, "textures/noSpecular.png");
 
 	player_health = 1500;
@@ -473,7 +473,7 @@ void Game::initializeGame()
 	for (int i = 0; i < treeHearts.size() - 1; i++)
 	{
 			//hearts[i]->loadMesh("meshes/Health.obj");
-		treeHearts[i]->loadTexture(TextureType::Diffuse, "textures/testuv1.png");
+		treeHearts[i]->loadTexture(TextureType::Diffuse, "textures/Model Textures/testuv1.png");
 		treeHearts[i]->loadTexture(TextureType::Specular, "textures/noSpecular.png");
 
 		if (i <= (treeHearts.size() - 1) / 2)
@@ -495,10 +495,10 @@ void Game::initializeGame()
 	std::shared_ptr<GameObject> treeUI = std::make_shared<GameObject>();
 
 	playerUI->loadMesh("meshes/UI.obj");
-	playerUI->loadTexture(TextureType::Diffuse,"textures/playerhp10.png");
+	playerUI->loadTexture(TextureType::Diffuse,"textures/UI/playerhp10.png");
 	playerUI->loadTexture (TextureType::Specular, "textures/noSpecular.png");
 
-	treeUI->loadTexture(TextureType::Diffuse, "textures/UI3.png");
+	treeUI->loadTexture(TextureType::Diffuse, "textures/UI/UI3.png");
 	treeUI->loadMesh("meshes/UI.obj");
 	treeUI->loadTexture(TextureType::Specular, "textures/noSpecular.png");
 
@@ -517,8 +517,8 @@ void Game::initializeGame()
 	uiObjects["playerHP9"] = playerUI;
 	uiObjects["playerHP8"] = playerUI;
 
-	uiObjects["playerHP9"]->loadTexture(TextureType::Diffuse, "textures/playerhp9.png");
-	uiObjects["playerHP8"]->loadTexture(TextureType::Diffuse, "textures/playerhp8.png");
+	uiObjects["playerHP9"]->loadTexture(TextureType::Diffuse, "textures/UI/playerhp9.png");
+	uiObjects["playerHP8"]->loadTexture(TextureType::Diffuse, "textures/UI/playerhp8.png");
 	//playerUI->loadMesh("meshes/UI.obj");
 	//playerUI->loadTexture(TextureType::Diffuse, "textures/UI2.png");
 	//playerUI->loadTexture(TextureType::Specular, "textures/noSpecular.png");
@@ -577,7 +577,7 @@ void Game::initializeGame()
 	for (int i = 0; i < (enemies.size()/2)/2; i++)
 	{
 		enemies[i]->loadMesh("meshes/GDW_AlienNew.obj");
-		enemies[i]->loadTexture(TextureType::Diffuse, "textures/GDW_AlienUV.png");
+		enemies[i]->loadTexture(TextureType::Diffuse, "textures/Model Textures/GDW_AlienUV.png");
 		enemies[i]->loadTexture(TextureType::Specular, "textures/noSpecular.png");
 		enemies[i]->scale = 1.8f;
 		enemies[i]->setProperty(50.f, 1.f);
@@ -596,7 +596,7 @@ void Game::initializeGame()
 	for (int i = (enemies.size() / 2); i < enemies.size(); i++)
 	{
 		enemies[i]->loadMesh("meshes/InsectPrototype.obj");
-		enemies[i]->loadTexture(TextureType::Diffuse, "textures/GDW_ExpInsectTexture.png");
+		enemies[i]->loadTexture(TextureType::Diffuse, "textures/Model Textures/GDW_ExpInsectTexture.png");
 		enemies[i]->loadTexture(TextureType::Specular, "textures/noSpecular.png");
 		enemies[i]->scale=10.f;
 		enemies[i]->setProperty(10.f, 1.f);
@@ -630,7 +630,7 @@ void Game::initializeGame()
 	{
 		//chests[i]->loadMesh("meshes/Chest.obj");
 		chests[i]->applyMesh(chestMesh);
-		chests[i]->loadTexture(TextureType::Diffuse, "textures/GDW_ChestTexture.png");
+		chests[i]->loadTexture(TextureType::Diffuse, "textures/Model Textures/GDW_ChestTexture.png");
 		chests[i]->loadTexture(TextureType::Specular, "textures/noSpecular.png");
 
 		chests[i]->position = chestPos[i];

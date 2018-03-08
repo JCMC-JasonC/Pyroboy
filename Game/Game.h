@@ -12,6 +12,8 @@
 #include"Player.h"
 #include"Soundheader.h"
 #include "LUT.h"
+#include "FrameBufferObject.h"
+#include"ParticleEmitterSoA.h"
 #include<vector>
 #include <map>
 #include <memory>
@@ -66,6 +68,8 @@ public:
 	
 	std::string file = "textures/LUT.cube";
 	LUT lutObj;
+	FrameBufferObject buffer;
+	ParticleEmitterSoA emitter;
 
 	Mesh treeMesh, playerMesh,backgroundMesh;
 	GameObject tree, startupBack, gameOver, background, pauseback, monkey,arrow;
@@ -111,6 +115,7 @@ public:
 	ShaderProgram phongNoTexture;
 	ShaderProgram phong;
 	ShaderProgram lutShader;
+	ShaderProgram geoShader;
 
 	glm::mat4 originalCameraTransform;
 	glm::mat4 cameraTransform;

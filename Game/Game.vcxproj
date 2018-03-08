@@ -128,6 +128,7 @@
   <ItemGroup>
     <ClCompile Include="Bullet.cpp" />
     <ClCompile Include="Enemy.cpp" />
+    <ClCompile Include="FrameBufferObject.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="Light.cpp" />
@@ -136,6 +137,7 @@
     <ClCompile Include="Material.cpp" />
     <ClCompile Include="Mesh.cpp" />
     <ClCompile Include="Obstacles.cpp" />
+    <ClCompile Include="ParticleEmitterSoA.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="ShaderProgram.cpp" />
     <ClCompile Include="sound.cpp" />
@@ -143,25 +145,22 @@
     <ClCompile Include="Timer.cpp" />
     <ClCompile Include="Trap.cpp" />
     <ClCompile Include="UIGameObject.cpp" />
+    <ClCompile Include="VertexBufferObject.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AnimationMath.h" />
     <ClInclude Include="Bullet.h" />
+    <ClInclude Include="Camera.h" />
     <ClInclude Include="Enemy.h" />
+    <ClInclude Include="FrameBufferObject.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="GameObject.h" />
-    <ClInclude Include="include\TTK\Camera.h" />
-    <ClInclude Include="include\TTK\IO.h" />
-    <ClInclude Include="include\TTK\MeshBase.h" />
-    <ClInclude Include="include\TTK\OBJMesh.h" />
-    <ClInclude Include="include\TTK\QuadMesh.h" />
-    <ClInclude Include="include\TTK\Texture2D.h" />
-    <ClInclude Include="include\TTK\Utilities.h" />
     <ClInclude Include="Light.h" />
     <ClInclude Include="LUT.h" />
     <ClInclude Include="Material.h" />
     <ClInclude Include="Mesh.h" />
     <ClInclude Include="Obstacles.h" />
+    <ClInclude Include="ParticleEmitterSoA.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="ShaderProgram.h" />
     <ClInclude Include="Soundheader.h" />
@@ -169,6 +168,7 @@
     <ClInclude Include="Timer.h" />
     <ClInclude Include="Trap.h" />
     <ClInclude Include="UIObjects.h" />
+    <ClInclude Include="VertexBufferObject.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\background\faultlinegame-pyroboy-b859a34722f1\Game\shaders\lighting.frag" />

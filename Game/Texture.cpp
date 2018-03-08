@@ -39,7 +39,16 @@ void Texture::unload()
 		textObj = 0;
 	}
 }
-
+void Texture::bind(GLenum textureUnit)
+{
+	glActiveTexture(textureUnit);
+	glBindTexture(GL_TEXTURE_2D, textObj);
+}
+void Texture::unbind(GLenum textureUnit)
+{
+	glActiveTexture(textureUnit);
+	glBindTexture(GL_TEXTURE_2D, GL_NONE);
+}
 void Texture::bind()
 {
 	glBindTexture(GL_TEXTURE_2D, textObj);

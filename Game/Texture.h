@@ -19,6 +19,9 @@ public:
 	void bind();
 	void unbind();
 
+	void bind(GLenum textureUnit);
+	void unbind(GLenum textureUnit);
+
 	//handle to the texture object
 	GLuint textObj = 0;
 
