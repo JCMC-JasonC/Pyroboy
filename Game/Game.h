@@ -43,10 +43,12 @@ public:
 	void startDraw();
 	void startUpdate();
 	void mainMenu();
+	void initUIObjects();
 	void uiUpdate();
 	void uiDraw();
 	void update();
 	void draw();
+	void switchUIToDraw(GameObject::Ptr, uiType);
 	void drawHUD();
 	void pauseMenu();
 	void pauseUpdate();
@@ -74,10 +76,10 @@ public:
 	Mesh treeMesh, playerMesh,backgroundMesh;
 	GameObject tree, startupBack, gameOver, background, pauseback, monkey,arrow;
 
-	std::map<std::string, GameObject::Ptr> uiObjects;
+	std::map<std::string, GameObject::Ptr> playerUI, treeUI, otherUI;
 
 	Player player;
-	int player_health;
+	int player_health = 1500;
 
 	glm::vec4 bulletLocation= glm::vec4(0.f);
 	Trap trap1, trap2, trap3, trap4, trap5,

@@ -7,6 +7,11 @@
 #include<vector>
 #include <memory>
 
+enum uiType {
+	PLAYER,
+	TREE
+};
+
 class GameObject 
 {
 public:
@@ -35,7 +40,8 @@ public:
 	float rotY;
 	float rotZ;
 
-	bool shouldDraw = true;
+	
+	bool shouldDraw = true; // Used for UI elements to decide which ones to draw
 
 	virtual void loadMesh(const std::string &meshFile);
 	virtual void loadTexture(TextureType type, const std::string &texFile);

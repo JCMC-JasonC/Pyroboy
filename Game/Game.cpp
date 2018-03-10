@@ -194,18 +194,207 @@ void Game::mainMenu()
 	
 }
 
+void Game::initUIObjects()
+{
+	// Player
+	std::shared_ptr<GameObject> playerUI10 = std::make_shared<GameObject>();
+	std::shared_ptr<GameObject> playerUI9 = std::make_shared<GameObject>();
+	std::shared_ptr<GameObject> playerUI8 = std::make_shared<GameObject>();
+	std::shared_ptr<GameObject> playerUI7 = std::make_shared<GameObject>();
+	std::shared_ptr<GameObject> playerUI6 = std::make_shared<GameObject>();
+	std::shared_ptr<GameObject> playerUI5 = std::make_shared<GameObject>();
+	std::shared_ptr<GameObject> playerUI4 = std::make_shared<GameObject>();
+	std::shared_ptr<GameObject> playerUI3 = std::make_shared<GameObject>();
+	std::shared_ptr<GameObject> playerUI2 = std::make_shared<GameObject>();
+	std::shared_ptr<GameObject> playerUI1 = std::make_shared<GameObject>();
+
+	// Tree
+	std::shared_ptr<GameObject> treeUI10 = std::make_shared<GameObject>();
+	std::shared_ptr<GameObject> treeUI9 = std::make_shared<GameObject>();
+	std::shared_ptr<GameObject> treeUI8 = std::make_shared<GameObject>();
+	std::shared_ptr<GameObject> treeUI7 = std::make_shared<GameObject>();
+	std::shared_ptr<GameObject> treeUI6 = std::make_shared<GameObject>();
+	std::shared_ptr<GameObject> treeUI5 = std::make_shared<GameObject>();
+	std::shared_ptr<GameObject> treeUI4 = std::make_shared<GameObject>();
+	std::shared_ptr<GameObject> treeUI3 = std::make_shared<GameObject>();
+	std::shared_ptr<GameObject> treeUI2 = std::make_shared<GameObject>();
+	std::shared_ptr<GameObject> treeUI1 = std::make_shared<GameObject>();
+
+	// Tutorial thing
+	std::shared_ptr<GameObject> protect = std::make_shared<GameObject>();
+	protect->loadMesh("meshes/UI.obj");
+	protect->loadTexture(TextureType::Diffuse, "textures/UI/protect.png");
+	protect->loadTexture(TextureType::Specular, "textures/noSpecular.png");
+	otherUI["protect"] = protect;
+	otherUI["protect"]->shouldDraw = true;
+
+	// UI OBJECTS
+	playerUI10->loadMesh("meshes/UI.obj");
+	playerUI10->loadTexture(TextureType::Diffuse, "textures/UI/newPHP10.png");
+	playerUI10->loadTexture(TextureType::Specular, "textures/noSpecular.png");
+
+	playerUI9->loadMesh("meshes/UI.obj");
+	playerUI9->loadTexture(TextureType::Diffuse, "textures/UI/newPHP9.png");
+	playerUI9->loadTexture(TextureType::Specular, "textures/noSpecular.png");
+
+	playerUI8->loadMesh("meshes/UI.obj");
+	playerUI8->loadTexture(TextureType::Diffuse, "textures/UI/newPHP8.png");
+	playerUI8->loadTexture(TextureType::Specular, "textures/noSpecular.png");
+
+	playerUI7->loadMesh("meshes/UI.obj");
+	playerUI7->loadTexture(TextureType::Diffuse, "textures/UI/newPHP7.png");
+	playerUI7->loadTexture(TextureType::Specular, "textures/noSpecular.png");
+
+	playerUI6->loadMesh("meshes/UI.obj");
+	playerUI6->loadTexture(TextureType::Diffuse, "textures/UI/newPHP6.png");
+	playerUI6->loadTexture(TextureType::Specular, "textures/noSpecular.png");
+
+	playerUI5->loadMesh("meshes/UI.obj");
+	playerUI5->loadTexture(TextureType::Diffuse, "textures/UI/newPHP5.png");
+	playerUI5->loadTexture(TextureType::Specular, "textures/noSpecular.png");
+
+	playerUI4->loadMesh("meshes/UI.obj");
+	playerUI4->loadTexture(TextureType::Diffuse, "textures/UI/newPHP4.png");
+	playerUI4->loadTexture(TextureType::Specular, "textures/noSpecular.png");
+
+	playerUI3->loadMesh("meshes/UI.obj");
+	playerUI3->loadTexture(TextureType::Diffuse, "textures/UI/newPHP3.png");
+	playerUI3->loadTexture(TextureType::Specular, "textures/noSpecular.png");
+
+	playerUI2->loadMesh("meshes/UI.obj");
+	playerUI2->loadTexture(TextureType::Diffuse, "textures/UI/newPHP2.png");
+	playerUI2->loadTexture(TextureType::Specular, "textures/noSpecular.png");
+
+	playerUI1->loadMesh("meshes/UI.obj");
+	playerUI1->loadTexture(TextureType::Diffuse, "textures/UI/newPHP1.png");
+	playerUI1->loadTexture(TextureType::Specular, "textures/noSpecular.png");
+
+	// Tree Objects
+	treeUI10->loadMesh("meshes/UI.obj");
+	treeUI10->loadTexture(TextureType::Diffuse, "textures/UI/newTreeHP10.png");
+	treeUI10->loadTexture(TextureType::Specular, "textures/noSpecular.png");
+
+	treeUI9->loadMesh("meshes/UI.obj");
+	treeUI9->loadTexture(TextureType::Diffuse, "textures/UI/newTreeHP9.png");
+	treeUI9->loadTexture(TextureType::Specular, "textures/noSpecular.png");
+
+	treeUI8->loadMesh("meshes/UI.obj");
+	treeUI8->loadTexture(TextureType::Diffuse, "textures/UI/newTreeHP8.png");
+	treeUI8->loadTexture(TextureType::Specular, "textures/noSpecular.png");
+
+	treeUI7->loadMesh("meshes/UI.obj");
+	treeUI7->loadTexture(TextureType::Diffuse, "textures/UI/newTreeHP7.png");
+	treeUI7->loadTexture(TextureType::Specular, "textures/noSpecular.png");
+
+	treeUI6->loadMesh("meshes/UI.obj");
+	treeUI6->loadTexture(TextureType::Diffuse, "textures/UI/newTreeHP6.png");
+	treeUI6->loadTexture(TextureType::Specular, "textures/noSpecular.png");
+
+	treeUI5->loadMesh("meshes/UI.obj");
+	treeUI5->loadTexture(TextureType::Diffuse, "textures/UI/newTreeHP5.png");
+	treeUI5->loadTexture(TextureType::Specular, "textures/noSpecular.png");
+
+	treeUI4->loadMesh("meshes/UI.obj");
+	treeUI4->loadTexture(TextureType::Diffuse, "textures/UI/newTreeHP4.png");
+	treeUI4->loadTexture(TextureType::Specular, "textures/noSpecular.png");
+
+	treeUI3->loadMesh("meshes/UI.obj");
+	treeUI3->loadTexture(TextureType::Diffuse, "textures/UI/newTreeHP3.png");
+	treeUI3->loadTexture(TextureType::Specular, "textures/noSpecular.png");
+
+	treeUI2->loadMesh("meshes/UI.obj");
+	treeUI2->loadTexture(TextureType::Diffuse, "textures/UI/newTreeHP2.png");
+	treeUI2->loadTexture(TextureType::Specular, "textures/noSpecular.png");
+
+	treeUI1->loadMesh("meshes/UI.obj");
+	treeUI1->loadTexture(TextureType::Diffuse, "textures/UI/newTreeHP1.png");
+	treeUI1->loadTexture(TextureType::Specular, "textures/noSpecular.png");
+	// 
+
+	//playerUI10->transform = playerUI10->translate * playerUI10->rotate * glm::scale(glm::mat4(), glm::vec3(playerUI10->scale));
+	//treeUI10->transform = treeUI10->translate * treeUI10->rotate * glm::scale(glm::mat4(), glm::vec3(treeUI10->scale));
+
+	// map that holds UI objects so we can reference by name
+	playerUI["playerHP10"] = playerUI10;
+	playerUI["playerHP9"] = playerUI9;
+	playerUI["playerHP8"] = playerUI8;
+	playerUI["playerHP7"] = playerUI7;
+	playerUI["playerHP6"] = playerUI6;
+	playerUI["playerHP5"] = playerUI5;
+	playerUI["playerHP4"] = playerUI4;
+	playerUI["playerHP3"] = playerUI3;
+	playerUI["playerHP2"] = playerUI2;
+	playerUI["playerHP1"] = playerUI1;
+
+	// Don't draw any until HP is checked
+	playerUI["playerHP10"]->shouldDraw = false;
+	playerUI["playerHP9"]->shouldDraw = false;
+	playerUI["playerHP8"]->shouldDraw = false;
+	playerUI["playerHP7"]->shouldDraw = false;
+	playerUI["playerHP6"]->shouldDraw = false;
+	playerUI["playerHP5"]->shouldDraw = false;
+	playerUI["playerHP4"]->shouldDraw = false;
+	playerUI["playerHP3"]->shouldDraw = false;
+	playerUI["playerHP2"]->shouldDraw = false;
+	playerUI["playerHP1"]->shouldDraw = false;
+
+	// map for tree ui objects as well
+	treeUI["treeHP10"] = treeUI10;
+	treeUI["treeHP9"] = treeUI9;
+	treeUI["treeHP8"] = treeUI8;
+	treeUI["treeHP7"] = treeUI7;
+	treeUI["treeHP6"] = treeUI6;
+	treeUI["treeHP5"] = treeUI5;
+	treeUI["treeHP4"] = treeUI4;
+	treeUI["treeHP3"] = treeUI3;
+	treeUI["treeHP2"] = treeUI2;
+	treeUI["treeHP1"] = treeUI1;
+
+	treeUI["treeHP10"]->shouldDraw = false;
+	treeUI["treeHP9"]->shouldDraw = false;
+	treeUI["treeHP8"]->shouldDraw = false;
+	treeUI["treeHP7"]->shouldDraw = false;
+	treeUI["treeHP6"]->shouldDraw = false;
+	treeUI["treeHP5"]->shouldDraw = false;
+	treeUI["treeHP4"]->shouldDraw = false;
+	treeUI["treeHP3"]->shouldDraw = false;
+	treeUI["treeHP2"]->shouldDraw = false;
+	treeUI["treeHP1"]->shouldDraw = false;
+
+	// set transform for all ui objects
+	for (auto itr = playerUI.begin(); itr != playerUI.end(); itr++)
+	{
+		itr->second->transform =
+		glm::translate(glm::mat4(1.0f), glm::vec3(100.f, float(WINDOW_HEIGHT) - 25.0f, -1.0f))
+		* glm::scale(glm::mat4(1.0f), glm::vec3(200.0f, 50.f, 1.f));
+	}
+	for (auto itr = treeUI.begin(); itr != treeUI.end(); itr++)
+	{
+		itr->second->transform =
+			glm::translate(glm::mat4(1.0f), glm::vec3(float(WINDOW_WIDTH) - 100.0f, float(WINDOW_HEIGHT) - 25.0f, -1.0f))
+			* glm::scale(glm::mat4(1.0f), glm::vec3(200.0f, 50.f, 1.f));
+	}
+	protect->transform = 
+		glm::translate(glm::mat4(1.0f), glm::vec3(float(WINDOW_WIDTH) / 2, float(WINDOW_HEIGHT) / 2, -1.0f))
+		* glm::scale(glm::mat4(1.0f), glm::vec3(300.0f, 150.f, 1.f));
+
+
+	//treeUI["treeHP10"]->transform =
+	//	glm::translate(glm::mat4(1.0f), glm::vec3(float(WINDOW_WIDTH) - 75.0f, float(WINDOW_HEIGHT) - 50.0f, -1.0f))
+	//	* glm::scale(glm::mat4(1.0f), glm::vec3(150.0f, 100.f, 1.f));
+}
 //load everything in here
 void Game::initializeGame()
 {
-	se.Init();
-	result = se.system->createSound("sounds/testmusic.mp3", FMOD_3D, 0, &sound);
-	FmodErrorCheck(result);
-	result = sound->set3DMinMaxDistance(0.0f, 30000.0f);
-	FmodErrorCheck(result);
-	result = sound->setMode(FMOD_LOOP_NORMAL);
-	FmodErrorCheck(result);
-	result = se.system->playSound(sound, 0, false, &channel);
-	FmodErrorCheck(result);
+	//se.Init();
+	//result = se.system->createSound("sounds/testmusic.mp3", FMOD_3D, 0, &sound);
+	//FmodErrorCheck(result);
+	//result = sound->set3DMinMaxDistance(0.0f, 30000.0f);
+	//FmodErrorCheck(result);
+	//result = sound->setMode(FMOD_LOOP_NORMAL);
+	//FmodErrorCheck(result);
+	//result = se.system->playSound(sound, 0, false, &channel);
+	//FmodErrorCheck(result);
 
 	updateTimer = new Timer();
 
@@ -239,8 +428,6 @@ void Game::initializeGame()
 		system("pause");
 		exit(0);
 	}
-
-
 
 	// MAKE SURE TO RUN AT x86
 	// LOADING MODELS
@@ -406,7 +593,7 @@ void Game::initializeGame()
 	player.loadTexture(TextureType::Diffuse, "textures/Model Textures/GDW_PyroboyTexture.png");
 	player.loadTexture(TextureType::Specular, "textures/noSpecular.png");
 
-	player_health = 1500;
+	//player_health = 1500; // player starting health
 	player.position = glm::vec3(0.f, -10.f, 0.f);
 	player.speed = 1.5f;
 
@@ -429,7 +616,7 @@ void Game::initializeGame()
 
 	heartMesh.loadFromFile("meshes/Health.obj");
 	p_healthTex.load("textures/Health.png");
-	t_healthTex.load("textures/testuv1.png");
+	t_healthTex.load("textures/Model Textures/testuv1.png");
 
 	for (int i = 0; i < 15; i++)
 	{
@@ -490,40 +677,11 @@ void Game::initializeGame()
 	treeHeartCounter = treeHearts.size() - 1;
 	counter = hearts.size() - 1;
 
-	std::shared_ptr<GameObject> playerUI = std::make_shared<GameObject>();
-	std::shared_ptr<GameObject> playerUITemp = std::make_shared<GameObject>();
-	std::shared_ptr<GameObject> treeUI = std::make_shared<GameObject>();
-
-	playerUI->loadMesh("meshes/UI.obj");
-	playerUI->loadTexture(TextureType::Diffuse,"textures/UI/playerhp10.png");
-	playerUI->loadTexture (TextureType::Specular, "textures/noSpecular.png");
-
-	treeUI->loadTexture(TextureType::Diffuse, "textures/UI/UI3.png");
-	treeUI->loadMesh("meshes/UI.obj");
-	treeUI->loadTexture(TextureType::Specular, "textures/noSpecular.png");
-
 	/*ui.translate = glm::translate(ui.translate, glm::vec3(0.f,0.f,-5.f));
 	ui2.translate = glm::translate(ui.translate, glm::vec3(0.f, 0.f, -5.f));*/
 
-	playerUI->transform = playerUI->translate * playerUI->rotate * glm::scale(glm::mat4(), glm::vec3(playerUI->scale));
-	treeUI->transform = treeUI->translate * treeUI->rotate * glm::scale(glm::mat4(), glm::vec3(treeUI->scale));
-
-	playerUI->originalTransform = playerUI->transform;
-	treeUI->originalTransform = treeUI->transform;
-
-	// Make more uiObjects for different textures when applicable
-
-	uiObjects["playerHP10"] = playerUI;
-	uiObjects["playerHP9"] = playerUI;
-	uiObjects["playerHP8"] = playerUI;
-
-	uiObjects["playerHP9"]->loadTexture(TextureType::Diffuse, "textures/UI/playerhp9.png");
-	uiObjects["playerHP8"]->loadTexture(TextureType::Diffuse, "textures/UI/playerhp8.png");
-	//playerUI->loadMesh("meshes/UI.obj");
-	//playerUI->loadTexture(TextureType::Diffuse, "textures/UI2.png");
-	//playerUI->loadTexture(TextureType::Specular, "textures/noSpecular.png");
-	
-	uiObjects["treeHP"] = treeUI;
+	// Cleaning up block of UI code
+	initUIObjects();
 
 	//ENEMY POSITIONS
 	enemy.position = glm::vec3 (-400.f,  0.f,   -2.f);
@@ -648,7 +806,7 @@ void Game::initializeGame()
 	WeaponSprite.originalTransform = WeaponSprite.transform;
 
 	tree.position = glm::vec3(0.f,0.f,0.f);
-	tree_health = 3000.f;
+	tree_health = 3000.f; // tree starting health
 	tree.scale = 2.f;
 	tree.rotate = glm::rotate(tree.rotate, glm::pi<float>() /-2.f, glm::vec3(1.0f, 0.f, 0.f));
 	tree.translate = glm::translate(tree.translate, tree.position);
@@ -700,9 +858,9 @@ void Game::TreeWasAttacked(Enemy* _x, glm::vec3 pos)
 	{
 		tree_health -= _x->getAttack();
 		//std::cout << tree_health << std::endl;
-		if ((int)tree_health %100==0)
-		{
-			if (treeHeartCounter == 0)
+		//if ((int)tree_health %100==0)
+		//{
+			if (tree_health == 0) // we can just use the direct health value now
 			{
 				
 					player.position = glm::vec3(0.f,-10.f,0.f);
@@ -713,31 +871,26 @@ void Game::TreeWasAttacked(Enemy* _x, glm::vec3 pos)
 			}
 				//exit(0);
 			
-			if (!treeDead)
-			{
-				treeHearts[treeHeartCounter]->active = false;
-				treeHeartCounter--;
-			}
+			//if (!treeDead)
+			//{
+			//	treeHearts[treeHeartCounter]->active = false;
+			//	treeHeartCounter--;
+			//}
 			
 			//cameraTransform = originalCameraTransform * glm::mat4(0.f);
-		}
+		//}
 	}
 
-	if (_x->inArea(pos))
+	if (_x->inArea(pos)) // player taking damage
 	{
 		player_health -= _x->getAttack(); 
 		//std::cout << player_health << std::endl;
 
-		if ((int)player_health % 100 == 0)
+		// simplified player death as well
+		if (player_health == 0)
 		{
-			if (hearts.size() - 1 == 1)
-			{
 				playerDead = true;
-
-			}
-			hearts[counter]->active = false;
-			counter--;
-
+				
 		}
 	}
 }
@@ -867,8 +1020,8 @@ void Game::update()
 			blast = se.system->playSound(sound, 0, false, &channel);
 		}
 
-		result = se.system->update();
-		FmodErrorCheck(result);
+		//result = se.system->update();
+		//FmodErrorCheck(result);
 
 		player.update(deltaTime);
 		player.animate(deltaTime);
@@ -1239,8 +1392,8 @@ void Game::update()
 
 		if (treeDead|| playerDead)
 		{
-			tree_health = 3000.f;
-			player_health = 1500.f;
+			//tree_health = 3000.f;
+			//player_health = 1500.f;
 			treeHeartCounter = treeHearts.size() - 1;
 			counter = hearts.size() - 1;
 
@@ -1280,50 +1433,93 @@ void Game::fixAngle(float angle, glm::vec3 &dir)
 	player.rotate = glm::rotate(player.rotate, angle/ glm::pi<float>(), glm::vec3(0.f, 1.f, 0.f));
 	player.direction = dir;
 }
+
+void Game::switchUIToDraw(GameObject::Ptr curUI, uiType type)
+{
+	// Takes in uiObject we want to draw, sets all other uiObjects to not draw
+	// Then sets desired UI object to draw true
+	if (type == PLAYER) {
+		for (auto itr = playerUI.begin(); itr != playerUI.end(); itr++)
+		{
+			if (itr->second != curUI)
+			{
+				itr->second->shouldDraw = false;
+			}
+		}
+	}
+
+	else if (type == TREE) {
+		for (auto itr = treeUI.begin(); itr != treeUI.end(); itr++)
+		{
+			if (itr->second != curUI)
+			{
+				itr->second->shouldDraw = false;
+			}
+		}
+	}
+	curUI->shouldDraw = true;
+}
+
 void Game::drawHUD()
 {
 	glDisable(GL_DEPTH_TEST);
-	//glMatrixMode(GL_PROJECTION);
-	//glPushMatrix();
-	//glLoadIdentity();
-
-//	gluOrtho2D(0.f, 1.f, 1.f, 0.0);
 	glViewport(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT); // position and size of viewport
-	//glMatrixMode(GL_MODELVIEW);
-	//glPushMatrix();
-	//glLoadIdentity();
-
-	// Allows Transparency
-	glEnable(GL_BLEND);
+	glEnable(GL_BLEND); // Allows Transparency
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-	glDisable(GL_CULL_FACE);
-
 	cameraOrtho = glm::ortho(0.0f, (float)WINDOW_WIDTH, 0.0f, (float)WINDOW_HEIGHT, -1000.0f, 1000.0f);
 
-	uiObjects["playerHP10"]->transform =
-		glm::translate(glm::mat4(1.0f), glm::vec3(75.f, float(WINDOW_HEIGHT) - 50.0f, -1.0f)) 
-		* glm::scale(glm::mat4(1.0f), glm::vec3(150.0f, 100.f, 1.f));
+	//treeUI["treeHP10"]->draw(noLight, glm::mat4(1.0f), cameraOrtho, pointLights, directionalLight);
 
-	uiObjects["treeHP"]->transform =
-		glm::translate(glm::mat4(1.0f), glm::vec3(float(WINDOW_WIDTH) - 75.0f, float(WINDOW_HEIGHT) - 50.0f, -1.0f))
-		* glm::scale(glm::mat4(1.0f), glm::vec3(150.0f, 100.f, 1.f));
+	// update hearts based on player health and output num value for it
+	//std::cout << "players health: " << player_health << std::endl;
+	if (player_health <= 150) { switchUIToDraw(playerUI["playerHP1"], PLAYER); }
+	else if (player_health <= 300) { switchUIToDraw(playerUI["playerHP2"], PLAYER); }
+	else if (player_health <= 450) { switchUIToDraw(playerUI["playerHP3"], PLAYER); }
+	else if (player_health <= 600) { switchUIToDraw(playerUI["playerHP4"], PLAYER); }
+	else if (player_health <= 750) { switchUIToDraw(playerUI["playerHP5"], PLAYER); }
+	else if (player_health <= 900) { switchUIToDraw(playerUI["playerHP6"], PLAYER); }
+	else if (player_health <= 1050) { switchUIToDraw(playerUI["playerHP7"], PLAYER); }
+	else if (player_health <= 1200) { switchUIToDraw(playerUI["playerHP8"], PLAYER); }
+	else if (player_health <= 1350) { switchUIToDraw(playerUI["playerHP9"], PLAYER); }
+	else if (player_health <= 1500) { switchUIToDraw(playerUI["playerHP10"], PLAYER); }
+	
+	// same thing with tree
+	//std::cout << "tree health: " << tree_health << std::endl;
+	if (tree_health <= 300) { switchUIToDraw(treeUI["treeHP1"], TREE); }
+	else if (tree_health <= 600) { switchUIToDraw(treeUI["treeHP2"], TREE); }
+	else if (tree_health <= 900) { switchUIToDraw(treeUI["treeHP3"], TREE); }
+	else if (tree_health <= 1200) { switchUIToDraw(treeUI["treeHP4"], TREE); }
+	else if (tree_health <= 1500) { switchUIToDraw(treeUI["treeHP5"], TREE); }
+	else if (tree_health <= 1800) { switchUIToDraw(treeUI["treeHP6"], TREE); }
+	else if (tree_health <= 2100) { switchUIToDraw(treeUI["treeHP7"], TREE); }
+	else if (tree_health <= 2400) { switchUIToDraw(treeUI["treeHP8"], TREE); }
+	else if (tree_health <= 2700) { switchUIToDraw(treeUI["treeHP9"], TREE); }
+	else if (tree_health <= 3000) { switchUIToDraw(treeUI["treeHP10"], TREE); }
+	
+	// draw ui that's set to true
+	for (auto itr = playerUI.begin(); itr != playerUI.end(); itr++)
+	{
+		if (itr->second->shouldDraw)
+			itr->second->draw(noLight, glm::mat4(1.0f), cameraOrtho, pointLights, directionalLight);
+	}
+	for (auto itr = treeUI.begin(); itr != treeUI.end(); itr++)
+	{
+		if (itr->second->shouldDraw)
+			itr->second->draw(noLight, glm::mat4(1.0f), cameraOrtho, pointLights, directionalLight);
+	}
 
-	uiObjects["treeHP"]->draw(noLight, glm::mat4(1.0f), cameraOrtho, pointLights, directionalLight);
-	//uiObjects["playerHP8"]->draw(noLight, glm::mat4(1.0f), cameraOrtho, pointLights, directionalLight);
-	uiObjects["playerHP10"]->draw(noLight, glm::mat4(1.0f), cameraOrtho, pointLights, directionalLight);
+	//std::cout << t << std::endl;
+	if (t >= 5) { otherUI["protect"]->shouldDraw = false; }
 
-	//for (auto itr = uiObjects.begin(); itr != uiObjects.end(); itr++)
-	//{
-	//	if (itr->second->shouldDraw)
-	//		itr->second->draw(noLight, glm::mat4(1.0f), cameraOrtho, pointLights, directionalLight);
-	//}
+	switch (otherUI["protect"]->shouldDraw) {
+	case(true):
+		otherUI["protect"]->draw(noLight, glm::mat4(1.0f), cameraOrtho, pointLights, directionalLight);
+		break;
+	case(false):
+		break;
+	}
 
 	glDisable(GL_BLEND);
-
-	/*glMatrixMode(GL_PROJECTION);
-	glPopMatrix();
-	glMatrixMode(GL_MODELVIEW);
-	glPopMatrix();*/
 	glEnable(GL_DEPTH_TEST);
 }
 void Game::draw()
