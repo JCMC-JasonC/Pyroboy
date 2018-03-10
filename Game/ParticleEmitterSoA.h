@@ -70,7 +70,7 @@ public:
 	void update(float dt);
 
 	// Draws particles to screen
-	void draw(Camera* camera);
+	void draw(glm::mat4 uModel, glm::mat4 &uView, glm::mat4 &uProj);
 
 	void freeMemory();
 

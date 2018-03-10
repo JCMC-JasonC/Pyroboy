@@ -109,13 +109,11 @@ void Game::startUp()
 	startupBack.rotate = glm::rotate(background.rotate, glm::pi<float>() *1.5f, glm::vec3(1.0f, 0.f, 0.f));
 	//startupBack.rotate = glm::rotate(background.rotate, glm::pi<float>() /2.f, glm::vec3(0.0f, 0.f, 1.f));
 
-	camera.cameraPosition = glm::vec3(0.f, 0.f, -25.f);
-	cameraTransform = glm::lookAt(camera.cameraPosition,
-		glm::vec3(0.f, 0.f, 0.f), camera.upVector);
+	cameraTransform = glm::lookAt(glm::vec3(0.f, 0.f, -25.f),
+		glm::vec3(0.f, 0.f, 0.f), glm::vec3(0.f,-1.f,0.f));
 	originalCameraTransform = cameraTransform;
 
-	camera.angle = 90.f;
-	cameraProjection = glm::perspective(camera.angle, (float)WINDOW_WIDTH / (float)WINDOW_HEIGHT, 0.1f, 1000.f);
+	cameraProjection = glm::perspective(90.f, (float)WINDOW_WIDTH / (float)WINDOW_HEIGHT, 0.1f, 1000.f);
 	glViewport(0, 0, 20.f, 20.f);
 
 	//state = GameStates::MAIN_MENU;
@@ -887,7 +885,6 @@ void Game::update()
 		result = se.system->update();
 		FmodErrorCheck(result);
 
-		camera.update();
 		player.update(deltaTime);
 		player.animate(deltaTime);
 
@@ -1244,8 +1241,7 @@ void Game::update()
 			treeHearts[i]->transform = player.translate * treeHearts[i]->originalTransform;
 		}
 		
-		camera.cameraPosition = cameraEye;
-		cameraTransform = glm::lookAt(cameraEye, cameraCtr, camera.upVector);
+		cameraTransform = glm::lookAt(cameraEye, cameraCtr, glm::vec3(0.f, -1.f, 0.f));
 		originalCameraTransform = cameraTransform;
 
 		player.transform = player.translate * player.rotate * glm::scale(glm::mat4(), glm::vec3(player.scale));
@@ -1255,6 +1251,9 @@ void Game::update()
 
 		cameraTransform = originalCameraTransform * player.originalTranslate;
 		cameraTransform[1] = -cameraTransform[1];
+
+		emitter.initialPosition = player.position;
+		emitter.update(deltaTime);
 
 		if (treeDead|| playerDead)
 		{
@@ -1271,17 +1270,10 @@ void Game::update()
 			{
 				hearts[i]->active = true;
 			}
-			camera.cameraPosition = glm::vec3(0.f, 0.f, -25.f);
-			cameraTransform = glm::lookAt(camera.cameraPosition,
-				glm::vec3(0.f, 0.f, 0.f), camera.upVector);
+
+			cameraTransform = glm::lookAt(glm::vec3(0.f, 0.f, -25.f),
+				glm::vec3(0.f, 0.f, 0.f), glm::vec3(0.f, -1.f, 0.f));
 			originalCameraTransform = cameraTransform;
-
-			draw();
-
-			emitter.initialPosition = player.position;
-			emitter.update(deltaTime);
-
-			emitter.draw(&camera);
 
 			for (int i = 0; i < enemies.size(); i++)
 			{
@@ -1295,8 +1287,7 @@ void Game::update()
 			player.position = glm::vec3(0.f, -10.f, 0.f);
 			player.translate = glm::translate(player.translate, player.position);
 			player.transform = player.translate * player.rotate * glm::scale(glm::mat4(), glm::vec3(player.scale));
-			camera.angle = 90.f;
-			cameraProjection = glm::perspective(camera.angle, (float)WINDOW_WIDTH / (float)WINDOW_HEIGHT, 0.1f, 1000.f);
+			cameraProjection = glm::perspective(90.f, (float)WINDOW_WIDTH / (float)WINDOW_HEIGHT, 0.1f, 1000.f);
 			state = GameStates::LOSE;
 			treeDead = false;
 		}
@@ -1409,6 +1400,9 @@ void Game::draw()
 		bullets[i]->draw(phong, cameraTransform, cameraProjection, pointLights, directionalLight);
 	}
 	drawHUD();
+
+	emitter.draw(player.transform, cameraTransform, cameraProjection);
+
 	glutSwapBuffers();
 
 }
@@ -1435,14 +1429,12 @@ void Game::keyboardDown(unsigned char key, int mouseX, int mouseY)
 		{
 			state = GameStates::PLAYING;
 			background.scale = 20.f;
-			camera.cameraPosition = cameraEye;
 
 			cameraTransform = glm::lookAt(cameraEye,
-				cameraCtr, camera.upVector);
+				cameraCtr, glm::vec3(0.f, -1.f, 0.f));
 			originalCameraTransform = cameraTransform;
 
-			camera.angle = 150.f;
-			cameraProjection = glm::perspective(camera.angle, (float)WINDOW_WIDTH / (float)WINDOW_HEIGHT, 0.1f, 1000.f);
+			cameraProjection = glm::perspective(150.f, (float)WINDOW_WIDTH / (float)WINDOW_HEIGHT, 0.1f, 1000.f);
 			glViewport(0, 0, 20.f, 20.f);
 		}
 
@@ -1479,27 +1471,24 @@ void Game::keyboardDown(unsigned char key, int mouseX, int mouseY)
 		{
 			state = GameStates::PAUSE;
 			pauseback.scale = 3.f;
-			camera.cameraPosition = glm::vec3(0.f, 0.f, -25.f);
-			cameraTransform = glm::lookAt(camera.cameraPosition,
-				glm::vec3(0.f, 0.f, 0.f),camera.upVector);
+			
+			cameraTransform = glm::lookAt(glm::vec3(0.f, 0.f, -25.f),
+				glm::vec3(0.f, 0.f, 0.f), glm::vec3(0.f,-1.f,0.f));
 			originalCameraTransform = cameraTransform;
 
-			camera.angle = 90.f;
-			cameraProjection = glm::perspective(camera.angle, (float)WINDOW_WIDTH / (float)WINDOW_HEIGHT, 0.1f, 1000.f);
+			cameraProjection = glm::perspective(90.f, (float)WINDOW_WIDTH / (float)WINDOW_HEIGHT, 0.1f, 1000.f);
 			glViewport(0, 0, 20.f, 20.f);
 		}
 		if (!pause)
 		{
 			state = GameStates::PLAYING;
 			background.scale = 30.f;
-			camera.cameraPosition = cameraEye;
 
 			cameraTransform = glm::lookAt(cameraEye,
-				cameraCtr, camera.upVector);
+				cameraCtr, glm::vec3(0.f, -1.f, 0.f));
 			originalCameraTransform = cameraTransform;
 
-			camera.angle = 150.f;
-			cameraProjection = glm::perspective(camera.angle, (float)WINDOW_WIDTH / (float)WINDOW_HEIGHT, 0.1f, 1000.f);
+			cameraProjection = glm::perspective(150.f, (float)WINDOW_WIDTH / (float)WINDOW_HEIGHT, 0.1f, 1000.f);
 		}
 
 		break;

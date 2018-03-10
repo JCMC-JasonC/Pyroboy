@@ -101,7 +101,7 @@ void ParticleEmitterSoA::update(float dt)
 
 // HERE!
 // THIS IS WHERE WE CODE!!
-void ParticleEmitterSoA::draw(Camera* camera)
+void ParticleEmitterSoA::draw(glm::mat4 uModel, glm::mat4 &uView, glm::mat4 &uProj)
 {
 	//////////////////////////////////////////////////////////////////////////
 	//	TODO: WATCH VIDEO ON PARTICLE EMITTERS
@@ -119,9 +119,9 @@ void ParticleEmitterSoA::draw(Camera* camera)
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 
 	material->bind();
-	material->sendUniformMat4("u_mvp", glm::value_ptr(camera->viewProjMatrix), false);
-	material->sendUniformMat4("u_mv", glm::value_ptr(camera->viewMatrix), false);
-	material->sendUniformMat4("u_proj", glm::value_ptr(camera->projMatrix), false);
+	material->sendUniformMat4("u_mvp", glm::value_ptr(uModel), false);
+	material->sendUniformMat4("u_mv", glm::value_ptr(uView), false);
+	material->sendUniformMat4("u_proj", glm::value_ptr(uProj), false);
 
 	/*material->mat4Uniforms["u_mvp"] = camera->viewProjMatrix;
 	material->mat4Uniforms["u_mv"] = camera->viewMatrix;
