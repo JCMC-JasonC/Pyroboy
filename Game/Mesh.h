@@ -2,6 +2,7 @@
 #include<string>
 #include<GL/glew.h>
 #include<glm\glm.hpp>
+#include"VertexBufferObject.h"
 #include<vector>
 
 class Mesh
@@ -12,10 +13,19 @@ public:
 
 	//Load a Mesh
 	bool loadFromFile(const std::string &file);
+	void draw();
+
+	std::vector<glm::vec3> vertices;
+	std::vector<glm::vec3> normals;
+	std::vector<glm::vec2> textureCoordinates;
+	std::vector<glm::vec4> colours;
+
+	VertexBufferObject vbo;
 
 	//release data
 	void unload();
 	void update();
+	void createVBO();
 	std::vector<float> unpackedVertexData;
 	std::vector<float> unpackedTextureData;
 	std::vector<float> unpackedNormalData;
