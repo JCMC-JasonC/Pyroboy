@@ -584,36 +584,6 @@ void Game::initializeGame()
 	ar[1] = -37.f;
 	int x = 0;
 
-<<<<<<< HEAD
-	rocks.push_back(&rock);
-	rocks.push_back(&rock2);
-	rocks.push_back(&rock3);
-	rocks.push_back(&rock4);
-	rocks.push_back(&rock5);
-
-	glm::vec3 rockPos[5];
-	rockPos[0] = glm::vec3(18.0f, 22.0f, 0.0f);
-	rockPos[1] = glm::vec3(24.0f, -28.0f, 0.0f);
-	rockPos[2] = glm::vec3(-25.0f, 21.0f, 0.0f);
-	rockPos[3] = glm::vec3(-27.0f, -30.0f, 0.0f);
-	rockPos[4] = glm::vec3(-24.0f, 28.0f, 0.0f);
-
-	rockMesh.loadFromFile("meshes/Rock.obj");
-
-	for (int i = 0; i < rocks.size(); i++)
-	{
-		//rocks[i]->loadMesh("meshes/Rock.obj");
-		rocks[i]->applyMesh(rockMesh);
-		rocks[i]->loadTexture(TextureType::Diffuse, "textures/Model Textures/GDW_RockTexture.png");
-		rocks[i]->loadTexture(TextureType::Specular, "textures/noSpecular.png");
-		rocks[i]->scale = 2.2f;
-		rocks[i]->position = rockPos[i];
-		rocks[i]->translate = glm::translate(rocks[i]->translate, rocks[i]->position);
-		rocks[i]->transform = rocks[i]->translate * rocks[i]->rotate * glm::scale(glm::mat4(), glm::vec3(rocks[i]->scale));
-	}
-
-=======
->>>>>>> c3e6e959cdcfb09ea9aba7e384c8f92347d57cf0
 	background.loadMesh("meshes/map.obj");
 	background.loadTexture(TextureType::Diffuse, "textures/Model Textures/Background.png");
 	background.loadTexture(TextureType::Specular, "textures/noSpecular.png");
@@ -859,13 +829,10 @@ void Game::initializeGame()
 	background.scale = 2.0f;
 	background.position = glm::vec3(-2.0f * background.scale, -8.0f, 1.0f);
 	background.translate = glm::translate(background.translate, background.position);
-<<<<<<< HEAD
 	background.rotate = glm::rotate(background.rotate, -glm::pi<float>() / 2.f, glm::vec3(1.f, 0.f, 0.f));
 	background.rotate = glm::rotate(background.rotate, -0.002f, glm::vec3(1.f, 0.f, 0.f));
 	//background.rotate = glm::rotate(background.rotate, -glm::pi<float>(), glm::vec3(0.f, 1.f, 0.f));
-=======
 	//background.rotate = glm::rotate(background.rotate, glm::pi<float>() / 2.f, glm::vec3(1.f, 0.f, 0.f));
->>>>>>> c3e6e959cdcfb09ea9aba7e384c8f92347d57cf0
 	background.transform = background.translate * background.rotate * glm::scale(glm::mat4(), glm::vec3(background.scale));
 	 
 	pauseback.scale = 10.f;
@@ -1577,47 +1544,18 @@ void Game::draw()
 		if (!enemies[i]->getBool())
 			enemies[i]->draw(phong, cameraTransform, cameraProjection, pointLights, directionalLight);
 	}
-<<<<<<< HEAD
-	/*for (int i = 0; i < trap.size(); i++)
-	{
-		if (trap[i]->getBool())
-		trap[i]->draw(phong, cameraTransform, cameraProjection, pointLights, directionalLight);
-	}
-	*/
 	player.draw(phong, cameraTransform, cameraProjection, pointLights, directionalLight);
 
-	/*
-	for (int i = 0; i < fences.size(); i++)
-	{
-		fences[i]->draw(phong, cameraTransform, cameraProjection, pointLights, directionalLight);
-	}
-	
-	for (int i = 0; i < rocks.size(); i++)
-	{
-		rocks[i]->draw(phong, cameraTransform, cameraProjection, pointLights, directionalLight);
-	}
-
-	for (int i = 0; i < chests.size(); i++)
-	{
-		chests[i]->draw(phong, cameraTransform, cameraProjection, pointLights, directionalLight);
-	}
-
-=======
-	player.draw(phong, cameraTransform, cameraProjection, pointLights, directionalLight);
-
->>>>>>> c3e6e959cdcfb09ea9aba7e384c8f92347d57cf0
-	//WeaponSprite.draw(phong, cameraTransform, cameraProjection, pointLights, directionalLight);
-
-	for (int i = 0; i < hearts.size()-1; i++)
-	{
-		if(hearts[i]->active)
-		hearts[i]->draw(phong, cameraTransform, cameraProjection, pointLights, directionalLight);
-	}
-	for (int i = 0; i < treeHearts.size(); i++)
-	{
-		if (treeHearts[i]->active)
-			treeHearts[i]->draw(phong, cameraTransform, cameraProjection, pointLights, directionalLight);
-	}*/
+	//for (int i = 0; i < hearts.size()-1; i++)
+	//{
+	//	if(hearts[i]->active)
+	//	hearts[i]->draw(phong, cameraTransform, cameraProjection, pointLights, directionalLight);
+	//}
+	//for (int i = 0; i < treeHearts.size(); i++)
+	//{
+	//	if (treeHearts[i]->active)
+	//		treeHearts[i]->draw(phong, cameraTransform, cameraProjection, pointLights, directionalLight);
+	//}*/
 	for (int i = 0; i < bullets.size(); i++)
 	{
 		bullets[i]->draw(phong, cameraTransform, cameraProjection, pointLights, directionalLight);
@@ -1651,11 +1589,7 @@ void Game::keyboardDown(unsigned char key, int mouseX, int mouseY)
 		if (arrow.position == glm::vec3(-30.f, -1.f, 0.f))
 		{
 			state = GameStates::PLAYING;
-<<<<<<< HEAD
 			background.scale = 2.f;
-=======
-			background.scale = 1.f;
->>>>>>> c3e6e959cdcfb09ea9aba7e384c8f92347d57cf0
 
 			cameraTransform = glm::lookAt(cameraEye,
 				cameraCtr, glm::vec3(0.f, -1.f, 0.f));
@@ -1709,12 +1643,7 @@ void Game::keyboardDown(unsigned char key, int mouseX, int mouseY)
 		if (!pause)
 		{
 			state = GameStates::PLAYING;
-<<<<<<< HEAD
 			background.scale = 2.f;
-
-=======
-			background.scale = 1.f;
->>>>>>> c3e6e959cdcfb09ea9aba7e384c8f92347d57cf0
 			cameraTransform = glm::lookAt(cameraEye,
 				cameraCtr, glm::vec3(0.f, -1.f, 0.f));
 			originalCameraTransform = cameraTransform;
