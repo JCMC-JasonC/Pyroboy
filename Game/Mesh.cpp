@@ -72,6 +72,64 @@ void Mesh::update() {
 
 }
 
+void Mesh::draw()
+{
+	vbo.draw();
+}
+
+void Mesh::createVBO()
+{
+	unsigned int numTris = (unsigned int)(vertices.size()) / 3; // todo: handle non-triangulated meshes
+
+																// Setup VBO
+
+																// Set up position (vertex) attribute
+	if (vertices.size() > 0)
+	{
+		AttributeDescriptor positionAttrib;
+		positionAttrib.attributeLocation = AttributeLocations::VERTEX;
+		positionAttrib.attributeName = "vertex";
+		positionAttrib.data = &vertices[0];
+		positionAttrib.elementSize = sizeof(float);
+		positionAttrib.elementType = GL_FLOAT;
+		positionAttrib.numElements = numTris * 3 * 3; // (num triangles * three vertices per triangle * three floats per vertex)
+		positionAttrib.numElementsPerAttrib = 3;
+		vbo.addAttributeArray(positionAttrib);
+
+	}
+
+	// Set up UV attribute
+	if (textureCoordinates.size() > 0)
+	{
+		AttributeDescriptor uvAttrib;
+		uvAttrib.attributeLocation = AttributeLocations::TEX_COORD;
+		uvAttrib.attributeName = "uv";
+		uvAttrib.data = &textureCoordinates[0];
+		uvAttrib.elementSize = sizeof(float);
+		uvAttrib.elementType = GL_FLOAT;
+		uvAttrib.numElements = numTris * 3 * 2;
+		uvAttrib.numElementsPerAttrib = 2;
+		vbo.addAttributeArray(uvAttrib);
+	}
+
+	// Set up normal attribute
+	if (normals.size() > 0)
+	{
+		AttributeDescriptor normalAttrib;
+		normalAttrib.attributeLocation = AttributeLocations::NORMAL;
+		normalAttrib.attributeName = "normal";
+		normalAttrib.data = &normals[0];
+		normalAttrib.elementSize = sizeof(float);
+		normalAttrib.elementType = GL_FLOAT;
+		normalAttrib.numElements = numTris * 3 * 3;
+		normalAttrib.numElementsPerAttrib = 3;
+		vbo.addAttributeArray(normalAttrib);
+	}
+
+	// set up other attributes...
+
+	vbo.createVBO(GL_STATIC_DRAW);
+}
 //Load a Mesh
 bool Mesh::loadFromFile(const std::string &file)
 {

@@ -14,6 +14,7 @@
 #include "LUT.h"
 #include "FrameBufferObject.h"
 #include"ParticleEmitterSoA.h"
+#include<glm/gtc/type_ptr.hpp>
 #include<vector>
 #include <map>
 #include <memory>
@@ -48,6 +49,9 @@ public:
 	void uiDraw();
 	void update();
 	void draw();
+	std::shared_ptr<Mesh> createQuadMesh();
+	void blurBrightPass();
+	void brightPass();
 	void switchUIToDraw(GameObject::Ptr, uiType);
 	void drawHUD();
 	void pauseMenu();
@@ -72,7 +76,7 @@ public:
 	
 	std::string file = "textures/LUT.cube";
 	LUT lutObj;
-	FrameBufferObject buffer;
+	FrameBufferObject sceneBuffer, brightPassBuffer, blurBuffer, buffer;
 	ParticleEmitterSoA emitter;
 
 	Mesh treeMesh, playerMesh,backgroundMesh;
@@ -84,29 +88,19 @@ public:
 	int player_health = 1500;
 
 	glm::vec4 bulletLocation= glm::vec4(0.f);
-	Trap trap1, trap2, trap3, trap4, trap5,
-		trap6, trap7, trap8, trap9, trap10, trap11, trap12, trap13;
 	Mesh  insectMesh, trapMesh, run1,run2,run3,run4,run5,run6,run7,run8,run9,run10,run11,run12,run13,run14,run15,run16,run17,run18,run19
 		,run20,run21,run22,run23,run24,run25,run26;
-	Mesh bulletMesh, alienMesh, fenceMesh, rockMesh, chestMesh, heartMesh, uiMesh;
+	Mesh bulletMesh, alienMesh, heartMesh, uiMesh;
 	Texture fenceTex, p_healthTex, t_healthTex, uiTex, ui2Tex,smoke;
-
-	Obstacles fence, fence2, fence3, fence4, fence5, fence6, fence7, fence8, fence9, fence10, rock, rock2, rock3,
-		rock4, rock5, chest, chest2;
-	UIGameObjects WeaponSprite;
 
 	GameStates state = GameStates::STARTUP;
 
-	float healthCounter=0.f, bulletTime = 0.f;
+	float healthCounter=0.f, bulletTime = 0.f, bloomThreshold= 0.01f;
 	int numTraps = 0, counter, treeHeartCounter;
 	Enemy enemy, enemy2, enemy3, enemy4, enemy5, enemy6;
 	Enemy insect, insect2, insect3, insect4, insect5, insect6;
 
-	std::vector<Trap*> trap;
 	std::vector<Enemy*> enemies;
-	std::vector<Obstacles*> fences;
-	std::vector<Obstacles*> chests;
-	std::vector<Obstacles*> rocks;
 	std::vector<UIGameObjects*> hearts;
 	std::vector<UIGameObjects*> treeHearts;
 	std::vector<Bullet*> bullets;
@@ -121,13 +115,19 @@ public:
 	ShaderProgram lutShader;
 	ShaderProgram geoShader;
 
+	VertexBufferObject vbo;
+
 	std::map<std::string, std::shared_ptr<Texture>> textures;
 
 	// Materials
 	std::map<std::string, std::shared_ptr<ShaderProgram>> materials;
 
+	std::map<std::string, std::shared_ptr<Mesh>> meshes;
+
+
 
 	Camera camera;
+	glm::mat4 emptyMat;
 	glm::mat4 originalCameraTransform;
 	glm::mat4 cameraTransform;
 	glm::mat4 cameraProjection;

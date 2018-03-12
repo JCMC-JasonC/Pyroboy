@@ -22,10 +22,6 @@ Game::~Game()
 	phong.unload();
 
 	delete[]&enemies;
-	delete[]&trap;
-	delete[] & fences;
-	delete[] & chests;
-	delete[] & rocks;
 	delete[] &bullets;
 }
 void Game::gameOverUpdate()
@@ -79,6 +75,23 @@ void Game::startUp()
 		exit(0);
 	}
 
+	meshes["quad"] = createQuadMesh();
+
+	materials["particles"] = std::make_shared<ShaderProgram>();
+	materials["particles"]->load("shaders/passThru_v.glsl", "shaders/unlitTexture_f.glsl", "shaders/particles_g.glsl");
+
+	materials["blur"] = std::make_shared<ShaderProgram>();
+	materials["blur"]->load("shaders/default_v.glsl", "shaders/gaussianBlur_f.glsl");
+
+	materials["default"] = std::make_shared<ShaderProgram>();
+	materials["default"]->load("shaders/default_v.glsl", "shaders/default_f.glsl");
+
+	materials["bright"] = std::make_shared<ShaderProgram>();
+	materials["bright"]->load("shaders/default_v.glsl", "shaders/bright_f.glsl");
+
+	materials["bloom"] = std::make_shared<ShaderProgram>();
+
+	materials["bloom"]->load("shaders/default_v.glsl", "shaders/bloomComposite_f.glsl");
 	//LIGHTING
 	Light light1;
 
@@ -125,6 +138,25 @@ void Game::startDraw()
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	startupBack.draw(phong, cameraTransform, cameraProjection, pointLights, directionalLight);
+	//brightPass(); // Implement this function!
+	//blurBrightPass(); // Implement this function!
+
+	//sceneBuffer.bindTextureForSampling(0, GL_TEXTURE1);
+	//blurBuffer.bindTextureForSampling(0, GL_TEXTURE0);
+
+
+	////FrameBufferObject::unbindFrameBuffer(WINDOW_WIDTH, WINDOW_HEIGHT);
+	////FrameBufferObject::clearFrameBuffer(glm::vec4(0));
+	//materials["bloom"]->bind();
+	//materials["bloom"]->sendUniformMat4("u_mvp", glm::value_ptr(emptyMat), false);
+
+	//meshes["quad"]->draw();
+
+	////////////////////////////////////////////////////////////////////////////
+	//// UNBIND TEXTURES
+	////////////////////////////////////////////////////////////////////////////
+	//sceneBuffer.unbindTexture(GL_TEXTURE1);
+	//blurBuffer.unbindTexture(GL_TEXTURE0);
 	
 	glutSwapBuffers();
 }
@@ -394,7 +426,88 @@ void Game::initUIObjects()
 	//	glm::translate(glm::mat4(1.0f), glm::vec3(float(WINDOW_WIDTH) - 75.0f, float(WINDOW_HEIGHT) - 50.0f, -1.0f))
 	//	* glm::scale(glm::mat4(1.0f), glm::vec3(150.0f, 100.f, 1.f));
 }
+
+std::shared_ptr<Mesh> Game::createQuadMesh()
+{
+	std::shared_ptr<Mesh> quadMesh = std::make_shared<Mesh>();
+
+	// Triangle 1
+	quadMesh->vertices.push_back(glm::vec3(1.0f, 1.0f, 0.0f));
+	quadMesh->textureCoordinates.push_back(glm::vec2(1.0f, 1.0f));
+
+	quadMesh->vertices.push_back(glm::vec3(-1.0f, 1.0f, 0.0f));
+	quadMesh->textureCoordinates.push_back(glm::vec2(0.0f, 1.0f));
+
+	quadMesh->vertices.push_back(glm::vec3(-1.0, -1.0, 0.0f));
+	quadMesh->textureCoordinates.push_back(glm::vec2(0.0f, 0.0f));
+
+	// Triangle 2
+	quadMesh->vertices.push_back(glm::vec3(1.0, 1.0, 0.0f));
+	quadMesh->textureCoordinates.push_back(glm::vec2(1.0f, 1.0f));
+
+	quadMesh->vertices.push_back(glm::vec3(-1.0, -1.0, 0.0f));
+	quadMesh->textureCoordinates.push_back(glm::vec2(0.0f, 0.0f));
+
+	quadMesh->vertices.push_back(glm::vec3(1.0, -1.0, 0.0f));
+	quadMesh->textureCoordinates.push_back(glm::vec2(1.0f, 0.0f));
+
+	quadMesh->createVBO();
+
+	return quadMesh;
+}
 //load everything in here
+void Game::brightPass()
+{
+	//////////////////////////////////////////////////////////////////////////
+	// IMPLEMENT BRIGHT PASS HERE
+	// - Bind the appropriate shader and the texture that contains the rendered 
+	//   scene and render a full screen quad to the appropriate fbo
+	////////////////////////////////////////////////////////////////////////// 
+	brightPassBuffer.bindFrameBufferForDrawing();
+
+	sceneBuffer.bindTextureForSampling(0, GL_TEXTURE0);
+
+
+	materials["bright"]->sendUniformMat4("u_mvp", glm::value_ptr(emptyMat),false);
+	materials["bright"]->sendUniform("u_bloomThreshold", bloomThreshold);
+
+	materials["bright"]->bind();
+
+	meshes["quad"]->draw();
+
+	sceneBuffer.unbindTexture(GL_TEXTURE0);
+}
+
+void Game::blurBrightPass()
+{
+	//////////////////////////////////////////////////////////////////////////
+	// BLUR BRIGHT PASS HERE
+	//	- Bind the appropriate shader, the texture that contains the bright pass
+	//   and render a full screen quad to the appropriate fbo
+	////////////////////////////////////////////////////////////////////////// 
+
+	blurBuffer.bindFrameBufferForDrawing();
+	brightPassBuffer.bindTextureForSampling(0, GL_TEXTURE0);
+
+	materials["blur"]->bind();
+	materials["blur"]->sendUniformMat4("u_mvp", glm::value_ptr(emptyMat), false);
+	materials["blur"]->sendUniform("u_texelSize", glm::vec4(1.0 / (float)blurBuffer.getWidth(), 1.0 / (float)blurBuffer.getHeight(), 0.f, 0.f));
+
+	meshes["quad"]->draw();
+
+	int pass = 300; // pass 30 times
+	for (int i = 0; i < pass; i++) {
+		buffer.bindFrameBufferForDrawing();
+		blurBuffer.bindTextureForSampling(0, GL_TEXTURE0);
+		meshes["quad"]->draw();
+	}
+
+	blurBuffer.bindFrameBufferForDrawing();
+	buffer.bindTextureForSampling(0, GL_TEXTURE0);
+
+	meshes["quad"]->draw();
+
+}
 void Game::initializeGame()
 {
 	se.Init();
@@ -440,8 +553,7 @@ void Game::initializeGame()
 		exit(0);
 	}
 
-	materials["particles"] = std::make_shared<ShaderProgram>();
-	materials["particles"]->load("shaders/passThru_v.glsl", "shaders/unlitTexture_f.glsl", "shaders/particles_g.glsl");
+	emptyMat = glm::mat4();
 
 	// MAKE SURE TO RUN AT x86
 	// LOADING MODELS
@@ -455,7 +567,10 @@ void Game::initializeGame()
 
 	textures["smoke"] = std::make_shared<Texture>();
 	textures["smoke"]->load("textures/smoke_256_dm.png");
-	buffer.createFrameBuffer(WINDOW_WIDTH, WINDOW_HEIGHT, 1, true);
+	sceneBuffer.createFrameBuffer(WINDOW_WIDTH, WINDOW_HEIGHT, 1, true);
+	brightPassBuffer.createFrameBuffer(WINDOW_WIDTH, WINDOW_HEIGHT, 1, true); 
+	buffer.createFrameBuffer(WINDOW_WIDTH / 16.f, WINDOW_HEIGHT / 16.f, 1, true);
+	blurBuffer.createFrameBuffer(WINDOW_WIDTH / 16.f, WINDOW_HEIGHT / 16.f, 1, true);
 
 	initializeParticles();
 
@@ -463,90 +578,18 @@ void Game::initializeGame()
 	tree.loadTexture(TextureType::Diffuse, "textures/Model Textures/theWholeTree.png");
 	tree.loadTexture(TextureType::Specular, "textures/noSpecular.png");
 
-	trap.push_back(&trap1);
-	trap.push_back(&trap2);
-	trap.push_back(&trap3);
-	trap.push_back(&trap4);
-	trap.push_back(&trap5);
-
-	for (int i = 0; i < trap.size(); i++)
-	{
-		trap[i]->loadMesh("meshes/GDW_Landmine.obj");
-		trap[i]->loadTexture(TextureType::Diffuse, "textures/Model Textures/GDW_LandmineTexture.png");
-		trap[i]->loadTexture(TextureType::Specular, "textures/noSpecular.png");
-	}
-
-	//Setting object to mesh
-	fences.push_back(&fence);
-	fences.push_back(&fence2);
-	fences.push_back(&fence3);
-	fences.push_back(&fence4);
-	fences.push_back(&fence5);
-	fences.push_back(&fence6);
-	fences.push_back(&fence7);
-	fences.push_back(&fence8);
-	fences.push_back(&fence9);
-	fences.push_back(&fence10);
-	fenceMesh.loadFromFile("meshes/woodFence.obj");
-	fenceTex.load("textures/Model Textures/GDW_WoodFenceTexture.png");
 	float ar[2];
 	ar[0] = 25.f;
 	ar[1] = -37.f;
 	int x = 0;
-	for (int i = 0; i < fences.size(); i++)
-	{
-		//fences[i]->loadMesh("meshes/woodFence.obj");
-		fences[i]->applyMesh(fenceMesh);
-		fences[i]->loadTexture(TextureType::Diffuse, "textures/Model Textures/GDW_WoodFenceTexture.png");
-		fences[i]->loadTexture(TextureType::Specular, "textures/noSpecular.png");
-		fences[i]->scale = 1.2f;
-		if (i == (fences.size()-1) / 2.0f)
-		{
-			x = 1;
-		}
-		fences[i]->position= glm::vec3(-20.0f +(8.f* i), ar[x],-3.0f);
-		fences[i]->translate = glm::translate(fences[i]->translate, fences[i]->position);
-		fences[i]->rotate = glm::rotate(fences[i]->rotate, glm::pi<float>()/2.f, glm::vec3(1.f,0.f,0.f));
-		fences[i]->transform = fences[i]->translate * fences[i]->rotate * glm::scale(glm::mat4(), glm::vec3(fences[i]->scale));
 
-	}
-
-	rocks.push_back(&rock);
-	rocks.push_back(&rock2);
-	rocks.push_back(&rock3);
-	rocks.push_back(&rock4);
-	rocks.push_back(&rock5);
-
-	glm::vec3 rockPos[5];
-	rockPos[0] = glm::vec3(18.0f, 22.0f, 0.0f);
-	rockPos[1] = glm::vec3(24.0f, -28.0f, 0.0f);
-	rockPos[2] = glm::vec3(-25.0f, 21.0f, 0.0f);
-	rockPos[3] = glm::vec3(-27.0f, -30.0f, 0.0f);
-	rockPos[4] = glm::vec3(-24.0f, 28.0f, 0.0f);
-
-	rockMesh.loadFromFile("meshes/Rock.obj");
-
-	for (int i = 0; i < rocks.size(); i++)
-	{
-		//rocks[i]->loadMesh("meshes/Rock.obj");
-		rocks[i]->applyMesh(rockMesh);
-		rocks[i]->loadTexture(TextureType::Diffuse, "textures/Model Textures/GDW_RockTexture.png");
-		rocks[i]->loadTexture(TextureType::Specular, "textures/noSpecular.png");
-		rocks[i]->scale = 2.2f;
-		rocks[i]->position = rockPos[i];
-		rocks[i]->translate = glm::translate(rocks[i]->translate, rocks[i]->position);
-		rocks[i]->transform = rocks[i]->translate * rocks[i]->rotate * glm::scale(glm::mat4(), glm::vec3(rocks[i]->scale));
-	}
-
-	background.loadMesh("meshes/A_Background.obj");
+	background.loadMesh("meshes/map.obj");
 	background.loadTexture(TextureType::Diffuse, "textures/Model Textures/Background.png");
 	background.loadTexture(TextureType::Specular, "textures/noSpecular.png");
 
 	gameOver.loadMesh("meshes/background.obj");
 	gameOver.loadTexture(TextureType::Diffuse, "textures/Model Textures/gameovertemp.png");
 	gameOver.loadTexture(TextureType::Specular, "textures/noSpecular.png"); 
-
-	//
 
 	gameOver.rotate = glm::rotate(gameOver.rotate, glm::pi<float>() *1.5f, glm::vec3(1.0f, 0.f, 0.f));
 	gameOver.scale = 3.f;
@@ -555,10 +598,6 @@ void Game::initializeGame()
 	pauseback.loadMesh("meshes/background.obj");
 	pauseback.loadTexture(TextureType::Diffuse, "textures/Model Textures/pause.png");
 	pauseback.loadTexture(TextureType::Specular, "textures/noSpecular.png");
-
-	WeaponSprite.loadMesh("meshes/background.obj");
-	WeaponSprite.loadTexture(TextureType::Diffuse, "textures/Model Textures/WeaponSprite.png");
-	WeaponSprite.loadTexture(TextureType::Specular, "textures/noSpecular.png");
 
 	bulletMesh.loadFromFile("meshes/cube.obj");
 		player.morph.loadMesh("meshes/PyroboyAnim1.obj");
@@ -780,50 +819,18 @@ void Game::initializeGame()
 		enemies[i]->setProperty(10.f, 1.f);
 	}
 
-	WeaponSprite.scale = 0.8f; 
-
 	//load textures
 	//FENCE POSITIONS
 
 	background.scale = 10.0f;
 	background.position = glm::vec3(-2.0f * background.scale, -10.0f, 0.0f);
 	background.translate = glm::translate(background.translate, background.position);
-	background.rotate = glm::rotate(background.rotate, glm::pi<float>() / 2.f, glm::vec3(1.f, 0.f, 0.f));
+	//background.rotate = glm::rotate(background.rotate, glm::pi<float>() / 2.f, glm::vec3(1.f, 0.f, 0.f));
 	background.transform = background.translate * background.rotate * glm::scale(glm::mat4(), glm::vec3(background.scale));
 	 
 	pauseback.scale = 10.f;
 	pauseback.rotate = glm::rotate(pauseback.rotate, glm::pi<float>() *1.5f, glm::vec3(1.0f, 0.f, 0.f));
 	pauseback.transform = pauseback.translate * pauseback.rotate * glm::scale(glm::mat4(), glm::vec3(pauseback.scale));
-
-	chests.push_back(&chest);
-	chests.push_back(&chest2);
-
-	glm::vec3 chestPos[2];
-
-	chestPos[0] = glm::vec3(-40.0f, -10.0f, 0.0f);
-	chestPos[1] = glm::vec3( 20.5f, -36.0f, 0.0f);
-
-	chestMesh.loadFromFile("meshes/Chest.obj");
-	for (int i = 0; i < chests.size(); i++)
-	{
-		//chests[i]->loadMesh("meshes/Chest.obj");
-		chests[i]->applyMesh(chestMesh);
-		chests[i]->loadTexture(TextureType::Diffuse, "textures/Model Textures/GDW_ChestTexture.png");
-		chests[i]->loadTexture(TextureType::Specular, "textures/noSpecular.png");
-
-		chests[i]->position = chestPos[i];
-		chests[i]->translate = glm::translate(chests[i]->translate, chests[i]->position);
-		chests[i]->rotate = glm::rotate(chests[i]->rotate, glm::pi<float>() / -2.f, glm::vec3(1.f, 0.f, 0.f));
-		chests[i]->scale = 1.f;
-		chests[i]->transform = chests[i]->translate * chests[i]->rotate * glm::scale(glm::mat4(), glm::vec3(chests[i]->scale));
-	}
-
-	// WEAPON SPRITE POSITIONS
-	WeaponSprite.position = glm::vec3(-18.0f, -7.0f, -5.0f);
-	WeaponSprite.translate = glm::translate(WeaponSprite.translate, WeaponSprite.position);
-	WeaponSprite.rotate = glm::rotate(WeaponSprite.rotate, glm::pi<float>() / 2.0f, glm::vec3(1.f, 0.f, 0.f));
-	WeaponSprite.transform = WeaponSprite.translate * WeaponSprite.rotate * glm::scale(glm::mat4(), glm::vec3(WeaponSprite.scale));
-	WeaponSprite.originalTransform = WeaponSprite.transform;
 
 	tree.position = glm::vec3(0.f,0.f,0.f);
 	tree_health = 3000.f; // tree starting health
@@ -1174,31 +1181,6 @@ void Game::update()
 		//SCALE THE OBJECT ACCORDINGLY
 
 		for (int j = 0; j < enemies.size(); j++) {
-			//glm::vec3 enemyLocation = glm::vec3(enemies[j]->translate*glm::vec4(glm::vec3(1.f, 1.f, 1.f), 1.0));
-			TreeWasAttacked(enemies[j], playerLocation);
-			for (int i = 0; i < trap.size() - 1; i++)
-			{
-
-				glm::vec3 trapLocation = glm::vec3(trap[i]->translate*glm::vec4(glm::vec3(0.f, 0.f, 0.f), 1.0));
-
-				if ((enemies[i]->position.x > trapLocation.x - 10.f && enemies[i]->position.x < trapLocation.x + 10.f)
-					&& (enemies[i]->position.y > trapLocation.y - 10.f  && enemies[i]->position.y < trapLocation.y + 10.f))
-
-				{
-					//std::cout << "LOL " << j << trap[i]->getBool() << std::endl;
-					trap[i]->setBool(false);
-					//trap.pop_back();
-
-					enemies[j]->position = glm::vec3(-100.f, -100.f, -2.f);
-					enemies[j]->setBool(true);
-
-					//enemies.pop_back(); // need to figure out how to pop back specific enemies also need to figure out how to check in the if statement for all enemies instead of just one
-					// will probably have to do some kind of loop that loops through each enemy and then within the loop loops through every trap and sees if any enemies touch any traps 
-					//std::cout << trap.size() << std::endl;
-				}
-			}
-		}
-		for (int j = 0; j < enemies.size(); j++) {
 			glm::vec3 enemyLocation = glm::vec3(enemies[j]->translate*glm::vec4(glm::vec3(0.f, 0.f, 0.f), 1.0));
 			//TreeWasAttacked(*enemies[j], playerLocation);
 			for (int i = 0; i < bullets.size(); i++)
@@ -1377,18 +1359,6 @@ void Game::update()
 			fences[i]->transform = fences[i]->translate * fences[i]->rotate * glm::scale(glm::mat4(), glm::vec3(fences[i]->scale));
 		}*/
 
-		for (int i = 0; i < rocks.size(); i++)
-		{
-			rocks[i]->transform = rocks[i]->translate * rocks[i]->rotate * glm::scale(glm::mat4(), glm::vec3(rocks[i]->scale));
-		}
-
-		for (int i = 0; i < chests.size(); i++)
-		{
-			chests[i]->transform = chests[i]->translate * chests[i]->rotate * glm::scale(glm::mat4(), glm::vec3(chests[i]->scale));
-		}
-
-		WeaponSprite.transform = player.translate * WeaponSprite.originalTransform;
-
 		for (int i = 0; i < hearts.size(); i++)
 		{
 			hearts[i]->transform = player.translate * hearts[i]->originalTransform;
@@ -1551,7 +1521,15 @@ void Game::draw()
 	glClearColor(0.5, 0.5, 0.5, 0);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	//render stuff
+	sceneBuffer.bindFrameBufferForDrawing();
+	sceneBuffer.clearFrameBuffer(glm::vec4(0));
+
+	// Set material properties
+	materials["default"]->sendUniform("u_lightPos",cameraTransform * directionalLight.positionOrDirection);
+
+	// draw the scene to the fbo
+	//drawScene(playerCamera);'
+	sceneBuffer.unbindFrameBuffer(WINDOW_WIDTH, WINDOW_HEIGHT);
 
 	background.draw(phong, cameraTransform, cameraProjection, pointLights, directionalLight);
 	tree.draw(phong, cameraTransform, cameraProjection, pointLights, directionalLight);
@@ -1560,28 +1538,7 @@ void Game::draw()
 		if (!enemies[i]->getBool())
 			enemies[i]->draw(phong, cameraTransform, cameraProjection, pointLights, directionalLight);
 	}
-	for (int i = 0; i < trap.size(); i++)
-	{
-		if (trap[i]->getBool())
-		trap[i]->draw(phong, cameraTransform, cameraProjection, pointLights, directionalLight);
-	}
 	player.draw(phong, cameraTransform, cameraProjection, pointLights, directionalLight);
-
-
-	for (int i = 0; i < fences.size(); i++)
-	{
-		fences[i]->draw(phong, cameraTransform, cameraProjection, pointLights, directionalLight);
-	}
-	
-	for (int i = 0; i < rocks.size(); i++)
-	{
-		rocks[i]->draw(phong, cameraTransform, cameraProjection, pointLights, directionalLight);
-	}
-
-	for (int i = 0; i < chests.size(); i++)
-	{
-		chests[i]->draw(phong, cameraTransform, cameraProjection, pointLights, directionalLight);
-	}
 
 	//WeaponSprite.draw(phong, cameraTransform, cameraProjection, pointLights, directionalLight);
 
@@ -1600,8 +1557,8 @@ void Game::draw()
 		bullets[i]->draw(phong, cameraTransform, cameraProjection, pointLights, directionalLight);
 	}
 	drawHUD();
-
 	emitter.draw(player.transform, cameraTransform, cameraProjection);
+
 
 	glutSwapBuffers();
 
@@ -1628,7 +1585,7 @@ void Game::keyboardDown(unsigned char key, int mouseX, int mouseY)
 		if (arrow.position == glm::vec3(-30.f, -1.f, 0.f))
 		{
 			state = GameStates::PLAYING;
-			background.scale = 20.f;
+			background.scale = 1.f;
 
 			cameraTransform = glm::lookAt(cameraEye,
 				cameraCtr, glm::vec3(0.f, -1.f, 0.f));
@@ -1682,8 +1639,7 @@ void Game::keyboardDown(unsigned char key, int mouseX, int mouseY)
 		if (!pause)
 		{
 			state = GameStates::PLAYING;
-			background.scale = 30.f;
-
+			background.scale = 1.f;
 			cameraTransform = glm::lookAt(cameraEye,
 				cameraCtr, glm::vec3(0.f, -1.f, 0.f));
 			originalCameraTransform = cameraTransform;
@@ -1691,83 +1647,6 @@ void Game::keyboardDown(unsigned char key, int mouseX, int mouseY)
 			cameraProjection = glm::perspective(150.f, (float)WINDOW_WIDTH / (float)WINDOW_HEIGHT, 0.1f, 1000.f);
 		}
 
-		break;
-	case ' ':
-		iKeyDown = true;
-		std::cout << numTraps;
-		trap1.scale = 4.f;
-		trap2.scale = 4.f;
-		trap3.scale = 4.f;
-		trap4.scale = 4.f;
-		trap5.scale = 4.f;
-		//tranformations
-		// line below for displaying obj at intended location  
-
-		switch (numTraps) {
-		case(0):
-			trap1.position = playerLocation;
-			trap1.translate = glm::translate(trap1.translate, trap1.position);
-			trap1.rotate = glm::rotate(trap1.rotate, glm::pi<float>() / 4.f, glm::vec3(0.f, 1.f, 0.f));
-			trap1.rotate = glm::rotate(trap1.rotate, glm::pi<float>() / 2.f, glm::vec3(1.f, 0.f, 0.f));
-			trap1.transform = trap1.translate * trap1.rotate* glm::scale(glm::mat4(), glm::vec3(trap1.scale));
-			//trap.push_back(&trap1);
-			//std::cout << &trap1;
-
-			numTraps++;
-			break;
-		case(1):
-
-			trap2.position = playerLocation;
-			trap2.translate = glm::translate(trap2.translate, trap2.position);
-			trap2.rotate = glm::rotate(trap2.rotate, glm::pi<float>() / 4.f, glm::vec3(0.f, 1.f, 0.f));
-			trap2.rotate = glm::rotate(trap2.rotate, glm::pi<float>() / 2.f, glm::vec3(1.f, 0.f, 0.f));
-
-			trap2.transform = trap2.translate * trap2.rotate* glm::scale(glm::mat4(), glm::vec3(trap2.scale));
-			//trap.push_back(&trap2);
-
-			numTraps++;
-			break;
-		case(2):
-			trap3.position = playerLocation;
-			trap3.translate = glm::translate(trap3.translate, trap3.position);
-			trap3.rotate = glm::rotate(trap3.rotate, glm::pi<float>() / 4.f, glm::vec3(0.f, 1.f, 0.f));
-			trap3.rotate = glm::rotate(trap3.rotate, glm::pi<float>() / 2.f, glm::vec3(1.f, 0.f, 0.f));
-
-			trap3.transform = trap3.translate * trap3.rotate* glm::scale(glm::mat4(), glm::vec3(trap3.scale));
-			//trap.push_back(&trap3);
-
-			//std::cout << "trap3 x " << trap3.position.x << " trap3 y " << trap3.position.y << std::endl;
-
-			numTraps++;
-			break;
-		case(3):
-			trap4.position = playerLocation;
-			trap4.translate = glm::translate(trap4.translate, trap4.position);
-			trap4.rotate = glm::rotate(trap4.rotate, glm::pi<float>() / 4.f, glm::vec3(0.f, 1.f, 0.f));
-			trap4.rotate = glm::rotate(trap4.rotate, glm::pi<float>() / 2.f, glm::vec3(1.f, 0.f, 0.f));
-
-			trap4.transform = trap4.translate * trap4.rotate* glm::scale(glm::mat4(), glm::vec3(trap4.scale));
-			//trap.push_back(&trap4);
-
-			numTraps++;
-
-	
-			//std::cout << "trap4 x " << trap4.position.x << " trap4 y " << trap4.position.y << std::endl;
-
-			break;
-		case(4):
-			trap5.position = playerLocation;
-			trap5.translate = glm::translate(trap5.translate, trap5.position);
-			trap5.rotate = glm::rotate(trap5.rotate, glm::pi<float>() / 4.f, glm::vec3(0.f, 1.f, 0.f));
-			trap5.rotate = glm::rotate(trap5.rotate, glm::pi<float>() / 2.f, glm::vec3(1.f, 0.f, 0.f));
-
-			trap5.transform = trap5.translate * trap5.rotate* glm::scale(glm::mat4(), glm::vec3(trap5.scale));
-			//trap.push_back(&trap5);
-
-			//std::cout << "trap5 x " << trap5.position.x << " trap5 y " << trap5.position.y << std::endl;
-
-			numTraps++;
-		}
 		break;
 	default:
 		break;
