@@ -195,9 +195,10 @@ void Game::initializeParticles()
 {
 	// Init particle emitter
 	// Set the emitter properties
-	emitter.lifeRange = glm::vec3(1.0f, 3.0f, 0.0f);
+	emitter.lifeRange = glm::vec3(1.0f, 2.0f, 0.0f);
 	emitter.initialForceMin = glm::vec3(-3.0f, 5.0f, -4.0f);
-	emitter.initialForceMax = glm::vec3(3.0f, 15.0f, -10.0f);
+	emitter.initialForceMax = glm::vec3(4.0f, 5.0f, -10.0f);
+	emitter.initialPosition = glm::vec3(93.f, -50.f, -13.f);
 
 	emitter.material = materials["particles"];
 	emitter.texture = textures["smoke"];
@@ -397,15 +398,15 @@ void Game::initUIObjects()
 //load everything in here
 void Game::initializeGame()
 {
-	se.Init();
-	result = se.system->createSound("sounds/testmusic.mp3", FMOD_3D, 0, &sound);
-	FmodErrorCheck(result);
-	result = sound->set3DMinMaxDistance(0.0f, 30000.0f);
-	FmodErrorCheck(result);
-	result = sound->setMode(FMOD_LOOP_NORMAL);
-	FmodErrorCheck(result);
-	result = se.system->playSound(sound, 0, false, &channel);
-	FmodErrorCheck(result);
+	//se.Init();
+	//result = se.system->createSound("sounds/testmusic.mp3", FMOD_3D, 0, &sound);
+	//FmodErrorCheck(result);
+	//result = sound->set3DMinMaxDistance(0.0f, 30000.0f);
+	//FmodErrorCheck(result);
+	//result = sound->setMode(FMOD_LOOP_NORMAL);
+	//FmodErrorCheck(result);
+	//result = se.system->playSound(sound, 0, false, &channel);
+	//FmodErrorCheck(result);
 
 	updateTimer = new Timer();
 
@@ -538,7 +539,7 @@ void Game::initializeGame()
 		rocks[i]->transform = rocks[i]->translate * rocks[i]->rotate * glm::scale(glm::mat4(), glm::vec3(rocks[i]->scale));
 	}
 
-	background.loadMesh("meshes/A_Background.obj");
+	background.loadMesh("meshes/map.obj");
 	background.loadTexture(TextureType::Diffuse, "textures/Model Textures/Background.png");
 	background.loadTexture(TextureType::Specular, "textures/noSpecular.png");
 
@@ -562,6 +563,8 @@ void Game::initializeGame()
 
 	bulletMesh.loadFromFile("meshes/cube.obj");
 		player.morph.loadMesh("meshes/PyroboyAnim1.obj");
+		player.morph.loadTexture(TextureType::Diffuse, "textures/Model Textures/pyroboy_flipped.png");
+		player.morph.loadTexture(TextureType::Specular, "textures/noSpecular.png");
 		 run1.loadFromFile("meshes/PyroboyAnim1.obj");
 		 run2.loadFromFile("meshes/PyroboyAnim2.obj");
 		 run3.loadFromFile("meshes/PyroboyAnim3.obj");
@@ -610,7 +613,7 @@ void Game::initializeGame()
 	player.playerMesh.push_back(run18);
 	player.playerMesh.push_back(run19);
 
-	player.loadTexture(TextureType::Diffuse, "textures/Model Textures/GDW_PyroboyTexture.png");
+	player.loadTexture(TextureType::Diffuse, "textures/Model Textures/pyroboy_flipped.png");
 	player.loadTexture(TextureType::Specular, "textures/noSpecular.png");
 
 	//player_health = 1500; // player starting health
@@ -785,10 +788,13 @@ void Game::initializeGame()
 	//load textures
 	//FENCE POSITIONS
 
-	background.scale = 10.0f;
-	background.position = glm::vec3(-2.0f * background.scale, -10.0f, 0.0f);
+	// BG Stuff
+	background.scale = 2.0f;
+	background.position = glm::vec3(-2.0f * background.scale, -8.0f, 1.0f);
 	background.translate = glm::translate(background.translate, background.position);
-	background.rotate = glm::rotate(background.rotate, glm::pi<float>() / 2.f, glm::vec3(1.f, 0.f, 0.f));
+	background.rotate = glm::rotate(background.rotate, -glm::pi<float>() / 2.f, glm::vec3(1.f, 0.f, 0.f));
+	background.rotate = glm::rotate(background.rotate, -0.002f, glm::vec3(1.f, 0.f, 0.f));
+	//background.rotate = glm::rotate(background.rotate, -glm::pi<float>(), glm::vec3(0.f, 1.f, 0.f));
 	background.transform = background.translate * background.rotate * glm::scale(glm::mat4(), glm::vec3(background.scale));
 	 
 	pauseback.scale = 10.f;
@@ -1069,7 +1075,7 @@ void Game::update()
 			glm::vec4(glm::vec3(0.f, 0.f, 0.f), 1.0));
 		if (wKeyDown) {
 			/*std::cout << glm::to_string(player.transform) << std::endl;*/
-			if (playerLocation.y >-80 * (background.scale/8.f)) {
+			if (playerLocation.y >-80 * (background.scale/3.f)) {
 
 				if (isDown)
 				{
@@ -1094,7 +1100,7 @@ void Game::update()
 			}
 		}
 		if (sKeyDown) {
-			if (playerLocation.y <120 * (background.scale/8.f)) {
+			if (playerLocation.y <120 * (background.scale/3.f)) {
 				if (isUp)
 				{
 					player.rotate = glm::rotate(player.rotate, glm::pi<float>(), glm::vec3(0.f, 1.f, 0.f));
@@ -1121,7 +1127,7 @@ void Game::update()
 		}
 		if (aKeyDown) {
 			/*std::cout << glm::to_string(player.transform) << std::endl;*/
-			if (playerLocation.x <100.f * (background.scale/8.f)) {
+			if (playerLocation.x < 100.f * (background.scale/3.f)) {
 				if (isUp)
 				{
 					player.rotate = glm::rotate(player.rotate, glm::pi<float>() / -2.f, glm::vec3(0.f, 1.f, 0.f));
@@ -1148,7 +1154,7 @@ void Game::update()
 
 		if (dKeyDown) {
 			/*std::cout << glm::to_string(player.transform) << std::endl;*/
-			if (playerLocation.x >-100.f * (background.scale/8.f)) {
+			if (playerLocation.x >-100.f * (background.scale/3.f)) {
 				if (isUp)
 				{
 					player.rotate = glm::rotate(player.rotate, glm::pi<float>() / 2.f, glm::vec3(0.f, 1.f, 0.f));
@@ -1289,7 +1295,7 @@ void Game::update()
 							(glm::pi<float>() - atan((playerLocation.y - enemies[i]->position.y) /
 							(playerLocation.x - enemies[i]->position.x))), glm::vec3(0.f, 0.f, 1.f));
 						enemies[i]->rotate = glm::rotate(glm::mat4(),
-							(glm::pi<float>()  - atan((playerLocation.y - enemies[i]->position.y) /
+							(glm::pi<float>() - atan((playerLocation.y - enemies[i]->position.y) /
 							(playerLocation.x - enemies[i]->position.x))), glm::vec3(0.f, 0.f, 1.f));
 					}
 					else if ((playerLocation.x - enemies[i]->position.x) >= 0 &&
@@ -1409,7 +1415,6 @@ void Game::update()
 		cameraTransform = originalCameraTransform * player.originalTranslate;
 		cameraTransform[1] = -cameraTransform[1];
 
-		emitter.initialPosition = player.position;
 		emitter.update(deltaTime);
 
 		if (treeDead|| playerDead)
@@ -1560,14 +1565,15 @@ void Game::draw()
 		if (!enemies[i]->getBool())
 			enemies[i]->draw(phong, cameraTransform, cameraProjection, pointLights, directionalLight);
 	}
-	for (int i = 0; i < trap.size(); i++)
+	/*for (int i = 0; i < trap.size(); i++)
 	{
 		if (trap[i]->getBool())
 		trap[i]->draw(phong, cameraTransform, cameraProjection, pointLights, directionalLight);
 	}
+	*/
 	player.draw(phong, cameraTransform, cameraProjection, pointLights, directionalLight);
 
-
+	/*
 	for (int i = 0; i < fences.size(); i++)
 	{
 		fences[i]->draw(phong, cameraTransform, cameraProjection, pointLights, directionalLight);
@@ -1585,7 +1591,7 @@ void Game::draw()
 
 	//WeaponSprite.draw(phong, cameraTransform, cameraProjection, pointLights, directionalLight);
 
-	/*for (int i = 0; i < hearts.size()-1; i++)
+	for (int i = 0; i < hearts.size()-1; i++)
 	{
 		if(hearts[i]->active)
 		hearts[i]->draw(phong, cameraTransform, cameraProjection, pointLights, directionalLight);
@@ -1628,7 +1634,7 @@ void Game::keyboardDown(unsigned char key, int mouseX, int mouseY)
 		if (arrow.position == glm::vec3(-30.f, -1.f, 0.f))
 		{
 			state = GameStates::PLAYING;
-			background.scale = 20.f;
+			background.scale = 2.f;
 
 			cameraTransform = glm::lookAt(cameraEye,
 				cameraCtr, glm::vec3(0.f, -1.f, 0.f));
@@ -1682,7 +1688,7 @@ void Game::keyboardDown(unsigned char key, int mouseX, int mouseY)
 		if (!pause)
 		{
 			state = GameStates::PLAYING;
-			background.scale = 30.f;
+			background.scale = 2.f;
 
 			cameraTransform = glm::lookAt(cameraEye,
 				cameraCtr, glm::vec3(0.f, -1.f, 0.f));
