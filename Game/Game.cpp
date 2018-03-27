@@ -1510,6 +1510,35 @@ void Game::draw()
 
 	sceneBuffer.bindFrameBufferForDrawing();
 	sceneBuffer.clearFrameBuffer(glm::vec4(0));
+
+	//meshes["quad"]->draw();
+	sceneBuffer.unbindFrameBuffer(WINDOW_WIDTH, WINDOW_HEIGHT);
+
+
+	//brightPass(); // Implement this function!
+	//blurBrightPass(); // Implement this function!
+
+	//				  // Set material properties
+	//materials["default"]->sendUniform("u_lightPos", cameraTransform * directionalLight.positionOrDirection);
+
+	//sceneBuffer.bindTextureForSampling(0, GL_TEXTURE1);
+	//blurBuffer.bindTextureForSampling(0, GL_TEXTURE0);
+
+
+	////FrameBufferObject::unbindFrameBuffer(WINDOW_WIDTH, WINDOW_HEIGHT);
+	////FrameBufferObject::clearFrameBuffer(glm::vec4(0));
+	//materials["bloom"]->bind();
+	//materials["bloom"]->sendUniformMat4("u_mvp", glm::value_ptr(emptyMat), false);
+	//materials["bloom"]->sendUniformMat4("u_mv", glm::value_ptr(emptyMat), false);
+
+
+
+	//////////////////////////////////////////////////////////////////////////
+	// UNBIND TEXTURES
+	//////////////////////////////////////////////////////////////////////////
+	//sceneBuffer.unbindTexture(GL_TEXTURE1);
+	//blurBuffer.unbindTexture(GL_TEXTURE0);
+
 	background.draw(phong, cameraTransform, cameraProjection, pointLights, directionalLight);
 	tree.draw(phong, cameraTransform, cameraProjection, pointLights, directionalLight);
 	for (int i = 0; i < enemies.size(); i++)
@@ -1535,35 +1564,7 @@ void Game::draw()
 	}
 	drawHUD();
 	emitter.draw(player.transform, cameraTransform, cameraProjection);
-	sceneBuffer.unbindFrameBuffer(WINDOW_WIDTH, WINDOW_HEIGHT);
-
-
-	brightPass(); // Implement this function!
-	blurBrightPass(); // Implement this function!
-
-	// Set material properties
-	materials["default"]->sendUniform("u_lightPos", cameraTransform * directionalLight.positionOrDirection);
-
-	sceneBuffer.bindTextureForSampling(0, GL_TEXTURE1);
-	blurBuffer.bindTextureForSampling(0, GL_TEXTURE0);
-
-
-	//FrameBufferObject::unbindFrameBuffer(WINDOW_WIDTH, WINDOW_HEIGHT);
-	//FrameBufferObject::clearFrameBuffer(glm::vec4(0));
-	materials["bloom"]->bind();
-	materials["bloom"]->sendUniformMat4("u_mvp", glm::value_ptr(emptyMat), false);
-	materials["bloom"]->sendUniformMat4("u_mv", glm::value_ptr(emptyMat), false);
-
-
 	meshes["quad"]->draw();
-
-	//////////////////////////////////////////////////////////////////////////
-	// UNBIND TEXTURES
-	//////////////////////////////////////////////////////////////////////////
-	sceneBuffer.unbindTexture(GL_TEXTURE1);
-	blurBuffer.unbindTexture(GL_TEXTURE0);
-	// draw the scene to the fbo
-	//drawScene(playerCamera);'
 
 	glutSwapBuffers();
 
