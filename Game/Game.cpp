@@ -243,6 +243,9 @@ void Game::initUIObjects()
 	std::shared_ptr<GameObject> treeUI2 = std::make_shared<GameObject>();
 	std::shared_ptr<GameObject> treeUI1 = std::make_shared<GameObject>();
 
+	std::shared_ptr<GameObject> treeAlert = std::make_shared<GameObject>();
+	std::shared_ptr<GameObject> playerAlert = std::make_shared<GameObject>();
+
 	// Tutorial thing
 	std::shared_ptr<GameObject> protect = std::make_shared<GameObject>();
 	protect->loadMesh("meshes/UI.obj");
@@ -334,6 +337,22 @@ void Game::initUIObjects()
 	treeUI1->loadTexture(TextureType::Specular, "textures/noSpecular.png");
 	// 
 
+	//Alert UI Elements
+	playerAlert->loadMesh("meshes/UI.obj");
+	playerAlert->loadTexture(TextureType::Diffuse, "textures/UI/UI2.png");
+	playerAlert->loadTexture(TextureType::Specular, "textures/noSpecular.png");
+
+	treeAlert->loadMesh("meshes/UI.obj");
+	treeAlert->loadTexture(TextureType::Diffuse, "textures/UI/UI3.png");
+	treeAlert->loadTexture(TextureType::Specular, "textures/noSpecular.png");
+
+	// Put them into the other UI list
+	otherUI["playerAlert"] = playerAlert;
+	otherUI["playerAlert"]->shouldDraw = false;
+
+	otherUI["treeAlert"] = treeAlert;
+	otherUI["treeAlert"]->shouldDraw = false;
+
 	//playerUI10->transform = playerUI10->translate * playerUI10->rotate * glm::scale(glm::mat4(), glm::vec3(playerUI10->scale));
 	//treeUI10->transform = treeUI10->translate * treeUI10->rotate * glm::scale(glm::mat4(), glm::vec3(treeUI10->scale));
 
@@ -399,6 +418,14 @@ void Game::initUIObjects()
 	}
 	protect->transform = 
 		glm::translate(glm::mat4(1.0f), glm::vec3(float(WINDOW_WIDTH) / 2, float(WINDOW_HEIGHT) / 2, -1.0f))
+		* glm::scale(glm::mat4(1.0f), glm::vec3(300.0f, 150.f, 1.f));
+
+	playerAlert->transform =
+		glm::translate(glm::mat4(1.0f), glm::vec3(float(WINDOW_WIDTH) / 4, float(WINDOW_HEIGHT) / 2, -1.0f))
+		* glm::scale(glm::mat4(1.0f), glm::vec3(300.0f, 150.f, 1.f));
+
+	treeAlert->transform =
+		glm::translate(glm::mat4(1.0f), glm::vec3(float(WINDOW_WIDTH) * 0.75, float(WINDOW_HEIGHT) / 2, -1.0f))
 		* glm::scale(glm::mat4(1.0f), glm::vec3(300.0f, 150.f, 1.f));
 
 
@@ -634,7 +661,7 @@ void Game::initializeGame()
 	player.loadTexture(TextureType::Diffuse, "textures/Model Textures/pyroboy_flipped.png");
 	player.loadTexture(TextureType::Specular, "textures/noSpecular.png");
 
-	//player_health = 1500; // player starting health
+	player_health = player_start_health; // player starting health
 	player.position = glm::vec3(0.f, -10.f, 0.f);
 	player.speed = 1.5f;
 
@@ -892,7 +919,7 @@ void Game::initializeGame()
 	pauseback.transform = pauseback.translate * pauseback.rotate * glm::scale(glm::mat4(), glm::vec3(pauseback.scale));
 
 	tree.position = glm::vec3(0.0001f,-0.2f,0.f);
-	tree_health = 3000.f; // tree starting health
+	tree_health = tree_start_health; // tree starting health
 	tree.scale = 2.5f;
 	tree.rotate = glm::rotate(tree.rotate, glm::pi<float>() /-2.f, glm::vec3(1.0f, 0.f, 0.f));
 	tree.translate = glm::translate(tree.translate, tree.position);
@@ -940,7 +967,7 @@ void Game::initializeGame()
 
 void Game::TreeWasAttacked(Enemy* _x, glm::vec3 pos)
 {
-	if (_x->inArea(glm::vec3(0.f, 0.f, 0.f)))
+	if (_x->inArea(glm::vec3(0.f, 0.f, 0.), objType::T_OBJ))
 	{
 		tree_health -= _x->getAttack();
 		//std::cout << tree_health << std::endl;
@@ -948,7 +975,6 @@ void Game::TreeWasAttacked(Enemy* _x, glm::vec3 pos)
 		//{
 			if (tree_health == 0) // we can just use the direct health value now
 			{
-				
 					player.position = glm::vec3(0.f,-10.f,0.f);
 					bulletTime = 0;
 					t = 0;
@@ -967,7 +993,7 @@ void Game::TreeWasAttacked(Enemy* _x, glm::vec3 pos)
 		//}
 	}
 
-	if (_x->inArea(pos)) // player taking damage
+	if (_x->inArea(pos, objType::P_OBJ)) // player taking damage
 	{
 		player_health -= _x->getAttack(); 
 		//std::cout << player_health << std::endl;
@@ -1084,6 +1110,50 @@ void Game::uiDraw()
 
 	glutSwapBuffers();
 }
+
+void Game::updateAlerts()
+{
+	std::cout << "Tree: " << tree_health << std::endl;
+	std::cout << "Player: " << player_health << std::endl;
+	if (playerDamaged || treeDamaged)
+	{
+		alertTimer += dt;
+
+		if (playerDamaged == true)
+		{
+			if (alertTimer <= 2.f)
+			{
+				otherUI["playerAlert"]->shouldDraw = true;
+			}
+
+			else if (alertTimer <= 4.f)
+			{
+				otherUI["playerAlert"]->shouldDraw = false;				
+			}
+
+			else { alertTimer = 0.f; }
+		}
+
+		if (treeDamaged == true)
+		{
+			if (alertTimer <= 2.f)
+			{
+				otherUI["treeAlert"]->shouldDraw = true;
+			}
+
+			else if (alertTimer <= 4.f)
+			{
+				otherUI["treeAlert"]->shouldDraw = false;
+			}
+
+			else { alertTimer = 0.f; }
+		}
+	}
+
+	else { alertTimer = 0.f; }
+	std::cout << alertTimer << std::endl;
+}
+
 void Game::update()
 {
 	background.transform = background.translate * background.rotate * glm::scale(glm::mat4(), glm::vec3(background.scale));
@@ -1237,9 +1307,14 @@ void Game::update()
 		}
 		//SCALE THE OBJECT ACCORDINGLY
 
+		// Store current health values and then loop through all enemies
+		float previousTreeHealth = tree_health;
+		float previousPlayerHealth = player_health;
 		for (int j = 0; j < enemies.size(); j++) {
 			glm::vec3 enemyLocation = glm::vec3(enemies[j]->translate*glm::vec4(glm::vec3(0.f, 0.f, 0.f), 1.0));
-			//TreeWasAttacked(enemies[j], playerLocation);
+
+			TreeWasAttacked(enemies[j], playerLocation); // check if anything is being attacked
+
 			for (int i = 0; i < bulletQ.size(); i++)
 			{
 				tempBullet = bulletQ.front();
@@ -1271,6 +1346,12 @@ void Game::update()
 				enemies[j]->position = glm::vec3(-100.f, -100.f, -2.f);
 			}
 		}
+		if (tree_health < previousTreeHealth) { treeDamaged = true; } // check if tree took damage at all
+		else { treeDamaged = false; }
+		if (player_health < previousPlayerHealth) { playerDamaged = true; } // check if tree took damage at all
+		else { playerDamaged = false; }
+
+		updateAlerts();
 		if (upKey)
 		{
 			createBullet(playerLocation, up);
@@ -1574,29 +1655,29 @@ void Game::drawHUD()
 
 	// update hearts based on player health and output num value for it
 	//std::cout << "players health: " << player_health << std::endl;
-	if (player_health <= 150) { switchUIToDraw(playerUI["playerHP1"], PLAYER); }
-	else if (player_health <= 300) { switchUIToDraw(playerUI["playerHP2"], PLAYER); }
-	else if (player_health <= 450) { switchUIToDraw(playerUI["playerHP3"], PLAYER); }
-	else if (player_health <= 600) { switchUIToDraw(playerUI["playerHP4"], PLAYER); }
-	else if (player_health <= 750) { switchUIToDraw(playerUI["playerHP5"], PLAYER); }
-	else if (player_health <= 900) { switchUIToDraw(playerUI["playerHP6"], PLAYER); }
-	else if (player_health <= 1050) { switchUIToDraw(playerUI["playerHP7"], PLAYER); }
-	else if (player_health <= 1200) { switchUIToDraw(playerUI["playerHP8"], PLAYER); }
-	else if (player_health <= 1350) { switchUIToDraw(playerUI["playerHP9"], PLAYER); }
-	else if (player_health <= 1500) { switchUIToDraw(playerUI["playerHP10"], PLAYER); }
+	if (player_health <= player_start_health * 0.1) { switchUIToDraw(playerUI["playerHP1"], PLAYER); }
+	else if (player_health <= player_start_health * 0.2) { switchUIToDraw(playerUI["playerHP2"], PLAYER); }
+	else if (player_health <= player_start_health * 0.3) { switchUIToDraw(playerUI["playerHP3"], PLAYER); }
+	else if (player_health <= player_start_health * 0.4) { switchUIToDraw(playerUI["playerHP4"], PLAYER); }
+	else if (player_health <= player_start_health * 0.5) { switchUIToDraw(playerUI["playerHP5"], PLAYER); }
+	else if (player_health <= player_start_health * 0.6) { switchUIToDraw(playerUI["playerHP6"], PLAYER); }
+	else if (player_health <= player_start_health * 0.7) { switchUIToDraw(playerUI["playerHP7"], PLAYER); }
+	else if (player_health <= player_start_health * 0.8) { switchUIToDraw(playerUI["playerHP8"], PLAYER); }
+	else if (player_health <= player_start_health * 0.9) { switchUIToDraw(playerUI["playerHP9"], PLAYER); }
+	else if (player_health <= player_start_health * 1) { switchUIToDraw(playerUI["playerHP10"], PLAYER); }
 	
 	// same thing with tree
 	//std::cout << "tree health: " << tree_health << std::endl;
-	if (tree_health <= 300) { switchUIToDraw(treeUI["treeHP1"], TREE); }
-	else if (tree_health <= 600) { switchUIToDraw(treeUI["treeHP2"], TREE); }
-	else if (tree_health <= 900) { switchUIToDraw(treeUI["treeHP3"], TREE); }
-	else if (tree_health <= 1200) { switchUIToDraw(treeUI["treeHP4"], TREE); }
-	else if (tree_health <= 1500) { switchUIToDraw(treeUI["treeHP5"], TREE); }
-	else if (tree_health <= 1800) { switchUIToDraw(treeUI["treeHP6"], TREE); }
-	else if (tree_health <= 2100) { switchUIToDraw(treeUI["treeHP7"], TREE); }
-	else if (tree_health <= 2400) { switchUIToDraw(treeUI["treeHP8"], TREE); }
-	else if (tree_health <= 2700) { switchUIToDraw(treeUI["treeHP9"], TREE); }
-	else if (tree_health <= 3000) { switchUIToDraw(treeUI["treeHP10"], TREE); }
+	if (tree_health <= tree_start_health * 0.1) { switchUIToDraw(treeUI["treeHP1"], TREE); }
+	else if (tree_health <= tree_start_health * 0.2) { switchUIToDraw(treeUI["treeHP2"], TREE); }
+	else if (tree_health <= tree_start_health * 0.3) { switchUIToDraw(treeUI["treeHP3"], TREE); }
+	else if (tree_health <= tree_start_health * 0.4) { switchUIToDraw(treeUI["treeHP4"], TREE); }
+	else if (tree_health <= tree_start_health * 0.5) { switchUIToDraw(treeUI["treeHP5"], TREE); }
+	else if (tree_health <= tree_start_health * 0.6) { switchUIToDraw(treeUI["treeHP6"], TREE); }
+	else if (tree_health <= tree_start_health * 0.7) { switchUIToDraw(treeUI["treeHP7"], TREE); }
+	else if (tree_health <= tree_start_health * 0.8) { switchUIToDraw(treeUI["treeHP8"], TREE); }
+	else if (tree_health <= tree_start_health * 0.9) { switchUIToDraw(treeUI["treeHP9"], TREE); }
+	else if (tree_health <= tree_start_health * 1) { switchUIToDraw(treeUI["treeHP10"], TREE); }
 	
 	// draw ui that's set to true
 	for (auto itr = playerUI.begin(); itr != playerUI.end(); itr++)
@@ -1613,12 +1694,10 @@ void Game::drawHUD()
 	//std::cout << t << std::endl;
 	if (t >= 5) { otherUI["protect"]->shouldDraw = false; }
 
-	switch (otherUI["protect"]->shouldDraw) {
-	case(true):
-		otherUI["protect"]->draw(noLight, glm::mat4(1.0f), cameraOrtho, pointLights, directionalLight);
-		break;
-	case(false):
-		break;
+	for (auto itr = otherUI.begin(); itr != otherUI.end(); itr++)
+	{
+		if (itr->second->shouldDraw == true)
+			itr->second->draw(noLight, glm::mat4(1.0f), cameraOrtho, pointLights, directionalLight);
 	}
 
 	glDisable(GL_BLEND);
@@ -1737,6 +1816,17 @@ void Game::keyboardDown(unsigned char key, int mouseX, int mouseY)
 
 		if (arrow.position == glm::vec3(-30.f, 25.f, 0.f))
 			exit(1);
+		break;
+	case'l':
+		state = GameStates::TUTORIAL;
+		background.scale = 2.f;
+
+		cameraTransform = glm::lookAt(cameraEye,
+			cameraCtr, glm::vec3(0.f, -1.f, 0.f));
+		originalCameraTransform = cameraTransform;
+
+		cameraProjection = glm::perspective(150.f, (float)WINDOW_WIDTH / (float)WINDOW_HEIGHT, 0.1f, 1000.f);
+		glViewport(0, 0, 20.f, 20.f);
 		break;
 	case 'w':
 

@@ -34,6 +34,7 @@ enum GameStates {
 	,EXIT
 	,TUTORIAL
 };
+
 class Game {
 public:
 	Game();
@@ -55,6 +56,7 @@ public:
 	void blurBrightPass();
 	void brightPass();
 	void switchUIToDraw(GameObject::Ptr, uiType);
+	void updateAlerts();
 	void drawHUD();
 	void pauseMenu();
 	void pauseUpdate();
@@ -73,7 +75,13 @@ public:
 	void fixAngle(float angle, glm::vec3 &dir);
 	void createBullet(glm::vec3 pos, glm::vec3 dir);
 	void TreeWasAttacked(Enemy* _x, glm::vec3 pos);
+
+	int tree_start_health = 50000;
+	int player_start_health = 10000;
+
+	float player_health;
 	float tree_health;
+
 	Timer* updateTimer = nullptr;
 	
 	std::string file = "textures/LUT.cube";
@@ -87,7 +95,6 @@ public:
 	std::map<std::string, GameObject::Ptr> playerUI, treeUI, otherUI;
 
 	Player player;
-	int player_health = 1500;
 
 	glm::vec4 bulletLocation= glm::vec4(0.f);
 	Mesh  insectMesh, trapMesh, run1,run2,run3,run4,run5,run6,run7,run8,run9,run10,run11,run12,run13,run14,run15,run16,run17,run18,run19
@@ -99,6 +106,8 @@ public:
 
 	float healthCounter=0.f, bulletTime = 0.f, bloomThreshold= 0.01f;
 	int numTraps = 0, counter, treeHeartCounter;
+
+	float alertTimer = 0.f;
 
 	// End me
 	Enemy enemy, enemy2, enemy3, enemy4, enemy5, enemy6, enemy7, enemy8, enemy9, enemy10, enemy11, enemy12, enemy13, enemy14;
@@ -154,6 +163,7 @@ public:
 	glm::vec3 left = glm::vec3(1.f, 0.f, 0.f);
 
 	bool shooting = false, pause = false, treeDead = false, playerDead = false;
+	bool treeDamaged = false, playerDamaged = false;
 
 	SoundEngine se;
 	FMOD_RESULT      result,blast;

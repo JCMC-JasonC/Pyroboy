@@ -13,7 +13,7 @@ public:
 
 	float getHealth();
 	float getAttack();
-	bool inArea(glm::vec3 &_pos);
+	bool inArea(glm::vec3 &_pos, objType type);
 
 	void update(float dt);
 	void seek(glm::vec3 &pos);
