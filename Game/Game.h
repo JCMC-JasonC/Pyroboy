@@ -18,6 +18,7 @@
 #include<vector>
 #include <map>
 #include <memory>
+#include <queue>
 
 #define WINDOW_WIDTH 1280
 #define WINDOW_HEIGHT 720
@@ -31,6 +32,7 @@ enum GameStates {
 	, PAUSE
 	, LOSE
 	,EXIT
+	,TUTORIAL
 };
 class Game {
 public:
@@ -97,14 +99,21 @@ public:
 
 	float healthCounter=0.f, bulletTime = 0.f, bloomThreshold= 0.01f;
 	int numTraps = 0, counter, treeHeartCounter;
-	Enemy enemy, enemy2, enemy3, enemy4, enemy5, enemy6;
-	Enemy insect, insect2, insect3, insect4, insect5, insect6;
+
+	// End me
+	Enemy enemy, enemy2, enemy3, enemy4, enemy5, enemy6, enemy7, enemy8, enemy9, enemy10, enemy11, enemy12, enemy13, enemy14;
+	Enemy enemy15, enemy16, enemy17, enemy18, enemy19, enemy20, enemy21, enemy22, enemy23, enemy24, enemy25, enemy26, enemy27, enemy28;
+
+	Enemy insect, insect2, insect3, insect4, insect5, insect6, insect7, insect8, insect9, insect10, insect11, insect12, insect13, insect14;
+	Enemy insect15, insect16, insect17, insect18, insect19, insect20, insect21, insect22, insect23, insect24, insect25, insect26, insect27, insect28;
 
 	std::vector<Enemy*> enemies;
-	Enemy* baseEnemy; // creating a base to copy from
 	std::vector<UIGameObjects*> hearts;
 	std::vector<UIGameObjects*> treeHearts;
 	std::vector<Bullet*> bullets;
+
+	std::queue<Bullet*> bulletQ;
+	Bullet* tempBullet;
 
 	std::vector<glm::vec3> positions;
 	std::vector<Light> pointLights;

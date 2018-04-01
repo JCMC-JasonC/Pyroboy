@@ -138,25 +138,6 @@ void Game::startDraw()
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	startupBack.draw(phong, cameraTransform, cameraProjection, pointLights, directionalLight);
-	//brightPass(); // Implement this function!
-	//blurBrightPass(); // Implement this function!
-
-	//sceneBuffer.bindTextureForSampling(0, GL_TEXTURE1);
-	//blurBuffer.bindTextureForSampling(0, GL_TEXTURE0);
-
-
-	////FrameBufferObject::unbindFrameBuffer(WINDOW_WIDTH, WINDOW_HEIGHT);
-	////FrameBufferObject::clearFrameBuffer(glm::vec4(0));
-	//materials["bloom"]->bind();
-	//materials["bloom"]->sendUniformMat4("u_mvp", glm::value_ptr(emptyMat), false);
-
-	//meshes["quad"]->draw();
-
-	////////////////////////////////////////////////////////////////////////////
-	//// UNBIND TEXTURES
-	////////////////////////////////////////////////////////////////////////////
-	//sceneBuffer.unbindTexture(GL_TEXTURE1);
-	//blurBuffer.unbindTexture(GL_TEXTURE0);
 	
 	glutSwapBuffers();
 }
@@ -220,8 +201,6 @@ void Game::mainMenu()
 	arrow.position =glm::vec3(-30.f, -1.f, 0.f);
 	arrow.translate = glm::translate(arrow.translate,arrow.position); //(-30f,-1f,0.f), 10,25
 	arrow.rotate = glm::rotate(arrow.rotate, glm::pi<float>()*0.f, glm::vec3(0.f,0.f,1.f));
-	
-	
 }
 void Game::initializeParticles()
 {
@@ -584,33 +563,6 @@ void Game::initializeGame()
 	ar[1] = -37.f;
 	int x = 0;
 
-	//rocks.push_back(&rock);
-	//rocks.push_back(&rock2);
-	//rocks.push_back(&rock3);
-	//rocks.push_back(&rock4);
-	//rocks.push_back(&rock5);
-	//
-	//glm::vec3 rockPos[5];
-	//rockPos[0] = glm::vec3(18.0f, 22.0f, 0.0f);
-	//rockPos[1] = glm::vec3(24.0f, -28.0f, 0.0f);
-	//rockPos[2] = glm::vec3(-25.0f, 21.0f, 0.0f);
-	//rockPos[3] = glm::vec3(-27.0f, -30.0f, 0.0f);
-	//rockPos[4] = glm::vec3(-24.0f, 28.0f, 0.0f);
-	//
-	//rockMesh.loadFromFile("meshes/Rock.obj");
-	//
-	//for (int i = 0; i < rocks.size(); i++)
-	//{
-	//	//rocks[i]->loadMesh("meshes/Rock.obj");
-	//	rocks[i]->applyMesh(rockMesh);
-	//	rocks[i]->loadTexture(TextureType::Diffuse, "textures/Model Textures/GDW_RockTexture.png");
-	//	rocks[i]->loadTexture(TextureType::Specular, "textures/noSpecular.png");
-	//	rocks[i]->scale = 2.2f;
-	//	rocks[i]->position = rockPos[i];
-	//	rocks[i]->translate = glm::translate(rocks[i]->translate, rocks[i]->position);
-	//	rocks[i]->transform = rocks[i]->translate * rocks[i]->rotate * glm::scale(glm::mat4(), glm::vec3(rocks[i]->scale));
-	//}
-
 	background.loadMesh("meshes/mapv2.obj");
 	background.loadTexture(TextureType::Diffuse, "textures/Model Textures/Background_01.png");
 	background.loadTexture(TextureType::Specular, "textures/noSpecular.png");
@@ -779,12 +731,64 @@ void Game::initializeGame()
 	enemy4.position = glm::vec3( 0.f,   -350.f, -2.f);
 	enemy5.position = glm::vec3( 400.f,  0.f,   -2.f);
 	enemy6.position = glm::vec3( 0.f,    400.f, -2.f);
+
+	enemy7.position = glm::vec3(-400.f, 400.f, -2.f);
+	enemy8.position = glm::vec3(200.f, 310.f, -2.f);
+	enemy9.position = glm::vec3(-300.f, 0.f, -2.f);
+	enemy10.position = glm::vec3(300.f, 0.f, -2.f);
+	enemy11.position = glm::vec3(309.f, -400.f, -2.f);
+	enemy12.position = glm::vec3(230.f, 180.f, -2.f);
+	enemy13.position = glm::vec3(-180.f, 230.f, -2.f);
+	enemy14.position = glm::vec3(-240.f, -400.f, -2.f);
+
+	enemy15.position = glm::vec3(-800.f, 20.f, -2.f);
+	enemy16.position = glm::vec3(1000.f, -880.f, -2.f);
+	enemy17.position = glm::vec3(-950.f, 700.f, -2.f);
+	enemy18.position = glm::vec3(0.f, -950.f, -2.f);
+	enemy19.position = glm::vec3(755.f, 0.f, -2.f);
+	enemy20.position = glm::vec3(0.f, 650.f, -2.f);
+
+	enemy21.position = glm::vec3(-850.f, 0.f, -2.f);
+	enemy22.position = glm::vec3(400.f, 610.f, -2.f);
+	enemy23.position = glm::vec3(-740.f, 0.f, -2.f);
+	enemy24.position = glm::vec3(430.f, 0.f, -2.f);
+	enemy25.position = glm::vec3(30.f, -840.f, -2.f);
+	enemy26.position = glm::vec3(10.f, 680.f, -2.f);
+	enemy27.position = glm::vec3(-580.f, 30.f, -2.f);
+	enemy28.position = glm::vec3(-740.f, -40.f, -2.f);
+
+	// Insect
 	insect.position = glm::vec3( 300.f,  100.f, -2.f);
 	insect2.position = glm::vec3(-100.f, 300.f, -2.f);
 	insect3.position = glm::vec3(250.f,  100.f, -2.f);
 	insect4.position = glm::vec3(0.f,    350.f, -2.f);
 	insect5.position = glm::vec3(-400.f, 0.f,   -2.f);
 	insect6.position = glm::vec3(0.f,   -400.f, -2.f);
+
+	insect7.position = glm::vec3(-100.f, -200.f, -2.f);
+	insect8.position = glm::vec3(140.f, 140.f, -2.f);
+	insect9.position = glm::vec3(-140.f, -140.f, -2.f);
+	insect10.position = glm::vec3(190.f, 450.f, -2.f);
+	insect11.position = glm::vec3(405.f, -300.f, -2.f);
+	insect12.position = glm::vec3(450.f, 300.f, -2.f);
+	insect13.position = glm::vec3(-360.f, -220.f, -2.f);
+	insect14.position = glm::vec3(0.f, -350.f, -2.f);
+
+	insect15.position = glm::vec3(-800.f, 0.f, -2.f);
+	insect16.position = glm::vec3(500.f, -800.f, -2.f);
+	insect17.position = glm::vec3(-750.f, 900.f, -2.f);
+	insect18.position = glm::vec3(0.f, -850.f, -2.f);
+	insect19.position = glm::vec3(600.f, 1000.f, -2.f);
+	insect20.position = glm::vec3(0.f, 940.f, -2.f);
+
+	insect21.position = glm::vec3(-800.f, 800.f, -2.f);
+	insect22.position = glm::vec3(600.f, 610.f, -2.f);
+	insect23.position = glm::vec3(-670.f, 770.f, -2.f);
+	insect24.position = glm::vec3(859.f, 0.f, -2.f);
+	insect25.position = glm::vec3(679.f, -740.f, -2.f);
+	insect26.position = glm::vec3(730.f, 880.f, -2.f);
+	insect27.position = glm::vec3(-680.f, 930.f, -2.f);
+	insect28.position = glm::vec3(-1040.f, -980.f, -2.f);
 
 	//Vector of positions
 	//pushback all positions
@@ -794,6 +798,7 @@ void Game::initializeGame()
 	positions.push_back(enemy2.position);
 	positions.push_back(enemy4.position);
 	positions.push_back(enemy6.position);
+
 	positions.push_back(insect.position);
 	positions.push_back(insect2.position);
 	positions.push_back(insect3.position);
@@ -803,18 +808,39 @@ void Game::initializeGame()
 
 	//Vector of enemies
 	//pushback all enemy objects
+	// Aliens
 	enemies.push_back(&enemy);
 	enemies.push_back(&enemy3);
 	enemies.push_back(&enemy5);
 	enemies.push_back(&enemy2);
 	enemies.push_back(&enemy4);
 	enemies.push_back(&enemy6);
+
+	enemies.push_back(&enemy7);
+	enemies.push_back(&enemy8);
+	enemies.push_back(&enemy9);
+	enemies.push_back(&enemy10);
+	enemies.push_back(&enemy11);
+	enemies.push_back(&enemy12);
+	enemies.push_back(&enemy13);
+	enemies.push_back(&enemy14);
+
+	// Insects
 	enemies.push_back(&insect);
 	enemies.push_back(&insect2);
 	enemies.push_back(&insect3);
 	enemies.push_back(&insect4);
 	enemies.push_back(&insect5);
 	enemies.push_back(&insect6);
+
+	enemies.push_back(&insect7);
+	enemies.push_back(&insect8);
+	enemies.push_back(&insect9);
+	enemies.push_back(&insect10);
+	enemies.push_back(&insect11);
+	enemies.push_back(&insect12);
+	enemies.push_back(&insect13);
+	enemies.push_back(&insect14);
 
 	alienMesh.loadFromFile("meshes/GDW_AlienNew.obj");
 	insectMesh.loadFromFile("meshes/GDW_ExpInsect.obj");
@@ -829,7 +855,6 @@ void Game::initializeGame()
 		enemies[i]->scale = 1.2f;
 		enemies[i]->setProperty(50.f, 1.f);
 	}
-	baseEnemy = enemies[0];
 	//explosive insect v1
 	for (int i = (enemies.size() / 2) / 2; i < (enemies.size() / 2); i++)
 	{
@@ -866,7 +891,7 @@ void Game::initializeGame()
 	pauseback.rotate = glm::rotate(pauseback.rotate, glm::pi<float>() *1.5f, glm::vec3(1.0f, 0.f, 0.f));
 	pauseback.transform = pauseback.translate * pauseback.rotate * glm::scale(glm::mat4(), glm::vec3(pauseback.scale));
 
-	tree.position = glm::vec3(0.f,0.f,0.f);
+	tree.position = glm::vec3(0.0001f,-0.2f,0.f);
 	tree_health = 3000.f; // tree starting health
 	tree.scale = 2.5f;
 	tree.rotate = glm::rotate(tree.rotate, glm::pi<float>() /-2.f, glm::vec3(1.0f, 0.f, 0.f));
@@ -966,12 +991,14 @@ void Game::createBullet(glm::vec3 pos, glm::vec3 dir)
 	
 	if (bulletTime < 0.01f)
 	{
-		bullets.push_back(new Bullet(bulletMesh,pos,1.f, 100.f, 15.f, dir));
+		//bullets.push_back(new Bullet(bulletMesh,pos,1.f, 100.f, 15.f, dir));
+		bulletQ.push(new Bullet(bulletMesh, pos, 1.f, 100.f, 15.f, dir));
 	}
 	else if(bulletTime > 0.4f)
 	{
 		bulletTime = 0.f;
-		bullets.push_back(new Bullet(bulletMesh, pos, 1.f, 100.f, 15.f, dir));
+		//bullets.push_back(new Bullet(bulletMesh, pos, 1.f, 100.f, 15.f, dir));
+		bulletQ.push(new Bullet(bulletMesh, pos, 1.f, 100.f, 15.f, dir));
 		
 	}
 }
@@ -1095,8 +1122,8 @@ void Game::update()
 			//rot = glm::rotate(rot, (glm::pi<float>() / 1.f), glm::vec3(0.f, 1.f, 0.f));
 			//rot = glm::rotate(rot, (glm::pi<float>() / -2.f), glm::vec3(1.f, 0.f, 0.f));
 			//rot = glm::rotate(rot, (glm::pi<float>() / 1.f), glm::vec3(0.f, 0.f, 1.f));
-			enemies.push_back(new Enemy(alienMesh, glm::vec3(50.f* ranPos, 50.f*ranPos, -2.f), rot, 1.2f, randSpeed, 30.f + (3.f * healthCounter), 1.f));
-			enemies.push_back(new Enemy(insectMesh, glm::vec3(-50.f* ranPos, 50.f*ranPos, -2.f), rot, 2.f, randSpeed, 30.f + (3.f * healthCounter), 1.f));
+			//enemies.push_back(new Enemy(alienMesh, glm::vec3(50.f* ranPos, 50.f*ranPos, -2.f), rot, 1.2f, randSpeed, 30.f + (3.f * healthCounter), 1.f));
+			//enemies.push_back(new Enemy(insectMesh, glm::vec3(-50.f* ranPos, 50.f*ranPos, -2.f), rot, 2.f, randSpeed, 30.f + (3.f * healthCounter), 1.f));
 			t = 0.f;
 			healthCounter++;
 		}
@@ -1213,19 +1240,30 @@ void Game::update()
 		for (int j = 0; j < enemies.size(); j++) {
 			glm::vec3 enemyLocation = glm::vec3(enemies[j]->translate*glm::vec4(glm::vec3(0.f, 0.f, 0.f), 1.0));
 			//TreeWasAttacked(enemies[j], playerLocation);
-			for (int i = 0; i < bullets.size(); i++)
+			for (int i = 0; i < bulletQ.size(); i++)
 			{
-				if ((bullets[i]->position.x > enemyLocation.x - 5.f && bullets[i]->position.x < enemyLocation.x + 5.f)
-					&& (bullets[i]->position.y > enemyLocation.y - 5.f && bullets[i]->position.y < enemyLocation.y + 5.f))
+				tempBullet = bulletQ.front();
+				if ((tempBullet->position.x > enemyLocation.x - 5.f && tempBullet->position.x < enemyLocation.x + 5.f)
+					&& (tempBullet->position.y > enemyLocation.y - 5.f && tempBullet->position.y < enemyLocation.y + 5.f))
 				{
 
-					enemies[j]->setProperty(enemies[j]->getHealth() - bullets[i]->getDamage(), enemies[j]->getAttack());
-					bullets[i]->position = glm::vec3(100.f, 100.f, 0.f);
-					bullets[i]->direction = glm::vec3(0.f, 1.f, 0.f);
-					bullets.erase(bullets.begin() + i);
-
-
+					enemies[j]->setProperty(enemies[j]->getHealth() - tempBullet->getDamage(), enemies[j]->getAttack());
+					tempBullet->position = glm::vec3(100.f, 100.f, 0.f);
+					tempBullet->direction = glm::vec3(0.f, 1.f, 0.f);
+					//bullets.erase(bullets.begin() + i);
 				}
+
+				bulletQ.pop();
+				bulletQ.push(tempBullet);
+				//if ((bullets[i]->position.x > enemyLocation.x - 5.f && bullets[i]->position.x < enemyLocation.x + 5.f)
+				//	&& (bullets[i]->position.y > enemyLocation.y - 5.f && bullets[i]->position.y < enemyLocation.y + 5.f))
+				//{
+				//
+				//	enemies[j]->setProperty(enemies[j]->getHealth() - bullets[i]->getDamage(), enemies[j]->getAttack());
+				//	bullets[i]->position = glm::vec3(100.f, 100.f, 0.f);
+				//	bullets[i]->direction = glm::vec3(0.f, 1.f, 0.f);
+				//	bullets.erase(bullets.begin() + i);
+				//}
 			}
 			if (enemies[j]->getHealth() <= 0)
 			{
@@ -1257,21 +1295,42 @@ void Game::update()
 		{
 
 		}
-		for (int i = 0; i < bullets.size(); i++)
+		for (int i = 0; i < bulletQ.size(); i++)
 		{
-			bullets[i]->update(deltaTime);
-			//bullets[i]->velocity = bullets[i]->direction * bullets[i]->speed;
-			bullets[i]->translate = glm::translate(glm::mat4(), bullets[i]->position);
-			bullets[i]->transform = bullets[i]->translate *bullets[i]->rotate * glm::scale(glm::mat4(), glm::vec3(bullets[i]->scale));
+			tempBullet = bulletQ.front();
 
-			bulletLocation += bullets[i]->transform * glm::vec4(glm::vec3(0.f), 1.f);
-			if ((bullets[i]->position.x > 100.f || bullets[i]->position.x < -100.f) || (bullets[i]->position.y > 100.f || bullets[i]->position.y < -100.f))
+			tempBullet->update(deltaTime);
+			//bullets[i]->velocity = bullets[i]->direction * bullets[i]->speed;
+			tempBullet->translate = glm::translate(glm::mat4(), tempBullet->position);
+			tempBullet->transform = tempBullet->translate *tempBullet->rotate * glm::scale(glm::mat4(), glm::vec3(tempBullet->scale));
+
+			bulletLocation += tempBullet->transform * glm::vec4(glm::vec3(0.f), 1.f);
+			if ((tempBullet->position.x > 100.f || tempBullet->position.x < -100.f) || (tempBullet->position.y > 100.f || tempBullet->position.y < -100.f))
 			{
 				//std::cout << glm::to_string(bullets[i]->position) << std::endl;
-				bullets.erase(bullets.begin() + i);
+				//bullets.erase(bullets.begin() + i);
 				bulletLocation = glm::vec4(0.f);
 			}
+
+			bulletQ.pop();
+			bulletQ.push(tempBullet);
 		}
+
+		//for (int i = 0; i < bullets.size(); i++)
+		//{
+		//	bullets[i]->update(deltaTime);
+		//	//bullets[i]->velocity = bullets[i]->direction * bullets[i]->speed;
+		//	bullets[i]->translate = glm::translate(glm::mat4(), bullets[i]->position);
+		//	bullets[i]->transform = bullets[i]->translate *bullets[i]->rotate * glm::scale(glm::mat4(), glm::vec3(bullets[i]->scale));
+		//
+		//	bulletLocation += bullets[i]->transform * glm::vec4(glm::vec3(0.f), 1.f);
+		//	if ((bullets[i]->position.x > 100.f || bullets[i]->position.x < -100.f) || (bullets[i]->position.y > 100.f || bullets[i]->position.y < -100.f))
+		//	{
+		//		//std::cout << glm::to_string(bullets[i]->position) << std::endl;
+		//		bullets.erase(bullets.begin() + i);
+		//		bulletLocation = glm::vec4(0.f);
+		//	}
+		//}
 
 		//enemies movement
 		for (int i = 0; i < enemies.size(); i++)
@@ -1297,23 +1356,24 @@ void Game::update()
 				//enemies[i]->seek(glm::vec3(0.f, 0.f, 0.f));
 				enemies[i]->velocity = glm::normalize(tree.position - enemies[i]->position) * enemies[i]->speed;
 
-				//enemies[i]->velocity = glm::normalize(playerLocation - enemies[i]->position) * enemies[i]->speed;
+				enemies[i]->velocity = glm::normalize(playerLocation - enemies[i]->position) * enemies[i]->speed;
 
 				// New things
 				glm::vec3 ePos = enemies[i]->position;
 				glm::vec3 tPos = tree.position;
 				glm::normalize(ePos);
 				glm::normalize(tPos);
-				float cosa = glm::dot(ePos, tPos);
-				glm::clamp(cosa, -1.0f, 1.0f);
+				//float cosa = glm::dot(ePos, tPos);
+				//glm::clamp(cosa, -1.0f, 1.0f);
 				glm::vec3 axis = glm::cross(ePos, tPos);
-				float angle = glm::degrees(glm::acos(cosa));
+				//std::cout << axis.x << " " << axis.y << " " << axis.z << std::endl;
+				//float angle = glm::degrees(glm::acos(cosa));
 				
 				glm::vec3 dirToEnemy;
 				dirToEnemy.x = tree.position.x - enemies[i]->position.x;
 				dirToEnemy.y = tree.position.y - enemies[i]->position.y;
 				
-				// Calculate player angle on y axis
+				// Calculate enemy angle on y axis
 				float rot = atan2(dirToEnemy.y, -dirToEnemy.x);
 
 				enemies[i]->rotate = glm::rotate(glm::mat4(), rot, axis);
@@ -1330,10 +1390,11 @@ void Game::update()
 					glm::vec3 to_vector = playerLocation;
 					glm::normalize(from_vector);
 					glm::normalize(to_vector);
-					float cosa = glm::dot(from_vector, to_vector);
-					glm::clamp(cosa, -1.0f, 1.0f);
+					//float cosa = glm::dot(from_vector, to_vector);
+					//glm::clamp(cosa, -1.0f, 1.0f);
 					glm::vec3 axis = glm::cross(from_vector, to_vector);
-					float angle = glm::degrees(glm::acos(cosa));
+					//std::cout << "PlayerAxis: " << axis.x << " " << axis.y << " " << axis.z << std::endl;
+					//float angle = glm::degrees(glm::acos(cosa));
 
 					glm::vec3 dirToEnemy;
 					dirToEnemy.x = playerLocation.x - enemies[i]->position.x;
@@ -1622,10 +1683,19 @@ void Game::draw()
 		if (treeHearts[i]->active)
 			treeHearts[i]->draw(phong, cameraTransform, cameraProjection, pointLights, directionalLight);
 	}*/
-	for (int i = 0; i < bullets.size(); i++)
+	for (int i = 0; i < bulletQ.size(); i++)
 	{
-		bullets[i]->draw(phong, cameraTransform, cameraProjection, pointLights, directionalLight);
+		tempBullet = bulletQ.front();
+		tempBullet->draw(phong, cameraTransform, cameraProjection, pointLights, directionalLight);
+
+		bulletQ.pop();
+		bulletQ.push(tempBullet);
 	}
+
+	//for (int i = 0; i < bullets.size(); i++)
+	//{
+	//	bullets[i]->draw(phong, cameraTransform, cameraProjection, pointLights, directionalLight);
+	//}
 	drawHUD();
 	emitter.draw(player.transform, cameraTransform, cameraProjection);
 
