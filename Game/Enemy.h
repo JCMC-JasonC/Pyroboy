@@ -25,6 +25,7 @@ public:
 		return collided;
 	}
 	float speed;
+	float shouldMove = true;
 	glm::vec3 direction;
 	glm::vec3 position;
 	glm::vec3 velocity;

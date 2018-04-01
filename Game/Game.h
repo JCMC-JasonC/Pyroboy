@@ -80,7 +80,7 @@ public:
 	ParticleEmitterSoA emitter;
 
 	Mesh treeMesh, playerMesh,backgroundMesh;
-	GameObject tree, startupBack, gameOver, background, pauseback, monkey,arrow;
+	GameObject tree, startupBack, gameOver, background, pauseback, monkey, arrow, rocks;
 
 	std::map<std::string, GameObject::Ptr> playerUI, treeUI, otherUI;
 
@@ -101,6 +101,7 @@ public:
 	Enemy insect, insect2, insect3, insect4, insect5, insect6;
 
 	std::vector<Enemy*> enemies;
+	Enemy* baseEnemy; // creating a base to copy from
 	std::vector<UIGameObjects*> hearts;
 	std::vector<UIGameObjects*> treeHearts;
 	std::vector<Bullet*> bullets;
