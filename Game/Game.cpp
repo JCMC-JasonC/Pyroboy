@@ -200,13 +200,14 @@ void Game::mainMenu()
 		system("pause");
 		exit(0);
 	} 
-	monkey.loadMesh("meshes/background.obj");
-	monkey.loadTexture(TextureType::Diffuse,"textures/Model Textures/menu.PNG");
-	monkey.loadTexture(TextureType::Specular, "textures/noSpecular.png");
+	background.loadMesh("meshes/background.obj");
+	background.loadTexture(TextureType::Diffuse,"textures/Model Textures/menu.PNG");
+	background.loadTexture(TextureType::Specular, "textures/noSpecular.png");
 
-	monkey.scale = 4.f;
-	monkey.rotate = glm::rotate(monkey.rotate, glm::pi<float>()* 1.5f, glm::vec3(0.0f, 0.f, 1.f));
-	monkey.rotate = glm::rotate(monkey.rotate, glm::pi<float>() / 2.f, glm::vec3(1.0f,0.f,0.f));
+	background.scale = 4.f;
+	background.rotate = glm::rotate(background.rotate, glm::pi<float>()* 1.5f, glm::vec3(0.0f, 0.f, 1.f));
+	background.rotate = glm::rotate(background.rotate, glm::pi<float>() / 2.f, glm::vec3(0.0f, 1.f, 0.f));
+	background.rotate = glm::rotate(background.rotate, glm::pi<float>() / 2.f, glm::vec3(1.0f, 0.f, 0.f));
 
 	arrow.loadMesh("meshes/arrow.obj");
 	arrow.loadTexture(TextureType::Diffuse, "textures/Health.png");
@@ -521,7 +522,31 @@ std::shared_ptr<Mesh> Game::createQuadMesh()
 //}
 void Game::drawScene()
 {
-	background.draw(phong, cameraTransform, cameraProjection, pointLights, directionalLight);
+	ash.draw(phong, cameraTransform, cameraProjection, pointLights, directionalLight);
+	barrel.draw(phong, cameraTransform, cameraProjection, pointLights, directionalLight);
+	bridge.draw(phong, cameraTransform, cameraProjection, pointLights, directionalLight);
+	brokentower.draw(phong, cameraTransform, cameraProjection, pointLights, directionalLight);
+	cactus.draw(phong, cameraTransform, cameraProjection, pointLights, directionalLight);
+	fseast.draw(phong, cameraTransform, cameraProjection, pointLights, directionalLight);
+	fsnortheast.draw(phong, cameraTransform, cameraProjection, pointLights, directionalLight);
+	fssoutheast.draw(phong, cameraTransform, cameraProjection, pointLights, directionalLight);
+	fwood.draw(phong, cameraTransform, cameraProjection, pointLights, directionalLight);
+	gate.draw(phong, cameraTransform, cameraProjection, pointLights, directionalLight);
+	hill.draw(phong, cameraTransform, cameraProjection, pointLights, directionalLight);
+	hroof.draw(phong, cameraTransform, cameraProjection, pointLights, directionalLight);
+	hsand.draw(phong, cameraTransform, cameraProjection, pointLights, directionalLight);
+	hwalls.draw(phong, cameraTransform, cameraProjection, pointLights, directionalLight);
+	hwindows.draw(phong, cameraTransform, cameraProjection, pointLights, directionalLight);
+	hwood.draw(phong, cameraTransform, cameraProjection, pointLights, directionalLight);
+	hpath1.draw(phong, cameraTransform, cameraProjection, pointLights, directionalLight);
+	hpath2.draw(phong, cameraTransform, cameraProjection, pointLights, directionalLight);
+	lamp.draw(phong, cameraTransform, cameraProjection, pointLights, directionalLight);
+	pipe.draw(phong, cameraTransform, cameraProjection, pointLights, directionalLight);
+	plane.draw(phong, cameraTransform, cameraProjection, pointLights, directionalLight);
+	planegrass.draw(phong, cameraTransform, cameraProjection, pointLights, directionalLight);
+	planeroad.draw(phong, cameraTransform, cameraProjection, pointLights, directionalLight);
+	rocks.draw(phong, cameraTransform, cameraProjection, pointLights, directionalLight);
+	torch.draw(phong, cameraTransform, cameraProjection, pointLights, directionalLight);
 	tree.draw(phong, cameraTransform, cameraProjection, pointLights, directionalLight);
 	for (int i = 0; i < enemies.size(); i++)
 	{
@@ -606,15 +631,88 @@ void Game::blurBrightPass()
 }
 void Game::initializeGame()
 {
+	bool musicmenu = false;
 	se.Init();
-	result = se.system->createSound("sounds/testmusic.mp3", FMOD_3D, 0, &sound);
+
+	treefeedback1result = se.system->createSound("sounds/MyTreeWillStand.wav", FMOD_3D, 0, &treesound1);
+	FmodErrorCheck(treefeedback1result);
+	treefeedback1result = treesound1->set3DMinMaxDistance(0.0f, 30000.0f);
+	FmodErrorCheck(treefeedback1result);
+
+	treefeedback2result = se.system->createSound("sounds/DefendHome.wav", FMOD_3D, 0, &treesound2);
+	FmodErrorCheck(treefeedback2result);
+	treefeedback2result = treesound2->set3DMinMaxDistance(0.0f, 30000.0f);
+	FmodErrorCheck(treefeedback2result);
+
+	enemy1result = se.system->createSound("sounds/NothingAsh.wav", FMOD_3D, 0, &enemydialogue1);
+	FmodErrorCheck(enemy1result);
+	enemy1result = enemydialogue1->set3DMinMaxDistance(0.0f, 30000.0f);
+	FmodErrorCheck(enemy1result);
+
+
+	enemy2result = se.system->createSound("sounds/Warning.wav", FMOD_3D, 0, &enemydialogue2);
+	FmodErrorCheck(enemy2result);
+	enemy2result = enemydialogue2->set3DMinMaxDistance(0.0f, 30000.0f);
+	FmodErrorCheck(enemy2result);
+
+
+	enemy3result = se.system->createSound("sounds/Wildfire.wav", FMOD_3D, 0, &enemydialogue3);
+	FmodErrorCheck(enemy3result);
+	enemy3result = enemydialogue3->set3DMinMaxDistance(0.0f, 30000.0f);
+	FmodErrorCheck(enemy3result);
+
+
+	blast = se.system->createSound("sounds/fireball.mp3", FMOD_3D, 0, &shot);
+	FmodErrorCheck(blast);
+	blast = shot->set3DMinMaxDistance(0.0f, 30000.0f);
+	FmodErrorCheck(blast);
+
+	start1res = se.system->createSound("sounds/InfernoBegins.wav", FMOD_3D, 0, &start1sound);
+	FmodErrorCheck(start1res);
+	start1res = start1sound->set3DMinMaxDistance(0.0f, 30000.0f);
+	FmodErrorCheck(start1res);
+
+	start2res = se.system->createSound("sounds/TheyAreComing.wav", FMOD_3D, 0, &start2sound);
+	FmodErrorCheck(start2res);
+	start2res = start2sound->set3DMinMaxDistance(0.0f, 30000.0f);
+	FmodErrorCheck(start2res);
+
+	result = se.system->createSound("sounds/gamemusic.mp3", FMOD_3D, 0, &game);
 	FmodErrorCheck(result);
-	result = sound->set3DMinMaxDistance(0.0f, 30000.0f);
+	result = game->set3DMinMaxDistance(0.0f, 100.0f);
 	FmodErrorCheck(result);
-	result = sound->setMode(FMOD_LOOP_NORMAL);
-	FmodErrorCheck(result);
-	result = se.system->playSound(sound, 0, false, &channel);
-	FmodErrorCheck(result);
+	result = game->setMode(FMOD_LOOP_NORMAL);
+
+	dialogueresult = se.system->createSound("sounds/test.mp3", FMOD_3D, 0, &dialoguesound);
+	FmodErrorCheck(dialogueresult);
+	dialogueresult = dialoguesound->set3DMinMaxDistance(0.0f, 100.0f);
+	FmodErrorCheck(dialogueresult);
+	// not in sound folder, is placeholder
+
+
+	scroll = se.system->createSound("sounds/scroll.mp3", FMOD_3D, 0, &scrollsound);
+	FmodErrorCheck(scroll);
+	scroll = scrollsound->set3DMinMaxDistance(0.0f, 30000.0f);
+	FmodErrorCheck(scroll);
+
+	selection = se.system->createSound("sounds/selectSound.wav", FMOD_3D, 0, &selectsound);
+	FmodErrorCheck(selection);
+	selection = selectsound->set3DMinMaxDistance(0.0f, 30000.0f);
+	FmodErrorCheck(selection);
+
+	//
+	attack = se.system->createSound("sounds/enemydamage.mp3", FMOD_3D, 0, &attacksound);
+	FmodErrorCheck(attack);
+	attack = attacksound->set3DMinMaxDistance(0.0f, 30000.0f);
+	FmodErrorCheck(attack);
+
+	menu = se.system->createSound("sounds/menumusicEditV2.wav", FMOD_3D, 0, &menumusic);
+	FmodErrorCheck(menu);
+	menu = menumusic->set3DMinMaxDistance(0.0f, 30000.0f);
+	FmodErrorCheck(menu);
+	menu = menumusic->setMode(FMOD_LOOP_NORMAL);
+	FmodErrorCheck(menu);
+
 
 	updateTimer = new Timer();
 
@@ -671,18 +769,158 @@ void Game::initializeGame()
 
 	initializeParticles();
 
-	tree.loadMesh("meshes/GreenTree.obj");
-	tree.loadTexture(TextureType::Diffuse, "textures/Model Textures/theWholeTree.png");
+	tree.loadMesh("meshes/OBJ_Tree.obj");
+	tree.loadTexture(TextureType::Diffuse, "textures/Model Textures/OBJ_Tree_diffuse.png");
 	tree.loadTexture(TextureType::Specular, "textures/noSpecular.png");
+	tree.loadTexture(TextureType::Normal, "textures/Model Textures/OBJ_Tree_normal_map.png");
 
 	float ar[2];
 	ar[0] = 25.f;
 	ar[1] = -37.f;
 	int x = 0;
 
-	background.loadMesh("meshes/mapv2.obj");
-	background.loadTexture(TextureType::Diffuse, "textures/Model Textures/Background_01.png");
-	background.loadTexture(TextureType::Specular, "textures/noSpecular.png");
+	
+
+	ash.loadMesh("meshes/OBJ_Ash.obj");
+	ash.loadTexture(TextureType::Diffuse, "textures/Model Textures/OBJ_Ash_diffuse.png");
+	ash.loadTexture(TextureType::Specular, "textures/noSpecular.png"); ///////////
+	ash.loadTexture(TextureType::Normal, "textures/Model Textures/OBJ_Ash_normal_map.png");
+
+	barrel.loadMesh("meshes/OBJ_Barrel.obj");
+	barrel.loadTexture(TextureType::Diffuse, "textures/Model Textures/OBJ_Barrel_diffuse.png");
+	barrel.loadTexture(TextureType::Specular, "textures/noSpecular.png"); ///////////
+	barrel.loadTexture(TextureType::Normal, "textures/Model Textures/OBJ_Barrel_normal_map.png");
+
+	bridge.loadMesh("meshes/OBJ_Bridge.obj");
+	bridge.loadTexture(TextureType::Diffuse, "textures/Model Textures/OBJ_Bridge_diffuse.png");
+	bridge.loadTexture(TextureType::Specular, "textures/noSpecular.png"); ///////////
+	bridge.loadTexture(TextureType::Normal, "textures/Model Textures/OBJ_Bridge_normal_map.png");
+
+	brokentower.loadMesh("meshes/OBJ_BrokenTower.obj");
+	brokentower.loadTexture(TextureType::Diffuse, "textures/Model Textures/OBJ_BrokenTower_diffuse.png");
+	brokentower.loadTexture(TextureType::Specular, "textures/noSpecular.png"); ///////////
+	brokentower.loadTexture(TextureType::Normal, "textures/Model Textures/OBJ_BrokenTower_normal_map.png");
+
+	cactus.loadMesh("meshes/OBJ_Cactus.obj");
+	cactus.loadTexture(TextureType::Diffuse, "textures/Model Textures/OBJ_Cactus_diffuse.png");
+	cactus.loadTexture(TextureType::Specular, "textures/noSpecular.png"); ///////////
+	cactus.loadTexture(TextureType::Normal, "textures/Model Textures/OBJ_Cactus_normal_map.png");
+
+	fseast.loadMesh("meshes/OBJ_FenceSteel_East.obj");
+	fseast.loadTexture(TextureType::Diffuse, "textures/Model Textures/OBJ_FenceSteel_East_diffuse.png");
+	fseast.loadTexture(TextureType::Specular, "textures/noSpecular.png"); ///////////
+	fseast.loadTexture(TextureType::Normal, "textures/Model Textures/OBJ_FenceSteel_East_normal_map.png");
+
+	fsnortheast.loadMesh("meshes/OBJ_FenceSteel_NorthEast.obj");
+	fsnortheast.loadTexture(TextureType::Diffuse, "textures/Model Textures/OBJ_FenceSteel_NorthEast_diffuse.png");
+	fsnortheast.loadTexture(TextureType::Specular, "textures/noSpecular.png"); ///////////
+	fsnortheast.loadTexture(TextureType::Normal, "textures/Model Textures/OBJ_FenceSteel_NorthEast_normal_map.png");
+
+	fssoutheast.loadMesh("meshes/OBJ_FenceSteel_SouthEast.obj");
+	fssoutheast.loadTexture(TextureType::Diffuse, "textures/Model Textures/OBJ_FenceSteel_SouthEast_diffuse.png");
+	fssoutheast.loadTexture(TextureType::Specular, "textures/noSpecular.png"); ///////////
+	fssoutheast.loadTexture(TextureType::Normal, "textures/Model Textures/OBJ_FenceSteel_SouthEast_normal_map.png");
+
+	fwood.loadMesh("meshes/OBJ_FenceWood.obj");
+	fwood.loadTexture(TextureType::Diffuse, "textures/Model Textures/OBJ_FenceWood_diffuse.png");
+	fwood.loadTexture(TextureType::Specular, "textures/noSpecular.png"); ///////////
+	fwood.loadTexture(TextureType::Normal, "textures/Model Textures/OBJ_FenceWood_normal_map.png");
+
+	gate.loadMesh("meshes/OBJ_Gate.obj");
+	gate.loadTexture(TextureType::Diffuse, "textures/Model Textures/OBJ_Gate_diffuse.png");
+	gate.loadTexture(TextureType::Specular, "textures/noSpecular.png"); ///////////
+	gate.loadTexture(TextureType::Normal, "textures/Model Textures/OBJ_Gate_normal_map.png");
+
+	hill.loadMesh("meshes/OBJ_Hill.obj");
+	hill.loadTexture(TextureType::Diffuse, "textures/Model Textures/OBJ_Hill_diffuse.png");
+	hill.loadTexture(TextureType::Specular, "textures/noSpecular.png"); ///////////
+	hill.loadTexture(TextureType::Normal, "textures/Model Textures/OBJ_Hill_normal_map.png");
+
+	hpath1.loadMesh("meshes/OBJ_Path1.obj");
+	hpath1.loadTexture(TextureType::Diffuse, "textures/Model Textures/OBJ_Path1_diffuse.png");
+	hpath1.loadTexture(TextureType::Specular, "textures/noSpecular.png"); ///////////
+	hpath1.loadTexture(TextureType::Normal, "textures/Model Textures/OBJ_Path1_normal_map.png");
+
+	hpath2.loadMesh("meshes/OBJ_Path2.obj");
+	hpath2.loadTexture(TextureType::Diffuse, "textures/Model Textures/OBJ_Path2_diffuse.png");
+	hpath2.loadTexture(TextureType::Specular, "textures/noSpecular.png"); ///////////
+	hpath2.loadTexture(TextureType::Normal, "textures/Model Textures/OBJ_Path2_normal_map.png");
+
+	hroof.loadMesh("meshes/OBJ_Roof.obj");
+	hroof.loadTexture(TextureType::Diffuse, "textures/Model Textures/OBJ_Roof_diffuse.png");
+	hroof.loadTexture(TextureType::Specular, "textures/noSpecular.png"); ///////////
+	hroof.loadTexture(TextureType::Normal, "textures/Model Textures/OBJ_Roof_normal_map.png");
+
+	hsand.loadMesh("meshes/OBJ_House_Sand.obj");
+	hsand.loadTexture(TextureType::Diffuse, "textures/Model Textures/OBJ_House_Sand_diffuse.png");
+	hsand.loadTexture(TextureType::Specular, "textures/noSpecular.png"); ///////////
+	hsand.loadTexture(TextureType::Normal, "textures/Model Textures/OBJ_House_Sand_normal_map.png");
+
+	hwalls.loadMesh("meshes/OBJ_House_Walls.obj");
+	hwalls.loadTexture(TextureType::Diffuse, "textures/Model Textures/OBJ_House_Walls_diffuse.png");
+	hwalls.loadTexture(TextureType::Specular, "textures/noSpecular.png"); ///////////
+	hwalls.loadTexture(TextureType::Normal, "textures/Model Textures/OBJ_House_Walls_normal_map.png");
+
+	hwindows.loadMesh("meshes/OBJ_House_Windows.obj");
+	hwindows.loadTexture(TextureType::Diffuse, "textures/Model Textures/OBJ_House_Windows_diffuse.png");
+	hwindows.loadTexture(TextureType::Specular, "textures/noSpecular.png"); ///////////
+	hwindows.loadTexture(TextureType::Normal, "textures/Model Textures/OBJ_House_Windows_normal_map.png");
+
+	hwood.loadMesh("meshes/OBJ_House_Wood.obj");
+	hwood.loadTexture(TextureType::Diffuse, "textures/Model Textures/OBJ_House_Wood_diffuse.png");
+	hwood.loadTexture(TextureType::Specular, "textures/noSpecular.png"); ///////////
+	hwood.loadTexture(TextureType::Normal, "textures/Model Textures/OBJ_House_Wood_normal_map.png");
+
+	lamp.loadMesh("meshes/OBJ_Lamp.obj");
+	lamp.loadTexture(TextureType::Diffuse, "textures/Model Textures/OBJ_Lamp_diffuse.png");
+	lamp.loadTexture(TextureType::Specular, "textures/noSpecular.png"); ///////////
+	lamp.loadTexture(TextureType::Normal, "textures/Model Textures/OBJ_Lamp_normal_map.png");
+
+	pipe.loadMesh("meshes/OBJ_Pipe.obj");
+	pipe.loadTexture(TextureType::Diffuse, "textures/Model Textures/OBJ_Pipe_diffuse.png");
+	pipe.loadTexture(TextureType::Specular, "textures/noSpecular.png"); ///////////
+	pipe.loadTexture(TextureType::Normal, "textures/Model Textures/OBJ_Pipe_normal_map.png");
+
+	plane.loadMesh("meshes/OBJ_Plane.obj");
+	plane.loadTexture(TextureType::Diffuse, "textures/Model Textures/OBJ_Plane_diffuse.png");
+	plane.loadTexture(TextureType::Specular, "textures/noSpecular.png"); ///////////
+	plane.loadTexture(TextureType::Normal, "textures/Model Textures/OBJ_Plane_normal_map.png");
+
+	planegrass.loadMesh("meshes/OBJ_Plane_Grass.obj");
+	planegrass.loadTexture(TextureType::Diffuse, "textures/Model Textures/OBJ_Plane_Grass_diffuse.png");
+	planegrass.loadTexture(TextureType::Specular, "textures/noSpecular.png"); ///////////
+	planegrass.loadTexture(TextureType::Normal, "textures/Model Textures/OBJ_Plane_Grass_normal_map.png");
+
+	planeroad.loadMesh("meshes/OBJ_Plane_Road.obj");
+	planeroad.loadTexture(TextureType::Diffuse, "textures/Model Textures/OBJ_Plane_Road_diffuse.png");
+	planeroad.loadTexture(TextureType::Specular, "textures/noSpecular.png"); ///////////
+	planeroad.loadTexture(TextureType::Normal, "textures/Model Textures/OBJ_Plane_Road_normal_map.png");
+
+	rocks.loadMesh("meshes/OBJ_Rocks.obj");
+	rocks.loadTexture(TextureType::Diffuse, "textures/Model Textures/OBJ_Rocks_diffuse.png");
+	rocks.loadTexture(TextureType::Specular, "textures/noSpecular.png"); ///////////
+	rocks.loadTexture(TextureType::Normal, "textures/Model Textures/OBJ_Rocks_normal_map.png");
+
+	torch.loadMesh("meshes/OBJ_Torch.obj");
+	torch.loadTexture(TextureType::Diffuse, "textures/Model Textures/OBJ_Torch_diffuse.png");
+	torch.loadTexture(TextureType::Specular, "textures/noSpecular.png"); ///////////
+	torch.loadTexture(TextureType::Normal, "textures/Model Textures/OBJ_Torch_normal_map.png");
+
+	water.loadMesh("meshes/OBJ_Water.obj");
+	water.loadTexture(TextureType::Diffuse, "textures/Model Textures/OBJ_Water_diffuse.png");
+	water.loadTexture(TextureType::Specular, "textures/noSpecular.png"); ///////////
+	water.loadTexture(TextureType::Normal, "textures/Model Textures/OBJ_Water_normal_map.png");
+
+	wirepole.loadMesh("meshes/OBJ_WirePole.obj");
+	wirepole.loadTexture(TextureType::Diffuse, "textures/Model Textures/OBJ_WirePole_diffuse.png");
+	wirepole.loadTexture(TextureType::Specular, "textures/noSpecular.png"); ///////////
+	wirepole.loadTexture(TextureType::Normal, "textures/Model Textures/OBJ_WirePole_normal_map.png");
+
+	watertower.loadMesh("meshes/OBJ_WaterTower.obj");
+	watertower.loadTexture(TextureType::Diffuse, "textures/Model Textures/OBJ_WaterTower_diffuse.png");
+	watertower.loadTexture(TextureType::Specular, "textures/noSpecular.png");
+	watertower.loadTexture(TextureType::Normal, "textures/Model Textures/OBJ_WaterTower_normal_map.png"); ///////////
+
 
 	gameOver.loadMesh("meshes/background.obj");
 	gameOver.loadTexture(TextureType::Diffuse, "textures/Model Textures/gameovertemp.png");
@@ -1016,7 +1254,7 @@ void Game::initializeGame()
 	background.rotate = glm::rotate(background.rotate, -glm::pi<float>() / 2.f, glm::vec3(1.f, 0.f, 0.f));
 	background.rotate = glm::rotate(background.rotate, -0.002f, glm::vec3(1.f, 0.f, 0.f));
 	//background.rotate = glm::rotate(background.rotate, -glm::pi<float>(), glm::vec3(0.f, 1.f, 0.f));
-
+	//background.rotate = glm::rotate(background.rotate, glm::pi<float>() / 2.f, glm::vec3(1.f, 0.f, 0.f));
 	background.transform = background.translate * background.rotate * glm::scale(glm::mat4(), glm::vec3(background.scale));
 	 
 	pauseback.scale = 10.f;
@@ -1028,8 +1266,175 @@ void Game::initializeGame()
 	tree.scale = 2.5f;
 	tree.rotate = glm::rotate(tree.rotate, glm::pi<float>() /-2.f, glm::vec3(1.0f, 0.f, 0.f));
 	tree.translate = glm::translate(tree.translate, tree.position);
-
 	tree.transform = tree.translate * tree.rotate * glm::scale(glm::mat4(), glm::vec3(tree.scale));
+
+	ash.position = glm::vec3(0.f, 0.f, 0.f);
+	ash.scale = 2.f;
+	ash.rotate = glm::rotate(ash.rotate, glm::pi<float>() / -2.f, glm::vec3(1.0f, 0.f, 0.f));
+	ash.translate = glm::translate(ash.translate, ash.position);
+	ash.transform = ash.translate * ash.rotate * glm::scale(glm::mat4(), glm::vec3(ash.scale));
+
+	barrel.position = glm::vec3(0.f, 0.f, 0.f);
+	barrel.scale = 2.f;
+	barrel.rotate = glm::rotate(barrel.rotate, glm::pi<float>() / -2.f, glm::vec3(1.0f, 0.f, 0.f));
+	barrel.translate = glm::translate(barrel.translate, barrel.position);
+	barrel.transform = barrel.translate * barrel.rotate * glm::scale(glm::mat4(), glm::vec3(barrel.scale));
+
+	bridge.position = glm::vec3(0.f, 0.f, 0.f);
+	bridge.scale = 2.f;
+	bridge.rotate = glm::rotate(bridge.rotate, glm::pi<float>() / -2.f, glm::vec3(1.0f, 0.f, 0.f));
+	bridge.translate = glm::translate(bridge.translate, bridge.position);
+	bridge.transform = bridge.translate * bridge.rotate * glm::scale(glm::mat4(), glm::vec3(bridge.scale));
+
+	brokentower.position = glm::vec3(0.f, 0.f, 0.f);
+	brokentower.scale = 2.f;
+	brokentower.rotate = glm::rotate(brokentower.rotate, glm::pi<float>() / -2.f, glm::vec3(1.0f, 0.f, 0.f));
+	brokentower.translate = glm::translate(brokentower.translate, brokentower.position);
+	brokentower.transform = brokentower.translate * brokentower.rotate * glm::scale(glm::mat4(), glm::vec3(brokentower.scale));
+
+	cactus.position = glm::vec3(0.f, 0.f, 0.f);
+	cactus.scale = 2.f;
+	cactus.rotate = glm::rotate(cactus.rotate, glm::pi<float>() / -2.f, glm::vec3(1.0f, 0.f, 0.f));
+	cactus.translate = glm::translate(cactus.translate, cactus.position);
+	cactus.transform = cactus.translate * cactus.rotate * glm::scale(glm::mat4(), glm::vec3(cactus.scale));
+
+	fseast.position = glm::vec3(0.f, 0.f, 0.f);
+	fseast.scale = 2.f;
+	fseast.rotate = glm::rotate(fseast.rotate, glm::pi<float>() / -2.f, glm::vec3(1.0f, 0.f, 0.f));
+	fseast.translate = glm::translate(fseast.translate, fseast.position);
+	fseast.transform = fseast.translate * fseast.rotate * glm::scale(glm::mat4(), glm::vec3(fseast.scale));
+
+	fsnortheast.position = glm::vec3(0.f, 0.f, 0.f);
+	fsnortheast.scale = 2.f;
+	fsnortheast.rotate = glm::rotate(fsnortheast.rotate, glm::pi<float>() / -2.f, glm::vec3(1.0f, 0.f, 0.f));
+	fsnortheast.translate = glm::translate(fsnortheast.translate, fsnortheast.position);
+	fsnortheast.transform = fsnortheast.translate * fsnortheast.rotate * glm::scale(glm::mat4(), glm::vec3(fsnortheast.scale));
+
+	fssoutheast.position = glm::vec3(0.f, 0.f, 0.f);
+	fssoutheast.scale = 2.f;
+	fssoutheast.rotate = glm::rotate(fssoutheast.rotate, glm::pi<float>() / -2.f, glm::vec3(1.0f, 0.f, 0.f));
+	fssoutheast.translate = glm::translate(fssoutheast.translate, fssoutheast.position);
+	fssoutheast.transform = fssoutheast.translate * fssoutheast.rotate * glm::scale(glm::mat4(), glm::vec3(fssoutheast.scale));
+
+	fwood.position = glm::vec3(0.f, 0.f, 0.f);
+	fwood.scale = 2.f;
+	fwood.rotate = glm::rotate(fwood.rotate, glm::pi<float>() / -2.f, glm::vec3(1.0f, 0.f, 0.f));
+	fwood.translate = glm::translate(fwood.translate, fwood.position);
+	fwood.transform = fwood.translate * fwood.rotate * glm::scale(glm::mat4(), glm::vec3(fwood.scale));
+
+	gate.position = glm::vec3(0.f, 0.f, 0.f);
+	gate.scale = 2.f;
+	gate.rotate = glm::rotate(gate.rotate, glm::pi<float>() / -2.f, glm::vec3(1.0f, 0.f, 0.f));
+	gate.translate = glm::translate(gate.translate, gate.position);
+	gate.transform = gate.translate * gate.rotate * glm::scale(glm::mat4(), glm::vec3(gate.scale));
+
+	hill.position = glm::vec3(0.f, 0.f, 0.f);
+	hill.scale = 2.f;
+	hill.rotate = glm::rotate(hill.rotate, glm::pi<float>() / -2.f, glm::vec3(1.0f, 0.f, 0.f));
+	hill.translate = glm::translate(hill.translate, hill.position);
+	hill.transform = hill.translate * hill.rotate * glm::scale(glm::mat4(), glm::vec3(hill.scale));
+
+	hroof.position = glm::vec3(0.f, 0.f, 0.f);
+	hroof.scale = 2.f;
+	hroof.rotate = glm::rotate(hroof.rotate, glm::pi<float>() / -2.f, glm::vec3(1.0f, 0.f, 0.f));
+	hroof.translate = glm::translate(hroof.translate, hroof.position);
+	hroof.transform = hroof.translate * hroof.rotate * glm::scale(glm::mat4(), glm::vec3(hroof.scale));
+
+	hsand.position = glm::vec3(0.f, 0.f, 0.f);
+	hsand.scale = 2.f;
+	hsand.rotate = glm::rotate(hsand.rotate, glm::pi<float>() / -2.f, glm::vec3(1.0f, 0.f, 0.f));
+	hsand.translate = glm::translate(hsand.translate, hsand.position);
+	hsand.transform = hsand.translate * hsand.rotate * glm::scale(glm::mat4(), glm::vec3(hsand.scale));
+
+	hwalls.position = glm::vec3(0.f, 0.f, 0.f);
+	hwalls.scale = 2.f;
+	hwalls.rotate = glm::rotate(hwalls.rotate, glm::pi<float>() / -2.f, glm::vec3(1.0f, 0.f, 0.f));
+	hwalls.translate = glm::translate(hwalls.translate, hwalls.position);
+	hwalls.transform = hwalls.translate * hwalls.rotate * glm::scale(glm::mat4(), glm::vec3(hwalls.scale));
+
+	hwindows.position = glm::vec3(0.f, 0.f, 0.f);
+	hwindows.scale = 2.f;
+	hwindows.rotate = glm::rotate(hwindows.rotate, glm::pi<float>() / -2.f, glm::vec3(1.0f, 0.f, 0.f));
+	hwindows.translate = glm::translate(hwindows.translate, hwindows.position);
+	hwindows.transform = hwindows.translate * hwindows.rotate * glm::scale(glm::mat4(), glm::vec3(hwindows.scale));
+
+	hwood.position = glm::vec3(0.f, 0.f, 0.f);
+	hwood.scale = 2.f;
+	hwood.rotate = glm::rotate(hwood.rotate, glm::pi<float>() / -2.f, glm::vec3(1.0f, 0.f, 0.f));
+	hwood.translate = glm::translate(hwood.translate, hwood.position);
+	hwood.transform = hwood.translate * hwood.rotate * glm::scale(glm::mat4(), glm::vec3(hwood.scale));
+
+	hpath1.position = glm::vec3(0.f, 0.f, 0.f);
+	hpath1.scale = 2.f;
+	hpath1.rotate = glm::rotate(hpath1.rotate, glm::pi<float>() / -2.f, glm::vec3(1.0f, 0.f, 0.f));
+	hpath1.translate = glm::translate(hpath1.translate, hpath1.position);
+	hpath1.transform = hpath1.translate * hpath1.rotate * glm::scale(glm::mat4(), glm::vec3(hpath1.scale));
+
+	hpath2.position = glm::vec3(0.f, 0.f, 0.f);
+	hpath2.scale = 2.f;
+	hpath2.rotate = glm::rotate(hpath2.rotate, glm::pi<float>() / -2.f, glm::vec3(1.0f, 0.f, 0.f));
+	hpath2.translate = glm::translate(hpath2.translate, hpath2.position);
+	hpath2.transform = hpath2.translate * hpath2.rotate * glm::scale(glm::mat4(), glm::vec3(hpath2.scale));
+
+	lamp.position = glm::vec3(0.f, 0.f, 0.f);
+	lamp.scale = 2.f;
+	lamp.rotate = glm::rotate(lamp.rotate, glm::pi<float>() / -2.f, glm::vec3(1.0f, 0.f, 0.f));
+	lamp.translate = glm::translate(lamp.translate, lamp.position);
+	lamp.transform = lamp.translate * lamp.rotate * glm::scale(glm::mat4(), glm::vec3(lamp.scale));
+
+	pipe.position = glm::vec3(0.f, 0.f, 0.f);
+	pipe.scale = 2.f;
+	pipe.rotate = glm::rotate(pipe.rotate, glm::pi<float>() / -2.f, glm::vec3(1.0f, 0.f, 0.f));
+	pipe.translate = glm::translate(pipe.translate, pipe.position);
+	pipe.transform = pipe.translate * pipe.rotate * glm::scale(glm::mat4(), glm::vec3(pipe.scale));
+
+	plane.position = glm::vec3(0.f, 0.f, 0.f);
+	plane.scale = 2.f;
+	plane.rotate = glm::rotate(plane.rotate, glm::pi<float>() / -2.f, glm::vec3(1.0f, 0.f, 0.f));
+	plane.translate = glm::translate(plane.translate, plane.position);
+	plane.transform = plane.translate * plane.rotate * glm::scale(glm::mat4(), glm::vec3(plane.scale));
+
+	planegrass.position = glm::vec3(0.f, 0.f, 0.f);
+	planegrass.scale = 2.f;
+	planegrass.rotate = glm::rotate(planegrass.rotate, glm::pi<float>() / -2.f, glm::vec3(1.0f, 0.f, 0.f));
+	planegrass.translate = glm::translate(planegrass.translate, planegrass.position);
+	planegrass.transform = planegrass.translate * planegrass.rotate * glm::scale(glm::mat4(), glm::vec3(planegrass.scale));
+
+	planeroad.position = glm::vec3(0.f, 0.f, 0.f);
+	planeroad.scale = 2.f;
+	planeroad.rotate = glm::rotate(planeroad.rotate, glm::pi<float>() / -2.f, glm::vec3(1.0f, 0.f, 0.f));
+	planeroad.translate = glm::translate(planeroad.translate, planeroad.position);
+	planeroad.transform = planeroad.translate * planeroad.rotate * glm::scale(glm::mat4(), glm::vec3(planeroad.scale));
+
+	rocks.position = glm::vec3(0.f, 0.f, 0.f);
+	rocks.scale = 2.f;
+	rocks.rotate = glm::rotate(rocks.rotate, glm::pi<float>() / -2.f, glm::vec3(1.0f, 0.f, 0.f));
+	rocks.translate = glm::translate(rocks.translate, rocks.position);
+	rocks.transform = rocks.translate * rocks.rotate * glm::scale(glm::mat4(), glm::vec3(rocks.scale));
+
+	torch.position = glm::vec3(0.f, 0.f, 0.f);
+	torch.scale = 2.f;
+	torch.rotate = glm::rotate(torch.rotate, glm::pi<float>() / -2.f, glm::vec3(1.0f, 0.f, 0.f));
+	torch.translate = glm::translate(torch.translate, torch.position);
+	torch.transform = torch.translate * torch.rotate * glm::scale(glm::mat4(), glm::vec3(torch.scale));
+
+	water.position = glm::vec3(0.f, 0.f, 0.f);
+	water.scale = 2.f;
+	water.rotate = glm::rotate(water.rotate, glm::pi<float>() / -2.f, glm::vec3(1.0f, 0.f, 0.f));
+	water.translate = glm::translate(water.translate, water.position);
+	water.transform = water.translate * water.rotate * glm::scale(glm::mat4(), glm::vec3(water.scale));
+
+	watertower.position = glm::vec3(0.f, 0.f, 0.f);
+	watertower.scale = 2.f;
+	watertower.rotate = glm::rotate(watertower.rotate, glm::pi<float>() / -2.f, glm::vec3(1.0f, 0.f, 0.f));
+	watertower.translate = glm::translate(watertower.translate, watertower.position);
+	watertower.transform = watertower.translate * watertower.rotate * glm::scale(glm::mat4(), glm::vec3(watertower.scale));
+
+	wirepole.position = glm::vec3(0.f, 0.f, 0.f);
+	wirepole.scale = 2.f;
+	wirepole.rotate = glm::rotate(wirepole.rotate, glm::pi<float>() / -2.f, glm::vec3(1.0f, 0.f, 0.f));
+	wirepole.translate = glm::translate(wirepole.translate, wirepole.position);
+	wirepole.transform = wirepole.translate * wirepole.rotate * glm::scale(glm::mat4(), glm::vec3(wirepole.scale));
 
 	//timer is std::cout << "Total elapsed time: " << updateTimer->getCurrentTime() / 1000.f<<std::endl;
 	// want to do so that at specific time intervals spawn a enemy
@@ -1097,7 +1502,12 @@ void Game::TreeWasAttacked(Enemy* _x, glm::vec3 pos)
 			//cameraTransform = originalCameraTransform * glm::mat4(0.f);
 		//}
 	}
-
+	if ((tree_health < 1500.f) && test)
+	{
+		treefeedback2result = se.system->playSound(treesound2, 0, false, &dialoguechannel);
+		half_treehealth = 0.0f;
+		test = false;
+	}
 	if (_x->inArea(pos, objType::P_OBJ)) // player taking damage
 	{
 		player_health -= _x->getAttack(); 
@@ -1124,12 +1534,16 @@ void Game::createBullet(glm::vec3 pos, glm::vec3 dir)
 	{
 		//bullets.push_back(new Bullet(bulletMesh,pos,1.f, 100.f, 15.f, dir));
 		bulletQ.push(new Bullet(bulletMesh, pos, 1.f, 100.f, 15.f, dir));
+		bulletsound = true;
+		blast = se.system->playSound(shot, 0, false, &shotchannel);
 	}
 	else if(bulletTime > 0.4f)
 	{
 		bulletTime = 0.f;
 		//bullets.push_back(new Bullet(bulletMesh, pos, 1.f, 100.f, 15.f, dir));
 		bulletQ.push(new Bullet(bulletMesh, pos, 1.f, 100.f, 15.f, dir));
+		bulletsound = true;
+		blast = se.system->playSound(shot, 0, false, &shotchannel);
 		
 	}
 }
@@ -1143,6 +1557,13 @@ void Game::uiUpdate()
 	deltaTime = glm::clamp(deltaTime, 0.0f, 0.033f);
 	t += deltaTime;
 	dt += deltaTime;
+	st += deltaTime;
+
+	if (state = GameStates::MAIN_MENU) {
+		t1 += deltaTime;
+		t2 += deltaTime;
+		t3 += deltaTime;
+	}
 	if (t > 1.f)
 		t = 0.f;
 
@@ -1152,7 +1573,11 @@ void Game::uiUpdate()
 		//(-30f,-1f,0.f), 10,25
 		if (state == GameStates::MAIN_MENU)
 		{
-
+			if (st < 0.1f) {
+				menu = se.system->playSound(menumusic, 0, true, &menuchan);
+				menu = menuchan->setVolume(0.04f);
+				menu = menuchan->setPaused(false);
+			}
 			if(wKeyDown||upKey||leftKey)
 			{
 				if (arrow.position.y == -1.f)
@@ -1200,8 +1625,36 @@ void Game::uiUpdate()
 				arrow.translate = glm::translate(glm::mat4(), arrow.position);
 			}
 
-			monkey.transform = monkey.translate * monkey.rotate * glm::scale(glm::mat4(), glm::vec3(monkey.scale));
 			arrow.transform = arrow.translate * arrow.rotate * glm::scale(glm::mat4(), glm::vec3(arrow.scale));
+			background.transform = background.translate * background.rotate * glm::scale(glm::mat4(), glm::vec3(background.scale));
+			ash.transform = ash.translate * ash.rotate * glm::scale(glm::mat4(), glm::vec3(ash.scale));
+			barrel.transform = barrel.translate * barrel.rotate * glm::scale(glm::mat4(), glm::vec3(barrel.scale));
+			bridge.transform = bridge.translate * bridge.rotate * glm::scale(glm::mat4(), glm::vec3(bridge.scale));
+			brokentower.transform = brokentower.translate * brokentower.rotate * glm::scale(glm::mat4(), glm::vec3(brokentower.scale));
+			cactus.transform = cactus.translate * cactus.rotate * glm::scale(glm::mat4(), glm::vec3(cactus.scale));
+			fseast.transform = fseast.translate * fseast.rotate * glm::scale(glm::mat4(), glm::vec3(fseast.scale));
+			fsnortheast.transform = fsnortheast.translate * fsnortheast.rotate * glm::scale(glm::mat4(), glm::vec3(fsnortheast.scale));
+			fssoutheast.transform = fssoutheast.translate * fssoutheast.rotate * glm::scale(glm::mat4(), glm::vec3(fssoutheast.scale));
+			fwood.transform = fwood.translate * fwood.rotate * glm::scale(glm::mat4(), glm::vec3(fwood.scale));
+			gate.transform = gate.translate * gate.rotate * glm::scale(glm::mat4(), glm::vec3(gate.scale));
+			hill.transform = hill.translate * hill.rotate * glm::scale(glm::mat4(), glm::vec3(hill.scale));
+			hroof.transform = hroof.translate * hroof.rotate * glm::scale(glm::mat4(), glm::vec3(hroof.scale));
+			hsand.transform = hsand.translate * hsand.rotate * glm::scale(glm::mat4(), glm::vec3(hsand.scale));
+			hwalls.transform = hwalls.translate * hwalls.rotate * glm::scale(glm::mat4(), glm::vec3(hwalls.scale));
+			hwindows.transform = hwindows.translate * hwindows.rotate * glm::scale(glm::mat4(), glm::vec3(hwindows.scale));
+			hwood.transform = hwood.translate * hwood.rotate * glm::scale(glm::mat4(), glm::vec3(hwood.scale));
+			hpath1.transform = hpath1.translate * hpath1.rotate * glm::scale(glm::mat4(), glm::vec3(hpath1.scale));
+			hpath2.transform = hpath2.translate * hpath2.rotate * glm::scale(glm::mat4(), glm::vec3(hpath2.scale));
+			lamp.transform = lamp.translate * lamp.rotate * glm::scale(glm::mat4(), glm::vec3(lamp.scale));
+			pipe.transform = pipe.translate * pipe.rotate * glm::scale(glm::mat4(), glm::vec3(pipe.scale));
+			plane.transform = plane.translate * plane.rotate * glm::scale(glm::mat4(), glm::vec3(plane.scale));
+			planegrass.transform = planegrass.translate * planegrass.rotate * glm::scale(glm::mat4(), glm::vec3(planegrass.scale));
+			planeroad.transform = planeroad.translate * planeroad.rotate * glm::scale(glm::mat4(), glm::vec3(planeroad.scale));
+			rocks.transform = rocks.translate * rocks.rotate * glm::scale(glm::mat4(), glm::vec3(rocks.scale));
+			torch.transform = torch.translate * torch.rotate * glm::scale(glm::mat4(), glm::vec3(torch.scale));
+			water.transform = water.translate * water.rotate * glm::scale(glm::mat4(), glm::vec3(water.scale));
+			watertower.transform = watertower.translate * watertower.rotate * glm::scale(glm::mat4(), glm::vec3(watertower.scale));
+			wirepole.transform = wirepole.translate * wirepole.rotate * glm::scale(glm::mat4(), glm::vec3(wirepole.scale));
 		}
 
 }
@@ -1210,7 +1663,7 @@ void Game::uiDraw()
 	glClearColor(0.5, 0.5, 0.5, 0);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	monkey.draw(phong, cameraTransform, cameraProjection, pointLights, directionalLight);
+	background.draw(phong, cameraTransform, cameraProjection, pointLights, directionalLight);
 	arrow.draw(phong, cameraTransform, cameraProjection, pointLights, directionalLight);
 
 	glutSwapBuffers();
@@ -1261,7 +1714,34 @@ void Game::updateAlerts()
 
 void Game::update()
 {
-	background.transform = background.translate * background.rotate * glm::scale(glm::mat4(), glm::vec3(background.scale));
+	ash.transform = ash.translate * ash.rotate * glm::scale(glm::mat4(), glm::vec3(ash.scale));
+	barrel.transform = barrel.translate * barrel.rotate * glm::scale(glm::mat4(), glm::vec3(barrel.scale));
+	bridge.transform = bridge.translate * bridge.rotate * glm::scale(glm::mat4(), glm::vec3(bridge.scale));
+	brokentower.transform = brokentower.translate * brokentower.rotate * glm::scale(glm::mat4(), glm::vec3(brokentower.scale));
+	cactus.transform = cactus.translate * cactus.rotate * glm::scale(glm::mat4(), glm::vec3(cactus.scale));
+	fseast.transform = fseast.translate * fseast.rotate * glm::scale(glm::mat4(), glm::vec3(fseast.scale));
+	fsnortheast.transform = fsnortheast.translate * fsnortheast.rotate * glm::scale(glm::mat4(), glm::vec3(fsnortheast.scale));
+	fssoutheast.transform = fssoutheast.translate * fssoutheast.rotate * glm::scale(glm::mat4(), glm::vec3(fssoutheast.scale));
+	fwood.transform = fwood.translate * fwood.rotate * glm::scale(glm::mat4(), glm::vec3(fwood.scale));
+	gate.transform = gate.translate * gate.rotate * glm::scale(glm::mat4(), glm::vec3(gate.scale));
+	hill.transform = hill.translate * hill.rotate * glm::scale(glm::mat4(), glm::vec3(hill.scale));
+	hroof.transform = hroof.translate * hroof.rotate * glm::scale(glm::mat4(), glm::vec3(hroof.scale));
+	hsand.transform = hsand.translate * hsand.rotate * glm::scale(glm::mat4(), glm::vec3(hsand.scale));
+	hwalls.transform = hwalls.translate * hwalls.rotate * glm::scale(glm::mat4(), glm::vec3(hwalls.scale));
+	hwindows.transform = hwindows.translate * hwindows.rotate * glm::scale(glm::mat4(), glm::vec3(hwindows.scale));
+	hwood.transform = hwood.translate * hwood.rotate * glm::scale(glm::mat4(), glm::vec3(hwood.scale));
+	hpath1.transform = hpath1.translate * hpath1.rotate * glm::scale(glm::mat4(), glm::vec3(hpath1.scale));
+	hpath2.transform = hpath2.translate * hpath2.rotate * glm::scale(glm::mat4(), glm::vec3(hpath2.scale));
+	lamp.transform = lamp.translate * lamp.rotate * glm::scale(glm::mat4(), glm::vec3(lamp.scale));
+	pipe.transform = pipe.translate * pipe.rotate * glm::scale(glm::mat4(), glm::vec3(pipe.scale));
+	plane.transform = plane.translate * plane.rotate * glm::scale(glm::mat4(), glm::vec3(plane.scale));
+	planegrass.transform = planegrass.translate * planegrass.rotate * glm::scale(glm::mat4(), glm::vec3(planegrass.scale));
+	planeroad.transform = planeroad.translate * planeroad.rotate * glm::scale(glm::mat4(), glm::vec3(planeroad.scale));
+	rocks.transform = rocks.translate * rocks.rotate * glm::scale(glm::mat4(), glm::vec3(rocks.scale));
+	torch.transform = torch.translate * torch.rotate * glm::scale(glm::mat4(), glm::vec3(torch.scale));
+	water.transform = water.translate * water.rotate * glm::scale(glm::mat4(), glm::vec3(water.scale));
+	watertower.transform = watertower.translate * watertower.rotate * glm::scale(glm::mat4(), glm::vec3(watertower.scale));
+	wirepole.transform = wirepole.translate * wirepole.rotate * glm::scale(glm::mat4(), glm::vec3(wirepole.scale));
 	if (!pause)
 	{
 
@@ -1269,25 +1749,42 @@ void Game::update()
 
 		float deltaTime = updateTimer->getElapsedTimeSeconds();
 
-		deltaTime = glm::clamp(deltaTime, 0.0f, 0.033f);
+		deltaTime = glm::clamp(deltaTime, 0.0f, 0.033f); //
 		t += deltaTime;
 		srand(time(0));
 
-		if (shooting)
-		{
-			blast = se.system->createSound("sounds/blast.wav", FMOD_3D, 0, &sound);
-			FmodErrorCheck(blast);
-			blast = sound->set3DMinMaxDistance(0.0f, 30000.0f);
-			FmodErrorCheck(blast);
-			blast = se.system->playSound(sound, 0, false, &channel);
-		}
+		mt += deltaTime;
+		bool audiocheck1 = false;
+		if (t4 < 0.1f) {
 
-		result = se.system->update();
-		FmodErrorCheck(result);
+			t4 += deltaTime;
+		}
+		else if (t4 > 0.1f) {
+			t4 = 0.1f;
+		}
+		deltaTime = glm::clamp(deltaTime, 0.0f, 0.033f);
+		if (state = GameStates::PLAYING) {
+			mt += deltaTime;
+		}
+		//std::cout << mt << std::endl;
+		srand(time(0));
+		menu = menuchan->addFadePoint(deltaTime + 1.0f, 0.0f);
+		//	menusounds->addFadePoint(deltaTime + 1.0f, 0.0f);
+		if (mt < 0.1f) {
+			//	start1res = se.system->playSound(start1sound, 0, false, &dialoguechannel);
+			start2res = se.system->playSound(start2sound, 0, false, &dialoguechannel);
+			result = se.system->playSound(game, 0, true, &channel);
+			result = channel->setVolume(0.04f);
+			result = channel->setPaused(false);
+		}
+		bt += deltaTime;
+
 
 		player.update(deltaTime);
-		player.animate(deltaTime);
-
+		if (wKeyDown || aKeyDown || sKeyDown || dKeyDown)
+		{
+			player.animate(deltaTime);
+		}
 		if (t >= 8.f)
 		{
 			float ranPos = 1 + rand() % 5;
@@ -1305,14 +1802,14 @@ void Game::update()
 
 
 		if (shouldRotate) {
-			player.rotate = glm::rotate(player.rotate, deltaTime *(glm::pi<float>() / 4), glm::vec3(0.f, 1.f, 0.f));
+			player.rotate = glm::rotate(player.rotate, -deltaTime *(glm::pi<float>() * 20.f), glm::vec3(0.f, 1.f, 0.f));
 		}
 
 		glm::vec3 playerLocation = glm::vec3(player.translate*
 			glm::vec4(glm::vec3(0.f, 0.f, 0.f), 1.0));
 		if (wKeyDown) {
 			/*std::cout << glm::to_string(player.transform) << std::endl;*/
-			if (playerLocation.y >-80 * (background.scale/3.f)) {
+			if (playerLocation.y >-80 * (plane.scale/3.f)) {
 				// Set all other directions to false
 				if (isDown) { isDown = false; }
 				else if (isRight) { isRight = false; }
@@ -1338,7 +1835,7 @@ void Game::update()
 			}
 		}
 		if (sKeyDown) {
-			if (playerLocation.y <120 * (background.scale/3.f)) {
+			if (playerLocation.y <120 * (plane.scale/3.f)) {
 				if (isUp) { isUp = false; }
 				else if (isRight) { isRight = false; }
 				else if (isLeft) { isLeft = false; }
@@ -1362,7 +1859,7 @@ void Game::update()
 		}
 		if (aKeyDown) {
 			/*std::cout << glm::to_string(player.transform) << std::endl;*/
-			if (playerLocation.x < 100.f * (background.scale/3.f)) {
+			if (playerLocation.x < 100.f * (plane.scale/3.f)) {
 				if (isUp) { isUp = false; }
 				else if (isDown) { isDown = false; }
 				else if (isRight) { isRight = false; }
@@ -1388,7 +1885,7 @@ void Game::update()
 
 		if (dKeyDown) {
 			/*std::cout << glm::to_string(player.transform) << std::endl;*/
-			if (playerLocation.x >-100.f * (background.scale/3.f)) {
+			if (playerLocation.x >-100.f * (plane.scale/3.f)) {
 				if (isUp) {	isUp = false; }
 				else if (isDown) { isDown = false; }
 				else if (isLeft) { isLeft = false; }
@@ -1455,6 +1952,12 @@ void Game::update()
 		else { treeDamaged = false; }
 		if (player_health < previousPlayerHealth) { playerDamaged = true; } // check if tree took damage at all
 		else { playerDamaged = false; }
+		if ((mt > 20.1f) && (mt < 20.15f)) {
+			start1res = se.system->playSound(start1sound, 0, false, &dialoguechannel);
+		}
+		if ((mt > 40.1f) && (mt < 40.15f)) {
+			enemy1result = se.system->playSound(enemydialogue1, 0, false, &dialoguechannel);
+		}
 
 		updateAlerts();
 		if (upKey)
@@ -1648,7 +2151,34 @@ void Game::update()
 		//std::cout << glm::to_string(player.translate)<< std::endl
 		//TRANSFORMS
 
-		background.transform = background.translate *background.rotate * glm::scale(glm::mat4(), glm::vec3(background.scale));
+		ash.transform = ash.translate *ash.rotate * glm::scale(glm::mat4(), glm::vec3(ash.scale));
+		barrel.transform = barrel.translate * barrel.rotate * glm::scale(glm::mat4(), glm::vec3(barrel.scale));
+		bridge.transform = bridge.translate * bridge.rotate * glm::scale(glm::mat4(), glm::vec3(bridge.scale));
+		brokentower.transform = brokentower.translate * brokentower.rotate * glm::scale(glm::mat4(), glm::vec3(brokentower.scale));
+		cactus.transform = cactus.translate * cactus.rotate * glm::scale(glm::mat4(), glm::vec3(cactus.scale));
+		fseast.transform = fseast.translate * fseast.rotate * glm::scale(glm::mat4(), glm::vec3(fseast.scale));
+		fsnortheast.transform = fsnortheast.translate * fsnortheast.rotate * glm::scale(glm::mat4(), glm::vec3(fsnortheast.scale));
+		fssoutheast.transform = fssoutheast.translate * fssoutheast.rotate * glm::scale(glm::mat4(), glm::vec3(fssoutheast.scale));
+		fwood.transform = fwood.translate * fwood.rotate * glm::scale(glm::mat4(), glm::vec3(fwood.scale));
+		gate.transform = gate.translate * gate.rotate * glm::scale(glm::mat4(), glm::vec3(gate.scale));
+		hill.transform = hill.translate * hill.rotate * glm::scale(glm::mat4(), glm::vec3(hill.scale));
+		hroof.transform = hroof.translate * hroof.rotate * glm::scale(glm::mat4(), glm::vec3(hroof.scale));
+		hsand.transform = hsand.translate * hsand.rotate * glm::scale(glm::mat4(), glm::vec3(hsand.scale));
+		hwalls.transform = hwalls.translate * hwalls.rotate * glm::scale(glm::mat4(), glm::vec3(hwalls.scale));
+		hwindows.transform = hwindows.translate * hwindows.rotate * glm::scale(glm::mat4(), glm::vec3(hwindows.scale));
+		hwood.transform = hwood.translate * hwood.rotate * glm::scale(glm::mat4(), glm::vec3(hwood.scale));
+		hpath1.transform = hpath1.translate * hpath1.rotate * glm::scale(glm::mat4(), glm::vec3(hpath1.scale));
+		hpath2.transform = hpath2.translate * hpath2.rotate * glm::scale(glm::mat4(), glm::vec3(hpath2.scale));
+		lamp.transform = lamp.translate * lamp.rotate * glm::scale(glm::mat4(), glm::vec3(lamp.scale));
+		pipe.transform = pipe.translate * pipe.rotate * glm::scale(glm::mat4(), glm::vec3(pipe.scale));
+		plane.transform = plane.translate * plane.rotate * glm::scale(glm::mat4(), glm::vec3(plane.scale));
+		planegrass.transform = planegrass.translate * planegrass.rotate * glm::scale(glm::mat4(), glm::vec3(planegrass.scale));
+		planeroad.transform = planeroad.translate * planeroad.rotate * glm::scale(glm::mat4(), glm::vec3(planeroad.scale));
+		rocks.transform = rocks.translate * rocks.rotate * glm::scale(glm::mat4(), glm::vec3(rocks.scale));
+		torch.transform = torch.translate * torch.rotate * glm::scale(glm::mat4(), glm::vec3(torch.scale));
+		water.transform = water.translate * water.rotate * glm::scale(glm::mat4(), glm::vec3(water.scale));
+		watertower.transform = watertower.translate *watertower.rotate * glm::scale(glm::mat4(), glm::vec3(watertower.scale));
+		wirepole.transform = wirepole.translate * wirepole.rotate * glm::scale(glm::mat4(), glm::vec3(wirepole.scale));
 
 		/*for (int i = 0; i < fences.size(); i++)
 		{
@@ -1872,10 +2402,48 @@ void Game::draw()
 	materials["bloom"]->bind();
 	materials["bloom"]->sendUniformMat4("u_mvp", glm::value_ptr(emptyMat), false);
 	materials["bloom"]->sendUniformMat4("u_mv", glm::value_ptr(cameraTransform), false);
-
+	
 	meshes["quad"]->draw();
 	sceneBuffer.unbindTexture(GL_TEXTURE1);
 	blurBuffer.unbindTexture(GL_TEXTURE0);
+
+	player.draw(phong, cameraTransform, cameraProjection, pointLights, directionalLight);
+	ash.draw(phong, cameraTransform, cameraProjection, pointLights, directionalLight);
+	barrel.draw(phong, cameraTransform, cameraProjection, pointLights, directionalLight);
+	bridge.draw(phong, cameraTransform, cameraProjection, pointLights, directionalLight);
+	brokentower.draw(phong, cameraTransform, cameraProjection, pointLights, directionalLight);
+	cactus.draw(phong, cameraTransform, cameraProjection, pointLights, directionalLight);
+	fseast.draw(phong, cameraTransform, cameraProjection, pointLights, directionalLight);
+	fsnortheast.draw(phong, cameraTransform, cameraProjection, pointLights, directionalLight);
+	fssoutheast.draw(phong, cameraTransform, cameraProjection, pointLights, directionalLight);
+	fwood.draw(phong, cameraTransform, cameraProjection, pointLights, directionalLight);
+	gate.draw(phong, cameraTransform, cameraProjection, pointLights, directionalLight);
+	hill.draw(phong, cameraTransform, cameraProjection, pointLights, directionalLight);
+	hroof.draw(phong, cameraTransform, cameraProjection, pointLights, directionalLight);
+	hsand.draw(phong, cameraTransform, cameraProjection, pointLights, directionalLight);
+	hwalls.draw(phong, cameraTransform, cameraProjection, pointLights, directionalLight);
+	hwindows.draw(phong, cameraTransform, cameraProjection, pointLights, directionalLight);
+	hwood.draw(phong, cameraTransform, cameraProjection, pointLights, directionalLight);
+	hpath1.draw(phong, cameraTransform, cameraProjection, pointLights, directionalLight);
+	hpath2.draw(phong, cameraTransform, cameraProjection, pointLights, directionalLight);
+	lamp.draw(phong, cameraTransform, cameraProjection, pointLights, directionalLight);
+	pipe.draw(phong, cameraTransform, cameraProjection, pointLights, directionalLight);
+	plane.draw(phong, cameraTransform, cameraProjection, pointLights, directionalLight);
+	planegrass.draw(phong, cameraTransform, cameraProjection, pointLights, directionalLight);
+	planeroad.draw(phong, cameraTransform, cameraProjection, pointLights, directionalLight);
+	rocks.draw(phong, cameraTransform, cameraProjection, pointLights, directionalLight);
+	torch.draw(phong, cameraTransform, cameraProjection, pointLights, directionalLight);
+	tree.draw(phong, cameraTransform, cameraProjection, pointLights, directionalLight);
+	for (int i = 0; i < enemies.size(); i++)
+	{
+		if (!enemies[i]->getBool())
+			enemies[i]->draw(phong, cameraTransform, cameraProjection, pointLights, directionalLight);
+	}
+	water.draw(phong, cameraTransform, cameraProjection, pointLights, directionalLight);
+	watertower.draw(phong, cameraTransform, cameraProjection, pointLights, directionalLight);
+	wirepole.draw(phong, cameraTransform, cameraProjection, pointLights, directionalLight);
+
+
 	//drawFboAttachmentToBackBuffer(sceneBuffer, 0);
 	//drawFboAttachmentToBackBuffer(buffer, 0);
 	glutSwapBuffers();
@@ -1905,7 +2473,7 @@ void Game::keyboardDown(unsigned char key, int mouseX, int mouseY)
 		if (arrow.position == glm::vec3(-30.f, -1.f, 0.f))
 		{
 			state = GameStates::PLAYING;
-			background.scale = 2.f;
+			plane.scale = 2.f;
 
 			cameraTransform = glm::lookAt(cameraEye,
 				cameraCtr, glm::vec3(0.f, -1.f, 0.f));
@@ -1914,13 +2482,15 @@ void Game::keyboardDown(unsigned char key, int mouseX, int mouseY)
 			cameraProjection = glm::perspective(150.f, (float)WINDOW_WIDTH / (float)WINDOW_HEIGHT, near_plane, far_plane);
 			glViewport(0, 0, 20.f, 20.f);
 		}
+		selection = se.system->playSound(selectsound, 0, false, &menusounds);
+
 
 		if (arrow.position == glm::vec3(-30.f, 25.f, 0.f))
 			exit(1);
 		break;
 	case'l':
 		state = GameStates::TUTORIAL;
-		background.scale = 2.f;
+		plane.scale = 2.f;
 
 		cameraTransform = glm::lookAt(cameraEye,
 			cameraCtr, glm::vec3(0.f, -1.f, 0.f));
@@ -1930,7 +2500,9 @@ void Game::keyboardDown(unsigned char key, int mouseX, int mouseY)
 		glViewport(0, 0, 20.f, 20.f);
 		break;
 	case 'w':
-
+		if (!GameStates::PLAYING) {
+			scroll = se.system->playSound(scrollsound, 0, false, &menusounds);
+		}
 		wKeyDown = true;
 		isUp = true;
 		break;
@@ -1939,6 +2511,9 @@ void Game::keyboardDown(unsigned char key, int mouseX, int mouseY)
 		isLeft = true;
 		break;
 	case 's':
+		if (!GameStates::PLAYING) {
+			scroll = se.system->playSound(scrollsound, 0, false, &menusounds);
+		}
 		sKeyDown = true;	
 		isDown = true;
 		break;
@@ -1970,7 +2545,34 @@ void Game::keyboardDown(unsigned char key, int mouseX, int mouseY)
 		if (!pause)
 		{
 			state = GameStates::PLAYING;
-			background.scale = 2.f;
+			ash.scale = 2.f;
+			barrel.scale = 2.f;
+			bridge.scale = 2.f;
+			brokentower.scale = 2.f;
+			cactus.scale = 2.f;
+			fseast.scale = 2.f;
+			fsnortheast.scale = 2.f;
+			fssoutheast.scale = 2.f;
+			fwood.scale = 2.f;
+			gate.scale = 2.f;
+			hill.scale = 2.f;
+			hroof.scale = 2.f;
+			hsand.scale = 2.f;
+			hwalls.scale = 2.f;
+			hwindows.scale = 2.f;
+			hwood.scale = 2.f;
+			hpath1.scale = 2.f;
+			hpath2.scale = 2.f;
+			lamp.scale = 2.f;
+			pipe.scale = 2.f;
+			plane.scale = 2.f;
+			planegrass.scale = 2.f;
+			planeroad.scale = 2.f;
+			rocks.scale = 2.f;
+			torch.scale = 2.f;
+			water.scale = 2.f;
+			watertower.scale = 2.f;
+			wirepole.scale = 2.f;
 			cameraTransform = glm::lookAt(cameraEye,
 				cameraCtr, glm::vec3(0.f, -1.f, 0.f));
 			originalCameraTransform = cameraTransform;

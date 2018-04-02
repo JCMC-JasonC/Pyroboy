@@ -80,12 +80,13 @@ public:
 	void createBullet(glm::vec3 pos, glm::vec3 dir);
 	void TreeWasAttacked(Enemy* _x, glm::vec3 pos);
 
-	int tree_start_health = 50000;
-	int player_start_health = 10000;
-
+	int tree_start_health = 3000;
+	int player_start_health = 1500;
+	bool enemy1 = false, test = true;
+	float half_treehealth = 1500.f;
 	float player_health;
 	float tree_health;
-
+	bool bulletsound = false;
 	Timer* updateTimer = nullptr;
 	
 	std::string file = "textures/LUT.cube";
@@ -95,7 +96,9 @@ public:
 	ParticleEmitterSoA emitter;
 
 	Mesh treeMesh, playerMesh,backgroundMesh;
-	GameObject tree, startupBack, gameOver, background, pauseback, monkey, arrow, rocks;
+	GameObject tree, startupBack, gameOver, ash, barrel, bridge, brokentower, cactus, fseast, fsnortheast, fssoutheast,
+		fwood, gate, hill, hroof, hsand, hwalls, hwindows, hwood, hpath1, hpath2, pipe, plane, planegrass, planeroad,
+		rocks, torch, water, watertower, wirepole, lamp, background, pauseback, arrow;
 
 	std::map<std::string, GameObject::Ptr> playerUI, treeUI, otherUI;
 
@@ -177,9 +180,9 @@ public:
 	bool treeDamaged = false, playerDamaged = false;
 
 	SoundEngine se;
-	FMOD_RESULT      result,blast;
-	FMOD::Sound     *sound;
-	FMOD::Channel   *channel = 0;
+	FMOD_RESULT      dialogueresult, menu, result, attack, blast, scroll, selection, start1res, start2res, enemy1result, enemy2result, enemy3result, treefeedback1result, treefeedback2result;
+	FMOD::Sound     *dialoguesound, *sound, *menumusic, *game, *scrollsound, *selectsound, *shot, *attacksound, *start1sound, *start2sound, *enemydialogue1, *enemydialogue2, *enemydialogue3, *treesound1, *treesound2;
+	FMOD::Channel  *dialoguechannel = 0, *menuchan = 0, *channel = 0, *menusounds = 0, *shotchannel = 0, *enemychannel = 0;
 	FMOD_VECTOR soundpos = { 0.0f, 0.0f, 0.0f };
 	FMOD_VECTOR soundvel = { 0.0f, 0.0f, 0.0f };
 
@@ -199,4 +202,5 @@ private:
 
 	
 	float t=0,dt;
+	float  st, mt, bt, t1, t2, t3, t4;
 };

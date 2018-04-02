@@ -34,6 +34,7 @@ void GameObject::draw(ShaderProgram &shader, glm::mat4 &cameraTransform, glm::ma
 	
 	shader.sendUniform("material.diffuse", 0);
 	shader.sendUniform("material.specular", 1);
+	shader.sendUniform("material.normal", 2);
 	shader.sendUniform("material.hue", mat.hue);
 	shader.sendUniform("material.specularExponent", mat.specularExponent);
 

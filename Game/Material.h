@@ -15,6 +15,7 @@ public:
 
 	Texture diffuse;
 	Texture specular;
+	Texture normal;
 	glm::vec3 hue = glm::vec3(1.f);
 	float specularExponent = 50.f;
 };

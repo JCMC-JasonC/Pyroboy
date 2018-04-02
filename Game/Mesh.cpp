@@ -262,6 +262,7 @@ bool Mesh::loadFromFile(const std::string &file)
 
 	glVertexAttribPointer((GLuint)2, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 3, BUFFER_OFFSET(0));
 
+	//cleanup
 	glBindBuffer(GL_ARRAY_BUFFER, GL_NONE);
 	glBindVertexArray(GL_NONE);
 

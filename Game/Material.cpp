@@ -27,6 +27,9 @@ void Material::loadTexture(TextureType type, const std::string &texFile)
 	case Specular:
 		specular.load(texFile);
 		break;
+	case Normal:				/////////////
+		normal.load(texFile);	/////////////
+		break;
 	default:
 	{
 		std::cout << "Error - TextureType not found: " << type << std::endl;
