@@ -10,6 +10,7 @@ public:
 	~FrameBufferObject();
 
 	void createFrameBuffer(unsigned int fboWidth, unsigned int fboHeight, unsigned int numColourBuffers, bool useDepth);
+	void createDepthBuffer(unsigned int fboWidth, unsigned int fboHeight);
 
 	// Set active frame buffer for rendering
 	void bindFrameBufferForDrawing();

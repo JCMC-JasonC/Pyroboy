@@ -92,14 +92,24 @@ void Game::startUp()
 	materials["bloom"] = std::make_shared<ShaderProgram>();
 
 	materials["bloom"]->load("shaders/default_v.glsl", "shaders/bloomComposite_f.glsl");
+
+	materials["unlitTexture"] = std::make_shared<ShaderProgram>();
+	materials["unlitTexture"]->load("shaders/default_v.glsl", "shaders/unlitTexture_f.glsl");
+
+	materials["depthMap"] = std::make_shared<ShaderProgram>();
+	materials["depthMap"]->load("shaders/depthMap_v.glsl", "shaders/depthMap_f.glsl");
+
+	materials["shadows"] = std::make_shared<ShaderProgram>();
+	materials["shadows"]->load("shaders/shadows_v.glsl", "shaders/shadows_f.glsl");
+	
 	//LIGHTING
 	Light light1;
 
 	light1.positionOrDirection = glm::vec4(0.f, 10.f, -1.f, 1.f);
 	light1.originalPosition = light1.positionOrDirection;
-	light1.ambient = glm::vec3(0.2f);
+	light1.ambient = glm::vec3(0.06f,0.1f,0.06f);
 	light1.diffuse = glm::vec3(0.9f);
-	light1.specular = glm::vec3(0.9f);
+	light1.specular = glm::vec3(0.5f);
 	light1.specularExponent = 50.f;
 	light1.constantAttenuation = 1.f;
 	light1.linearAttenuation = 0.1f;
@@ -112,6 +122,11 @@ void Game::startUp()
 	directionalLight.diffuse = glm::vec3(0.7f);
 	directionalLight.specular - glm::vec3(1.0f);
 	directionalLight.specularExponent = 50.f;
+
+	//lightProjection = glm::ortho(-10.f, 10.f, -10.f,10.f, near_plane, far_plane);
+	lightProjection = glm::perspective(150.f, (float)WINDOW_WIDTH / (float)WINDOW_HEIGHT, near_plane, far_plane);
+	lightView = glm::lookAt(glm::vec3(directionalLight.positionOrDirection), glm::vec3(0.f), glm::vec3(0.f, -1.f, 0.f));//unsure if up is 1 or -1
+	lightSpaceMatrix = lightProjection * lightView;
 
 	startupBack.loadMesh("meshes/background.obj");
 	startupBack.loadTexture(TextureType::Diffuse, "textures/Model Textures/testtitle.png");
@@ -126,7 +141,7 @@ void Game::startUp()
 		glm::vec3(0.f, 0.f, 0.f), glm::vec3(0.f,-1.f,0.f));
 	originalCameraTransform = cameraTransform;
 
-	cameraProjection = glm::perspective(90.f, (float)WINDOW_WIDTH / (float)WINDOW_HEIGHT, 0.1f, 1000.f);
+	cameraProjection = glm::perspective(90.f, (float)WINDOW_WIDTH / (float)WINDOW_HEIGHT, near_plane, far_plane);
 	glViewport(0, 0, 20.f, 20.f);
 
 	//state = GameStates::MAIN_MENU;
@@ -203,6 +218,20 @@ void Game::mainMenu()
 	arrow.rotate = glm::rotate(arrow.rotate, glm::pi<float>()*0.f, glm::vec3(0.f,0.f,1.f));
 	
 	
+}
+void Game::drawFboAttachmentToBackBuffer(FrameBufferObject& fbo, int colorAttachment, glm::vec4 clearColor)
+{
+	FrameBufferObject::unbindFrameBuffer(WINDOW_WIDTH, WINDOW_HEIGHT);
+	FrameBufferObject::clearFrameBuffer(clearColor);
+	static auto unlitMaterial = materials["unlitTexture"];
+	fbo.bindTextureForSampling(colorAttachment, GL_TEXTURE0);
+	unlitMaterial->bind();
+	glm::mat4 temp = glm::mat4(1.0);
+	unlitMaterial->sendUniformMat4("u_mvp", glm::value_ptr(temp), false);
+	//unlitMaterial->sendUniforms();
+	meshes["quad"]->draw();
+
+	fbo.unbindTexture(GL_TEXTURE0);
 }
 void Game::initializeParticles()
 {
@@ -437,6 +466,53 @@ std::shared_ptr<Mesh> Game::createQuadMesh()
 
 	return quadMesh;
 }
+void Game::drawSceneWithShadows(ShaderProgram &shader, bool isShadowMap) 
+{
+	background.drawWithShadows(shader, cameraTransform, cameraProjection, lightSpaceMatrix, isShadowMap);
+	tree.drawWithShadows(shader, cameraTransform, cameraProjection, lightSpaceMatrix, isShadowMap);
+	for (int i = 0; i < enemies.size(); i++)
+	{
+		if (!enemies[i]->getBool())
+			enemies[i]->drawWithShadows(shader, cameraTransform, cameraProjection, lightSpaceMatrix, isShadowMap);
+	}
+	player.drawWithShadows(shader, cameraTransform, cameraProjection, lightSpaceMatrix, isShadowMap);
+	for (int i = 0; i < bullets.size(); i++)
+	{
+		bullets[i]->drawWithShadows(shader, cameraTransform, cameraProjection, lightSpaceMatrix, isShadowMap);
+	}
+	if (!isShadowMap)
+	{
+		shader.sendUniform("near_plane", near_plane);
+		shader.sendUniform("far_plane", far_plane);
+		depthMapFBO.bindDepthTextureForSampling(GL_TEXTURE0);
+	}
+	else
+	{
+		sceneBuffer.bindTextureForSampling(0, GL_TEXTURE0);
+		depthMapFBO.bindDepthTextureForSampling(GL_TEXTURE1);
+		shader.sendUniform("lightPos", glm::vec3(directionalLight.positionOrDirection));
+		//shader.sendUniformMat4("view", glm::value_ptr(emptyMat), false);
+	}
+}
+void Game::drawScene()
+{
+	background.draw(phong, cameraTransform, cameraProjection, pointLights, directionalLight);
+	tree.draw(phong, cameraTransform, cameraProjection, pointLights, directionalLight);
+	for (int i = 0; i < enemies.size(); i++)
+	{
+		if (!enemies[i]->getBool())
+			enemies[i]->draw(phong, cameraTransform, cameraProjection, pointLights, directionalLight);
+	}
+	player.draw(phong, cameraTransform, cameraProjection, pointLights, directionalLight);
+	for (int i = 0; i < bullets.size(); i++)
+	{
+		bullets[i]->draw(phong, cameraTransform, cameraProjection, pointLights, directionalLight);
+	}
+	drawHUD();
+	//materials["particles"]->bind();
+	emitter.draw(player.transform, cameraTransform, cameraProjection);
+	//materials["particles"]->unbind();
+}
 //load everything in here
 void Game::brightPass()
 {
@@ -447,10 +523,17 @@ void Game::brightPass()
 	////////////////////////////////////////////////////////////////////////// 
 	brightPassBuffer.bindFrameBufferForDrawing();
 
+	//player.draw(phong, cameraTransform, cameraProjection, pointLights, directionalLight);
+	//tree.draw(phong, cameraTransform, cameraProjection, pointLights, directionalLight);
+
+	//drawScene();
+	drawHUD();
 	sceneBuffer.bindTextureForSampling(0, GL_TEXTURE0);
 
 
 	materials["bright"]->sendUniformMat4("u_mvp", glm::value_ptr(emptyMat),false);
+	materials["bright"]->sendUniformMat4("u_mv", glm::value_ptr(cameraTransform), false);
+
 	materials["bright"]->sendUniform("u_bloomThreshold", bloomThreshold);
 
 	materials["bright"]->bind();
@@ -473,6 +556,7 @@ void Game::blurBrightPass()
 
 	materials["blur"]->bind();
 	materials["blur"]->sendUniformMat4("u_mvp", glm::value_ptr(emptyMat), false);
+	materials["blur"]->sendUniformMat4("u_mv", glm::value_ptr(cameraTransform), false);
 	materials["blur"]->sendUniform("u_texelSize", glm::vec4(1.0 / (float)blurBuffer.getWidth(), 1.0 / (float)blurBuffer.getHeight(), 0.f, 0.f));
 
 	meshes["quad"]->draw();
@@ -550,9 +634,10 @@ void Game::initializeGame()
 	textures["smoke"] = std::make_shared<Texture>();
 	textures["smoke"]->load("textures/smoke_256_dm.png");
 	sceneBuffer.createFrameBuffer(WINDOW_WIDTH, WINDOW_HEIGHT, 1, true);
-	brightPassBuffer.createFrameBuffer(WINDOW_WIDTH, WINDOW_HEIGHT, 1, true); 
-	buffer.createFrameBuffer(WINDOW_WIDTH / 16.f, WINDOW_HEIGHT / 16.f, 1, true);
-	blurBuffer.createFrameBuffer(WINDOW_WIDTH / 16.f, WINDOW_HEIGHT / 16.f, 1, true);
+	brightPassBuffer.createFrameBuffer(WINDOW_WIDTH, WINDOW_HEIGHT, 1, false); 
+	buffer.createFrameBuffer(WINDOW_WIDTH / 16.f, WINDOW_HEIGHT / 16.f, 1, false);
+	blurBuffer.createFrameBuffer(WINDOW_WIDTH / 16.f, WINDOW_HEIGHT / 16.f, 1, false);
+	depthMapFBO.createDepthBuffer(WINDOW_WIDTH, WINDOW_HEIGHT);
 
 	initializeParticles();
 
@@ -612,6 +697,13 @@ void Game::initializeGame()
 		run25.loadFromFile("meshes/PyroboyAnim25.obj");
 		run26.loadFromFile("meshes/PyroboyAnim26.obj");
 		
+	//for (int i = 0; i <= 25; i++)
+	//{
+	//	std::string name = "player" + std::to_string(i);
+	//	meshes[name] = std::make_shared<Mesh>();
+	//	meshes[name]->loadFromFile("meshes/PyroboyAnim" + std::to_string(i + 1) + ".obj");
+	//}
+
 	//player.loadMesh("meshes/GDW_Pyroboy.obj");
 	player.playerMesh.push_back(run1 );
 	player.playerMesh.push_back(run2 );
@@ -632,6 +724,13 @@ void Game::initializeGame()
 	player.playerMesh.push_back(run17);
 	player.playerMesh.push_back(run18);
 	player.playerMesh.push_back(run19);
+	player.playerMesh.push_back(run20);
+	player.playerMesh.push_back(run21);
+	player.playerMesh.push_back(run22);
+	player.playerMesh.push_back(run23);
+	player.playerMesh.push_back(run24);
+	player.playerMesh.push_back(run25);
+	player.playerMesh.push_back(run26);
 
 	player.loadTexture(TextureType::Diffuse, "textures/Model Textures/pyroboy_flipped.png");
 	player.loadTexture(TextureType::Specular, "textures/noSpecular.png");
@@ -1401,7 +1500,7 @@ void Game::update()
 			player.position = glm::vec3(0.f, -10.f, 0.f);
 			player.translate = glm::translate(player.translate, player.position);
 			player.transform = player.translate * player.rotate * glm::scale(glm::mat4(), glm::vec3(player.scale));
-			cameraProjection = glm::perspective(90.f, (float)WINDOW_WIDTH / (float)WINDOW_HEIGHT, 0.1f, 1000.f);
+			cameraProjection = glm::perspective(90.f, (float)WINDOW_WIDTH / (float)WINDOW_HEIGHT, near_plane, far_plane);
 			state = GameStates::LOSE;
 			treeDead = false;
 		}
@@ -1504,68 +1603,74 @@ void Game::drawHUD()
 }
 void Game::draw()
 {
-	
 	glClearColor(0.5, 0.5, 0.5, 0);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	sceneBuffer.bindFrameBufferForDrawing();
 	sceneBuffer.clearFrameBuffer(glm::vec4(0));
 
-	//meshes["quad"]->draw();
+	materials["default"]->bind();
+	materials["default"]->sendUniform("u_lightPos", cameraTransform * directionalLight.positionOrDirection);
+	drawScene();
+
 	sceneBuffer.unbindFrameBuffer(WINDOW_WIDTH, WINDOW_HEIGHT);
+	//For shadows
+	//cull front
+	//render to depth map
+	//bind fbo for drawing
+	//clear, send uniform, and render scene
+	//unbind fbo
+	//reset cull to back
 
-
-	//brightPass(); // Implement this function!
-	//blurBrightPass(); // Implement this function!
-
-	//				  // Set material properties
-	//materials["default"]->sendUniform("u_lightPos", cameraTransform * directionalLight.positionOrDirection);
-
-	//sceneBuffer.bindTextureForSampling(0, GL_TEXTURE1);
-	//blurBuffer.bindTextureForSampling(0, GL_TEXTURE0);
-
-
-	////FrameBufferObject::unbindFrameBuffer(WINDOW_WIDTH, WINDOW_HEIGHT);
-	////FrameBufferObject::clearFrameBuffer(glm::vec4(0));
-	//materials["bloom"]->bind();
-	//materials["bloom"]->sendUniformMat4("u_mvp", glm::value_ptr(emptyMat), false);
-	//materials["bloom"]->sendUniformMat4("u_mv", glm::value_ptr(emptyMat), false);
-
-
-
-	//////////////////////////////////////////////////////////////////////////
-	// UNBIND TEXTURES
-	//////////////////////////////////////////////////////////////////////////
-	//sceneBuffer.unbindTexture(GL_TEXTURE1);
-	//blurBuffer.unbindTexture(GL_TEXTURE0);
-
-	background.draw(phong, cameraTransform, cameraProjection, pointLights, directionalLight);
-	tree.draw(phong, cameraTransform, cameraProjection, pointLights, directionalLight);
-	for (int i = 0; i < enemies.size(); i++)
-	{
-		if (!enemies[i]->getBool())
-			enemies[i]->draw(phong, cameraTransform, cameraProjection, pointLights, directionalLight);
-	}
-	player.draw(phong, cameraTransform, cameraProjection, pointLights, directionalLight);
-
-	//for (int i = 0; i < hearts.size()-1; i++)
-	//{
-	//	if(hearts[i]->active)
-	//	hearts[i]->draw(phong, cameraTransform, cameraProjection, pointLights, directionalLight);
-	//}
-	//for (int i = 0; i < treeHearts.size(); i++)
-	//{
-	//	if (treeHearts[i]->active)
-	//		treeHearts[i]->draw(phong, cameraTransform, cameraProjection, pointLights, directionalLight);
-	//}*/
-	for (int i = 0; i < bullets.size(); i++)
-	{
-		bullets[i]->draw(phong, cameraTransform, cameraProjection, pointLights, directionalLight);
-	}
-	drawHUD();
-	emitter.draw(player.transform, cameraTransform, cameraProjection);
+	//render scene with shadow mapping
+	//set viewport, then clear
+	//send uniforms
+	//bind depth texture
+	//render scene
+	
+	glCullFace(GL_FRONT);
+	depthMapFBO.bindFrameBufferForDrawing();
+	depthMapFBO.clearFrameBuffer(glm::vec4(0));
+	drawScene();
+	drawSceneWithShadows(*materials["depthMap"], false);
 	meshes["quad"]->draw();
+	depthMapFBO.unbindFrameBuffer(WINDOW_WIDTH, WINDOW_HEIGHT);
+	glCullFace(GL_BACK);
 
+	sceneBuffer.bindFrameBufferForDrawing();
+	sceneBuffer.clearFrameBuffer(glm::vec4(0));
+	drawScene();
+	drawSceneWithShadows(*materials["shadows"], true);
+	//meshes["quad"]->draw();
+
+	/*if (temp >= player.playerMesh.size())
+		temp = 0;
+	meshes["player" + std::to_string(temp)]->draw();
+	temp++;*/
+	
+	sceneBuffer.unbindFrameBuffer(WINDOW_WIDTH, WINDOW_HEIGHT);
+	sceneBuffer.unbindTexture(GL_TEXTURE0);
+	depthMapFBO.unbindTexture(GL_TEXTURE1);
+
+	brightPass(); // Implement this function!
+	blurBrightPass(); // Implement this function!
+
+	sceneBuffer.bindTextureForSampling(0, GL_TEXTURE1);
+	blurBuffer.bindTextureForSampling(0, GL_TEXTURE0);
+
+
+	FrameBufferObject::unbindFrameBuffer(WINDOW_WIDTH, WINDOW_HEIGHT);
+	FrameBufferObject::clearFrameBuffer(glm::vec4(0));
+	materials["bloom"]->bind();
+	materials["bloom"]->sendUniformMat4("u_mvp", glm::value_ptr(emptyMat), false);
+	materials["bloom"]->sendUniformMat4("u_mv", glm::value_ptr(cameraTransform), false);
+
+
+	meshes["quad"]->draw();
+	sceneBuffer.unbindTexture(GL_TEXTURE1);
+	blurBuffer.unbindTexture(GL_TEXTURE0);
+	//drawFboAttachmentToBackBuffer(sceneBuffer, 0);
+	//drawFboAttachmentToBackBuffer(buffer, 0);
 	glutSwapBuffers();
 
 }
@@ -1580,8 +1685,10 @@ void Game::keyboardDown(unsigned char key, int mouseX, int mouseY)
 	switch (key) 
 	{
 	case 27://esc
-	case'q':
 		exit(1);
+		break;
+	case'q':
+		//exit(1);
 		break;
 	case't':
 		std::cout << "Total elapsed time: " << updateTimer->getCurrentTime() / 1000.f<<std::endl;
@@ -1597,7 +1704,7 @@ void Game::keyboardDown(unsigned char key, int mouseX, int mouseY)
 				cameraCtr, glm::vec3(0.f, -1.f, 0.f));
 			originalCameraTransform = cameraTransform;
 
-			cameraProjection = glm::perspective(150.f, (float)WINDOW_WIDTH / (float)WINDOW_HEIGHT, 0.1f, 1000.f);
+			cameraProjection = glm::perspective(150.f, (float)WINDOW_WIDTH / (float)WINDOW_HEIGHT, near_plane, far_plane);
 			glViewport(0, 0, 20.f, 20.f);
 		}
 
@@ -1639,7 +1746,7 @@ void Game::keyboardDown(unsigned char key, int mouseX, int mouseY)
 				glm::vec3(0.f, 0.f, 0.f), glm::vec3(0.f,-1.f,0.f));
 			originalCameraTransform = cameraTransform;
 
-			cameraProjection = glm::perspective(90.f, (float)WINDOW_WIDTH / (float)WINDOW_HEIGHT, 0.1f, 1000.f);
+			cameraProjection = glm::perspective(90.f, (float)WINDOW_WIDTH / (float)WINDOW_HEIGHT, near_plane, far_plane);
 			glViewport(0, 0, 20.f, 20.f);
 		}
 		if (!pause)
@@ -1650,7 +1757,7 @@ void Game::keyboardDown(unsigned char key, int mouseX, int mouseY)
 				cameraCtr, glm::vec3(0.f, -1.f, 0.f));
 			originalCameraTransform = cameraTransform;
 
-			cameraProjection = glm::perspective(150.f, (float)WINDOW_WIDTH / (float)WINDOW_HEIGHT, 0.1f, 1000.f);
+			cameraProjection = glm::perspective(150.f, (float)WINDOW_WIDTH / (float)WINDOW_HEIGHT, near_plane, far_plane);
 		}
 
 		break;

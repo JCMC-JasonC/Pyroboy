@@ -12,6 +12,7 @@ public:
 	void draw(ShaderProgram &shader, glm::mat4 &cameraTransform, glm::mat4 &cameraProjection, std::vector<Light> &pointLights, Light &directionalLight);
 	void update(float dt);
 	void animate(float dt);
+	int getCurrentFrame() { return currentFrame; }
 
 	int currentFrame=0, nextFrame=1;
 	float speed, m_pLocalMorphTime;

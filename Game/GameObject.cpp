@@ -11,6 +11,19 @@ GameObject::~GameObject()
 	mesh.unload();
 }
 
+void GameObject::drawWithShadows(ShaderProgram &shader, glm::mat4 &cameraTransform, glm::mat4 &cameraProjection
+	, glm::mat4 &lightSpaceMatrix, bool isShadowMap)
+{
+	shader.bind();
+	shader.sendUniformMat4("model", glm::value_ptr(transform), false);
+	shader.sendUniformMat4("lightSpaceMatrix", glm::value_ptr(lightSpaceMatrix), false);
+	if (isShadowMap)
+	{
+		shader.sendUniformMat4("view", glm::value_ptr(cameraTransform), false);
+		shader.sendUniformMat4("projection", glm::value_ptr(cameraProjection), false);
+	}
+
+}
 void GameObject::draw(ShaderProgram &shader, glm::mat4 &cameraTransform, glm::mat4 &cameraProjection
 	, std::vector<Light> &pointLights, Light &directionalLight)
 {

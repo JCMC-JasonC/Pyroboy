@@ -20,6 +20,6 @@ void main()
 {
 	vec4 colour = texture(u_rgb, vIn.texCoord.xy);
 	
-	FragColor =colour;
+	FragColor = vec4(colour.xyz, 1.0);
 
 }

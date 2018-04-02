@@ -47,5 +47,6 @@ public:
 	virtual void loadTexture(TextureType type, const std::string &texFile);
 	virtual void draw(ShaderProgram &shader, glm::mat4 &cameraTransform, glm::mat4 &cameraProjection
 		,std::vector<Light> &pointLights, Light &directionalLight);
-
+	virtual void drawWithShadows(ShaderProgram &shader, glm::mat4 &cameraTransform, glm::mat4 &cameraProjection
+		, glm::mat4 &lightSpaceMatrix, bool isShadowMap);
 };

@@ -37,21 +37,21 @@ void ShaderProgram::load(const std::string &vertFile, const std::string &fragFil
 
 	if (!compileShader(vertexShader))
 	{
-		std::cout << "Vertex shader failed to compile" << std::endl;
+		std::cout << "Vertex shader failed to compile: " + vertFile << std::endl;
 
 		outputShaderLog(vertexShader);
 		unload();
 	}
 	if (!compileShader(fragShader))
 	{
-		std::cout << "Fragment shader failed to compile" << std::endl;
+		std::cout << "Fragment shader failed to compile: " + fragFile << std::endl;
 
 		outputShaderLog(fragShader);
 		unload();
 	}
 	if (!compileShader(geoShader))
 	{
-		std::cout << "Geometry shader failed to compile" << std::endl;
+		std::cout << "Geometry shader failed to compile: " + geoFile<< std::endl;
 
 		outputShaderLog(fragShader);
 		unload();
@@ -88,7 +88,7 @@ bool ShaderProgram::load(const std::string &vertFile, const std::string &fragFil
 
 	if (!compileShader(vertexShader))
 	{
-		std::cout << "Vertex shader failed to compile"<<std::endl;
+		std::cout << "Vertex shader failed to compile: "+ vertFile<<std::endl;
 
 		outputShaderLog(vertexShader);
 		unload();
@@ -97,7 +97,7 @@ bool ShaderProgram::load(const std::string &vertFile, const std::string &fragFil
 	}
 	if (!compileShader(fragShader))
 	{
-		std::cout << "Vertex shader failed to compile" << std::endl;
+		std::cout << "Fragment shader failed to compile: " + fragFile << std::endl;
 
 		outputShaderLog(fragShader);
 		unload();

@@ -19,8 +19,8 @@
 #include <map>
 #include <memory>
 
-#define WINDOW_WIDTH 1280
-#define WINDOW_HEIGHT 720
+#define WINDOW_WIDTH 1920
+#define WINDOW_HEIGHT 1080
 #define FRAME_PER_SECOND 60
 
 enum GameStates {
@@ -57,6 +57,10 @@ public:
 	void pauseMenu();
 	void pauseUpdate();
 	void initializeParticles();
+	void drawFboAttachmentToBackBuffer(FrameBufferObject& fbo, int colorAttachment, glm::vec4 clearColor = glm::vec4(0.0));
+	void drawScene();
+	void drawSceneWithShadows(ShaderProgram &shader, bool isShadowMap);
+
 
 	GameStates getState() { return state; }
 
@@ -76,7 +80,8 @@ public:
 	
 	std::string file = "textures/LUT.cube";
 	LUT lutObj;
-	FrameBufferObject sceneBuffer, brightPassBuffer, blurBuffer, buffer;
+	FrameBufferObject sceneBuffer, brightPassBuffer, blurBuffer, buffer
+		, depthMapFBO;
 	ParticleEmitterSoA emitter;
 
 	Mesh treeMesh, playerMesh,backgroundMesh;
@@ -114,6 +119,9 @@ public:
 	ShaderProgram phong;
 	ShaderProgram lutShader;
 	ShaderProgram geoShader;
+	ShaderProgram depthMap;
+	ShaderProgram shadows;
+
 
 	VertexBufferObject vbo;
 
@@ -142,6 +150,9 @@ public:
 	glm::vec3 down = glm::vec3(0.f, 1.f, 0.f);
 	glm::vec3 right = glm::vec3(-1.f, 0.f, 0.f);
 	glm::vec3 left = glm::vec3(1.f, 0.f, 0.f);
+
+	float near_plane = 0.1f, far_plane = 1000.f;
+	glm::mat4 lightProjection, lightView, lightSpaceMatrix;
 
 	bool shooting = false, pause = false, treeDead = false, playerDead = false;
 

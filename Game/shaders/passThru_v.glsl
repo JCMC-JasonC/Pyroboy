@@ -1,11 +1,10 @@
- #version 400
+ #version 420
 
 // Vertex Shader Inputs
 // These are the attributes of the vertex
 layout(location = 0) in vec3 vIn_vertex;
 layout(location = 1) in vec3 vIn_normal;
 layout(location = 2) in vec3 vIn_uv;
-layout(location = 3) in float vIn_colour;
 
 // Uniforms
 // Constants throughout the entire pipeline
