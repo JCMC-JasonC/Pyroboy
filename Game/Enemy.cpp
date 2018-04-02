@@ -40,16 +40,29 @@ float Enemy::getHealth()
 {
 	return e_health;
 }
-bool Enemy::inArea(glm::vec3 &_pos)
+bool Enemy::inArea(glm::vec3 &_pos, objType type)
 {
 	glm::vec3 dist = _pos - position;
-	if (length(dist) < 3.f)
-	{
-		return true;
+	if (type == objType::T_OBJ) {
+		if (length(dist) < 12.f)
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
 	}
-	else
-	{
-		return false;
+
+	else {
+		if (length(dist) < 14.f)
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
 	}
 }
 void Enemy::setBool(bool b)

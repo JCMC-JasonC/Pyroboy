@@ -18,6 +18,7 @@
 #include<vector>
 #include <map>
 #include <memory>
+#include <queue>
 
 #define WINDOW_WIDTH 1280
 #define WINDOW_HEIGHT 720
@@ -31,7 +32,9 @@ enum GameStates {
 	, PAUSE
 	, LOSE
 	,EXIT
+	,TUTORIAL
 };
+
 class Game {
 public:
 	Game();
@@ -53,6 +56,7 @@ public:
 	void blurBrightPass();
 	void brightPass();
 	void switchUIToDraw(GameObject::Ptr, uiType);
+	void updateAlerts();
 	void drawHUD();
 	void pauseMenu();
 	void pauseUpdate();
@@ -71,7 +75,13 @@ public:
 	void fixAngle(float angle, glm::vec3 &dir);
 	void createBullet(glm::vec3 pos, glm::vec3 dir);
 	void TreeWasAttacked(Enemy* _x, glm::vec3 pos);
+
+	int tree_start_health = 50000;
+	int player_start_health = 10000;
+
+	float player_health;
 	float tree_health;
+
 	Timer* updateTimer = nullptr;
 	
 	std::string file = "textures/LUT.cube";
@@ -80,12 +90,11 @@ public:
 	ParticleEmitterSoA emitter;
 
 	Mesh treeMesh, playerMesh,backgroundMesh;
-	GameObject tree, startupBack, gameOver, background, pauseback, monkey,arrow;
+	GameObject tree, startupBack, gameOver, background, pauseback, monkey, arrow, rocks;
 
 	std::map<std::string, GameObject::Ptr> playerUI, treeUI, otherUI;
 
 	Player player;
-	int player_health = 1500;
 
 	glm::vec4 bulletLocation= glm::vec4(0.f);
 	Mesh  insectMesh, trapMesh, run1,run2,run3,run4,run5,run6,run7,run8,run9,run10,run11,run12,run13,run14,run15,run16,run17,run18,run19
@@ -97,13 +106,23 @@ public:
 
 	float healthCounter=0.f, bulletTime = 0.f, bloomThreshold= 0.01f;
 	int numTraps = 0, counter, treeHeartCounter;
-	Enemy enemy, enemy2, enemy3, enemy4, enemy5, enemy6;
-	Enemy insect, insect2, insect3, insect4, insect5, insect6;
+
+	float alertTimer = 0.f;
+
+	// End me
+	Enemy enemy, enemy2, enemy3, enemy4, enemy5, enemy6, enemy7, enemy8, enemy9, enemy10, enemy11, enemy12, enemy13, enemy14;
+	Enemy enemy15, enemy16, enemy17, enemy18, enemy19, enemy20, enemy21, enemy22, enemy23, enemy24, enemy25, enemy26, enemy27, enemy28;
+
+	Enemy insect, insect2, insect3, insect4, insect5, insect6, insect7, insect8, insect9, insect10, insect11, insect12, insect13, insect14;
+	Enemy insect15, insect16, insect17, insect18, insect19, insect20, insect21, insect22, insect23, insect24, insect25, insect26, insect27, insect28;
 
 	std::vector<Enemy*> enemies;
 	std::vector<UIGameObjects*> hearts;
 	std::vector<UIGameObjects*> treeHearts;
 	std::vector<Bullet*> bullets;
+
+	std::queue<Bullet*> bulletQ;
+	Bullet* tempBullet;
 
 	std::vector<glm::vec3> positions;
 	std::vector<Light> pointLights;
@@ -144,6 +163,7 @@ public:
 	glm::vec3 left = glm::vec3(1.f, 0.f, 0.f);
 
 	bool shooting = false, pause = false, treeDead = false, playerDead = false;
+	bool treeDamaged = false, playerDamaged = false;
 
 	SoundEngine se;
 	FMOD_RESULT      result,blast;

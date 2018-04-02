@@ -12,6 +12,12 @@ enum uiType {
 	TREE
 };
 
+enum objType
+{
+	P_OBJ,
+	T_OBJ
+};
+
 class GameObject 
 {
 public:
