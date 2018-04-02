@@ -80,8 +80,8 @@ public:
 	void createBullet(glm::vec3 pos, glm::vec3 dir);
 	void TreeWasAttacked(Enemy* _x, glm::vec3 pos);
 
-	int tree_start_health = 3000;
-	int player_start_health = 1500;
+	int tree_start_health = 30000;
+	int player_start_health = 15000;
 	bool enemy1 = false, test = true;
 	float half_treehealth = 1500.f;
 	float player_health;

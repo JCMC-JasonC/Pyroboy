@@ -1710,14 +1710,14 @@ void Game::updateAlerts()
 
 		if (playerDamaged == true)
 		{
-			if (alertTimer <= 2.f)
-			{
-				curPUIShouldDraw = false;
-			}
-
-			else if (alertTimer <= 4.f)
+			if (alertTimer <= 0.5f)
 			{
 				curPUIShouldDraw = true;
+			}
+
+			else if (alertTimer <= 1.f)
+			{
+				curPUIShouldDraw = false;
 			}
 
 			else { alertTimer = 0.f; }
@@ -1725,14 +1725,14 @@ void Game::updateAlerts()
 
 		if (treeDamaged == true)
 		{
-			if (alertTimer <= 2.f)
-			{
-				curTUIShouldDraw = false;
-			}
-
-			else if (alertTimer <= 4.f)
+			if (alertTimer <= 0.5f)
 			{
 				curTUIShouldDraw = true;
+			}
+
+			else if (alertTimer <= 1.f)
+			{
+				curTUIShouldDraw = false;
 			}
 
 			else { alertTimer = 0.f; }
