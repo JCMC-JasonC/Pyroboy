@@ -55,7 +55,7 @@ bool Enemy::inArea(glm::vec3 &_pos, objType type)
 	}
 
 	else {
-		if (length(dist) < 14.f)
+		if (length(dist) < 12.f)
 		{
 			return true;
 		}

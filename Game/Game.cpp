@@ -7,6 +7,7 @@
 #include<random>
 #include<ctime>
 
+clock_t alertTimer;
 Light LightFollowPlayer;
 
 Game::Game()
@@ -74,7 +75,6 @@ void Game::startUp()
 		system("pause");
 		exit(0);
 	}
-
 	meshes["quad"] = createQuadMesh();
 
 	materials["particles"] = std::make_shared<ShaderProgram>();
@@ -606,15 +606,16 @@ void Game::blurBrightPass()
 }
 void Game::initializeGame()
 {
-	se.Init();
-	result = se.system->createSound("sounds/testmusic.mp3", FMOD_3D, 0, &sound);
-	FmodErrorCheck(result);
-	result = sound->set3DMinMaxDistance(0.0f, 30000.0f);
-	FmodErrorCheck(result);
-	result = sound->setMode(FMOD_LOOP_NORMAL);
-	FmodErrorCheck(result);
-	result = se.system->playSound(sound, 0, false, &channel);
-	FmodErrorCheck(result);
+	// UNCOMMENT LATER
+	//se.Init();
+	//result = se.system->createSound("sounds/testmusic.mp3", FMOD_3D, 0, &sound);
+	//FmodErrorCheck(result);
+	//result = sound->set3DMinMaxDistance(0.0f, 30000.0f);
+	//FmodErrorCheck(result);
+	//result = sound->setMode(FMOD_LOOP_NORMAL);
+	//FmodErrorCheck(result);
+	//result = se.system->playSound(sound, 0, false, &channel);
+	//FmodErrorCheck(result);
 
 	updateTimer = new Timer();
 
@@ -1218,8 +1219,22 @@ void Game::uiDraw()
 
 void Game::updateAlerts()
 {
+	alertTimer = clock();
 	std::cout << "Tree: " << tree_health << std::endl;
 	std::cout << "Player: " << player_health << std::endl;
+
+	if (otherUI["playerAlert"]->shouldDraw)
+	{
+		std::cout << "player true" << std::endl;
+	}
+	else { std::cout << "player false" << std::endl; }
+
+	if (otherUI["treeAlert"]->shouldDraw)
+	{
+		std::cout << "tree true" << std::endl;
+	}
+	else { std::cout << "tree false" << std::endl; }
+
 	if (playerDamaged || treeDamaged)
 	{
 		alertTimer += dt;
@@ -1233,7 +1248,7 @@ void Game::updateAlerts()
 
 			else if (alertTimer <= 4.f)
 			{
-				otherUI["playerAlert"]->shouldDraw = false;				
+				otherUI["playerAlert"]->shouldDraw = false;
 			}
 
 			else { alertTimer = 0.f; }
@@ -1273,17 +1288,18 @@ void Game::update()
 		t += deltaTime;
 		srand(time(0));
 
-		if (shooting)
-		{
-			blast = se.system->createSound("sounds/blast.wav", FMOD_3D, 0, &sound);
-			FmodErrorCheck(blast);
-			blast = sound->set3DMinMaxDistance(0.0f, 30000.0f);
-			FmodErrorCheck(blast);
-			blast = se.system->playSound(sound, 0, false, &channel);
-		}
-
-		result = se.system->update();
-		FmodErrorCheck(result);
+		// UNCOMMENT LATER
+		//if (shooting)
+		//{
+		//	blast = se.system->createSound("sounds/blast.wav", FMOD_3D, 0, &sound);
+		//	FmodErrorCheck(blast);
+		//	blast = sound->set3DMinMaxDistance(0.0f, 30000.0f);
+		//	FmodErrorCheck(blast);
+		//	blast = se.system->playSound(sound, 0, false, &channel);
+		//}
+		//
+		//result = se.system->update();
+		//FmodErrorCheck(result);
 
 		player.update(deltaTime);
 		player.animate(deltaTime);
@@ -1455,8 +1471,8 @@ void Game::update()
 		else { treeDamaged = false; }
 		if (player_health < previousPlayerHealth) { playerDamaged = true; } // check if tree took damage at all
 		else { playerDamaged = false; }
-
 		updateAlerts();
+
 		if (upKey)
 		{
 			createBullet(playerLocation, up);

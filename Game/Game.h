@@ -177,6 +177,7 @@ public:
 	bool treeDamaged = false, playerDamaged = false;
 
 	SoundEngine se;
+	
 	FMOD_RESULT      result,blast;
 	FMOD::Sound     *sound;
 	FMOD::Channel   *channel = 0;
