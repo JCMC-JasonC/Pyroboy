@@ -4,8 +4,8 @@
 #include<GL/freeglut.h>
 #include"Game.h"
 
-#define WINDOW_WIDTH 1280
-#define WINDOW_HEIGHT 720
+#define WINDOW_WIDTH 1920
+#define WINDOW_HEIGHT 1020
 #define FRAMES_PER_SECOND 60
 
 const int FRAME_DELAY = 1000 / FRAMES_PER_SECOND;
@@ -110,6 +110,7 @@ int main(int argc, char **argv)
 	glutInitWindowSize(WINDOW_WIDTH, WINDOW_HEIGHT);
 	glutInitDisplayMode(GLUT_RGBA | GLUT_DOUBLE);
 	glutCreateWindow("Game");
+	//glutFullScreen();
 
 	glewExperimental = true;
 	if (glewInit() != GLEW_OK) {

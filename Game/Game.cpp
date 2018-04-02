@@ -96,12 +96,12 @@ void Game::startUp()
 	materials["unlitTexture"] = std::make_shared<ShaderProgram>();
 	materials["unlitTexture"]->load("shaders/default_v.glsl", "shaders/unlitTexture_f.glsl");
 
-	/*materials["depthMap"] = std::make_shared<ShaderProgram>();
+	materials["depthMap"] = std::make_shared<ShaderProgram>();
 	materials["depthMap"]->load("shaders/depthMap_v.glsl", "shaders/depthMap_f.glsl");
 
 	materials["shadows"] = std::make_shared<ShaderProgram>();
 	materials["shadows"]->load("shaders/shadows_v.glsl", "shaders/shadows_f.glsl");
-	*/
+	
 	//LIGHTING
 	Light light1;
 
@@ -123,9 +123,9 @@ void Game::startUp()
 	directionalLight.specular - glm::vec3(1.0f);
 	directionalLight.specularExponent = 50.f;
 
-	//lightProjection = glm::ortho(-10.f, 10.f, -10.f,10.f, near_plane, far_plane);
-	lightProjection = glm::perspective(150.f, (float)WINDOW_WIDTH / (float)WINDOW_HEIGHT, near_plane, far_plane);
-	lightView = glm::lookAt(glm::vec3(directionalLight.positionOrDirection), glm::vec3(0.f), glm::vec3(0.f, -1.f, 0.f));//unsure if up is 1 or -1
+	lightProjection = glm::ortho(-10.f, 10.f, -10.f,10.f, near_plane, far_plane);
+	//lightProjection = glm::perspective(150.f, (float)WINDOW_WIDTH / (float)WINDOW_HEIGHT, near_plane, far_plane);
+	lightView = glm::lookAt(glm::vec3(glm::vec4(-1.f, -1.f,300.f, 0.f)), glm::vec3(0.f), glm::vec3(0.f, 1.f, 0.f));//unsure if up is 1 or -1
 	lightSpaceMatrix = lightProjection * lightView;
 
 	startupBack.loadMesh("meshes/background.obj");
@@ -491,34 +491,34 @@ std::shared_ptr<Mesh> Game::createQuadMesh()
 
 	return quadMesh;
 }
-//void Game::drawSceneWithShadows(ShaderProgram &shader, bool isShadowMap) 
-//{
-//	background.drawWithShadows(shader, cameraTransform, cameraProjection, lightSpaceMatrix, isShadowMap);
-//	tree.drawWithShadows(shader, cameraTransform, cameraProjection, lightSpaceMatrix, isShadowMap);
-//	for (int i = 0; i < enemies.size(); i++)
-//	{
-//		if (!enemies[i]->getBool())
-//			enemies[i]->drawWithShadows(shader, cameraTransform, cameraProjection, lightSpaceMatrix, isShadowMap);
-//	}
-//	player.drawWithShadows(shader, cameraTransform, cameraProjection, lightSpaceMatrix, isShadowMap);
-//	for (int i = 0; i < bullets.size(); i++)
-//	{
-//		bullets[i]->drawWithShadows(shader, cameraTransform, cameraProjection, lightSpaceMatrix, isShadowMap);
-//	}
-//	if (!isShadowMap)
-//	{
-//		shader.sendUniform("near_plane", near_plane);
-//		shader.sendUniform("far_plane", far_plane);
-//		depthMapFBO.bindDepthTextureForSampling(GL_TEXTURE0);
-//	}
-//	else
-//	{
-//		sceneBuffer.bindTextureForSampling(0, GL_TEXTURE0);
-//		depthMapFBO.bindDepthTextureForSampling(GL_TEXTURE1);
-//		shader.sendUniform("lightPos", glm::vec3(directionalLight.positionOrDirection));
-//		//shader.sendUniformMat4("view", glm::value_ptr(emptyMat), false);
-//	}
-//}
+void Game::drawSceneWithShadows(ShaderProgram &shader, bool isShadowMap) 
+{
+	background.drawWithShadows(shader, cameraTransform, cameraProjection, lightSpaceMatrix, isShadowMap);
+	tree.drawWithShadows(shader, cameraTransform, cameraProjection, lightSpaceMatrix, isShadowMap);
+	for (int i = 0; i < enemies.size(); i++)
+	{
+		if (!enemies[i]->getBool())
+			enemies[i]->drawWithShadows(shader, cameraTransform, cameraProjection, lightSpaceMatrix, isShadowMap);
+	}
+	player.drawWithShadows(shader, cameraTransform, cameraProjection, lightSpaceMatrix, isShadowMap);
+	for (int i = 0; i < bullets.size(); i++)
+	{
+		bullets[i]->drawWithShadows(shader, cameraTransform, cameraProjection, lightSpaceMatrix, isShadowMap);
+	}
+	if (!isShadowMap)
+	{
+		shader.sendUniform("near_plane", near_plane);
+		shader.sendUniform("far_plane", far_plane);
+		depthMapFBO.bindDepthTextureForSampling(GL_TEXTURE0);
+	}
+	else
+	{
+		sceneBuffer.bindTextureForSampling(0, GL_TEXTURE0);
+		depthMapFBO.bindDepthTextureForSampling(GL_TEXTURE1);
+		shader.sendUniform("lightPos", glm::vec3(glm::vec4(-1.f, -1.f, 300.f, 0.f)));
+		//shader.sendUniformMat4("view", glm::value_ptr(emptyMat), false);
+	}
+}
 void Game::drawScene()
 {
 	background.draw(phong, cameraTransform, cameraProjection, pointLights, directionalLight);
@@ -1218,8 +1218,8 @@ void Game::uiDraw()
 
 void Game::updateAlerts()
 {
-	std::cout << "Tree: " << tree_health << std::endl;
-	std::cout << "Player: " << player_health << std::endl;
+	/*std::cout << "Tree: " << tree_health << std::endl;
+	std::cout << "Player: " << player_health << std::endl;*/
 	if (playerDamaged || treeDamaged)
 	{
 		alertTimer += dt;
@@ -1256,7 +1256,7 @@ void Game::updateAlerts()
 	}
 
 	else { alertTimer = 0.f; }
-	std::cout << alertTimer << std::endl;
+	//std::cout << alertTimer << std::endl;
 }
 
 void Game::update()
@@ -1293,12 +1293,12 @@ void Game::update()
 			float ranPos = 1 + rand() % 5;
 
 			float randSpeed = 10.f + rand() % 30;
-			glm::mat4 rot;
-			//rot = glm::rotate(rot, (glm::pi<float>() / 1.f), glm::vec3(0.f, 1.f, 0.f));
-			//rot = glm::rotate(rot, (glm::pi<float>() / -2.f), glm::vec3(1.f, 0.f, 0.f));
-			//rot = glm::rotate(rot, (glm::pi<float>() / 1.f), glm::vec3(0.f, 0.f, 1.f));
-			//enemies.push_back(new Enemy(alienMesh, glm::vec3(50.f* ranPos, 50.f*ranPos, -2.f), rot, 1.2f, randSpeed, 30.f + (3.f * healthCounter), 1.f));
-			//enemies.push_back(new Enemy(insectMesh, glm::vec3(-50.f* ranPos, 50.f*ranPos, -2.f), rot, 2.f, randSpeed, 30.f + (3.f * healthCounter), 1.f));
+			glm::mat4 rot = glm::mat4();
+			/*rot = glm::rotate(rot, (glm::pi<float>() / 1.f), glm::vec3(0.f, 1.f, 0.f));
+			rot = glm::rotate(rot, (glm::pi<float>() / -2.f), glm::vec3(1.f, 0.f, 0.f));
+			rot = glm::rotate(rot, (glm::pi<float>() / 1.f), glm::vec3(0.f, 0.f, 1.f));*/
+			enemies.push_back(new Enemy(alienMesh, glm::vec3(50.f* ranPos, 50.f*ranPos, -2.f), rot, 1.2f, randSpeed, 30.f + (3.f * healthCounter), 1.f));
+			enemies.push_back(new Enemy(insectMesh, glm::vec3(-50.f* ranPos, 50.f*ranPos, -2.f), rot, 2.f, randSpeed, 30.f + (3.f * healthCounter), 1.f));
 			t = 0.f;
 			healthCounter++;
 		}
@@ -1674,7 +1674,6 @@ void Game::update()
 
 		cameraTransform = originalCameraTransform * player.originalTranslate;
 		cameraTransform[1] = -cameraTransform[1];
-
 		emitter.update(deltaTime);
 
 		if (treeDead|| playerDead)
@@ -1836,29 +1835,31 @@ void Game::draw()
 	//bind depth texture
 	//render scene
 	
-	//glCullFace(GL_FRONT);
-	//depthMapFBO.bindFrameBufferForDrawing();
-	//depthMapFBO.clearFrameBuffer(glm::vec4(0));
-	//drawScene();
-	//drawSceneWithShadows(*materials["depthMap"], false);
+	glCullFace(GL_FRONT);
+	depthMapFBO.bindFrameBufferForDrawing();
+	depthMapFBO.clearFrameBuffer(glm::vec4(0));
+	drawScene();
+	drawSceneWithShadows(*materials["depthMap"], false);
+	/*depthMap.bind();
+	depthMapFBO.bindDepthTextureForSampling(GL_TEXTURE0);*/
 	//meshes["quad"]->draw();
-	//depthMapFBO.unbindFrameBuffer(WINDOW_WIDTH, WINDOW_HEIGHT);
-	//glCullFace(GL_BACK);
+	depthMapFBO.unbindFrameBuffer(WINDOW_WIDTH, WINDOW_HEIGHT);
+	glCullFace(GL_BACK);
 
-	//sceneBuffer.bindFrameBufferForDrawing();
-	//sceneBuffer.clearFrameBuffer(glm::vec4(0));
+	sceneBuffer.bindFrameBufferForDrawing();
+	sceneBuffer.clearFrameBuffer(glm::vec4(0));
 	//drawScene();
-	//drawSceneWithShadows(*materials["shadows"], true);
-	////meshes["quad"]->draw();
+	drawSceneWithShadows(*materials["shadows"], true);
+	//meshes["quad"]->draw();
 
 	///*if (temp >= player.playerMesh.size())
 	//	temp = 0;
 	//meshes["player" + std::to_string(temp)]->draw();
 	//temp++;*/
 	//
-	//sceneBuffer.unbindFrameBuffer(WINDOW_WIDTH, WINDOW_HEIGHT);
-	//sceneBuffer.unbindTexture(GL_TEXTURE0);
-	//depthMapFBO.unbindTexture(GL_TEXTURE1);
+	sceneBuffer.unbindFrameBuffer(WINDOW_WIDTH, WINDOW_HEIGHT);
+	sceneBuffer.unbindTexture(GL_TEXTURE0);
+	depthMapFBO.unbindTexture(GL_TEXTURE1);
 
 	brightPass(); // Implement this function!
 	blurBrightPass(); // Implement this function!

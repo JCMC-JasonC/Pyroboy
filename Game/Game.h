@@ -20,8 +20,8 @@
 #include <memory>
 #include <queue>
 
-#define WINDOW_WIDTH 1280
-#define WINDOW_HEIGHT 720
+#define WINDOW_WIDTH 1920
+#define WINDOW_HEIGHT 1020
 #define FRAME_PER_SECOND 60
 
 enum GameStates {
@@ -80,8 +80,8 @@ public:
 	void createBullet(glm::vec3 pos, glm::vec3 dir);
 	void TreeWasAttacked(Enemy* _x, glm::vec3 pos);
 
-	int tree_start_health = 50000;
-	int player_start_health = 10000;
+	int tree_start_health = 3000;
+	int player_start_health = 1500;
 
 	float player_health;
 	float tree_health;

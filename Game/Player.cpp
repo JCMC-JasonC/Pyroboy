@@ -13,7 +13,12 @@ void Player::shoot()
 {
 
 }
-
+void Player::drawWithShadows(ShaderProgram &shader, glm::mat4 &cameraTransform, glm::mat4 &cameraProjection
+	, glm::mat4 &lightSpaceMatrix, bool isShadowMap)
+{
+	morph.transform = transform;
+	morph.drawWithShadows(shader, cameraTransform, cameraProjection, lightSpaceMatrix, isShadowMap);
+}
 void Player::draw(ShaderProgram &shader, glm::mat4 &cameraTransform, glm::mat4 &cameraProjection
 	, std::vector<Light> &pointLights, Light &directionalLight)
 {

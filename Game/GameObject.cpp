@@ -23,6 +23,21 @@ void GameObject::drawWithShadows(ShaderProgram &shader, glm::mat4 &cameraTransfo
 		shader.sendUniformMat4("projection", glm::value_ptr(cameraProjection), false);
 	}
 
+	glActiveTexture(GL_TEXTURE0);
+	mat.diffuse.bind();
+
+	glActiveTexture(GL_TEXTURE1);
+	mat.specular.bind();
+
+	glBindVertexArray(mesh.vao);
+	glDrawArrays(GL_TRIANGLES, 0, mesh.getNumVertices());
+	glBindVertexArray(GL_NONE);
+
+	mat.specular.unbind();
+	glActiveTexture(GL_TEXTURE0);
+	mat.diffuse.unbind();
+
+	shader.unbind();
 }
 void GameObject::draw(ShaderProgram &shader, glm::mat4 &cameraTransform, glm::mat4 &cameraProjection
 	, std::vector<Light> &pointLights, Light &directionalLight)
