@@ -780,7 +780,7 @@ void Game::initializeGame()
 	int x = 0;
 
 	
-
+	// New Models
 	ash.loadMesh("meshes/OBJ_Ash.obj");
 	ash.loadTexture(TextureType::Diffuse, "textures/Model Textures/OBJ_Ash_diffuse.png");
 	ash.loadTexture(TextureType::Specular, "textures/noSpecular.png"); ///////////
@@ -921,6 +921,35 @@ void Game::initializeGame()
 	watertower.loadTexture(TextureType::Specular, "textures/noSpecular.png");
 	watertower.loadTexture(TextureType::Normal, "textures/Model Textures/OBJ_WaterTower_normal_map.png"); ///////////
 
+	//Set New Model Properties
+	ash.transform = ash.translate * ash.rotate * glm::scale(glm::mat4(), glm::vec3(ash.scale));
+	barrel.transform = barrel.translate * barrel.rotate * glm::scale(glm::mat4(), glm::vec3(barrel.scale));
+	bridge.transform = bridge.translate * bridge.rotate * glm::scale(glm::mat4(), glm::vec3(bridge.scale));
+	brokentower.transform = brokentower.translate * brokentower.rotate * glm::scale(glm::mat4(), glm::vec3(brokentower.scale));
+	cactus.transform = cactus.translate * cactus.rotate * glm::scale(glm::mat4(), glm::vec3(cactus.scale));
+	fseast.transform = fseast.translate * fseast.rotate * glm::scale(glm::mat4(), glm::vec3(fseast.scale));
+	fsnortheast.transform = fsnortheast.translate * fsnortheast.rotate * glm::scale(glm::mat4(), glm::vec3(fsnortheast.scale));
+	fssoutheast.transform = fssoutheast.translate * fssoutheast.rotate * glm::scale(glm::mat4(), glm::vec3(fssoutheast.scale));
+	fwood.transform = fwood.translate * fwood.rotate * glm::scale(glm::mat4(), glm::vec3(fwood.scale));
+	gate.transform = gate.translate * gate.rotate * glm::scale(glm::mat4(), glm::vec3(gate.scale));
+	hill.transform = hill.translate * hill.rotate * glm::scale(glm::mat4(), glm::vec3(hill.scale));
+	hroof.transform = hroof.translate * hroof.rotate * glm::scale(glm::mat4(), glm::vec3(hroof.scale));
+	hsand.transform = hsand.translate * hsand.rotate * glm::scale(glm::mat4(), glm::vec3(hsand.scale));
+	hwalls.transform = hwalls.translate * hwalls.rotate * glm::scale(glm::mat4(), glm::vec3(hwalls.scale));
+	hwindows.transform = hwindows.translate * hwindows.rotate * glm::scale(glm::mat4(), glm::vec3(hwindows.scale));
+	hwood.transform = hwood.translate * hwood.rotate * glm::scale(glm::mat4(), glm::vec3(hwood.scale));
+	hpath1.transform = hpath1.translate * hpath1.rotate * glm::scale(glm::mat4(), glm::vec3(hpath1.scale));
+	hpath2.transform = hpath2.translate * hpath2.rotate * glm::scale(glm::mat4(), glm::vec3(hpath2.scale));
+	lamp.transform = lamp.translate * lamp.rotate * glm::scale(glm::mat4(), glm::vec3(lamp.scale));
+	pipe.transform = pipe.translate * pipe.rotate * glm::scale(glm::mat4(), glm::vec3(pipe.scale));
+	plane.transform = plane.translate * plane.rotate * glm::scale(glm::mat4(), glm::vec3(plane.scale));
+	planegrass.transform = planegrass.translate * planegrass.rotate * glm::scale(glm::mat4(), glm::vec3(planegrass.scale));
+	planeroad.transform = planeroad.translate * planeroad.rotate * glm::scale(glm::mat4(), glm::vec3(planeroad.scale));
+	rocks.transform = rocks.translate * rocks.rotate * glm::scale(glm::mat4(), glm::vec3(rocks.scale));
+	torch.transform = torch.translate * torch.rotate * glm::scale(glm::mat4(), glm::vec3(torch.scale));
+	water.transform = water.translate * water.rotate * glm::scale(glm::mat4(), glm::vec3(water.scale));
+	watertower.transform = watertower.translate * watertower.rotate * glm::scale(glm::mat4(), glm::vec3(watertower.scale));
+	wirepole.transform = wirepole.translate * wirepole.rotate * glm::scale(glm::mat4(), glm::vec3(wirepole.scale));
 
 	gameOver.loadMesh("meshes/background.obj");
 	gameOver.loadTexture(TextureType::Diffuse, "textures/Model Textures/gameovertemp.png");
@@ -935,35 +964,37 @@ void Game::initializeGame()
 	pauseback.loadTexture(TextureType::Specular, "textures/noSpecular.png");
 
 	bulletMesh.loadFromFile("meshes/cube.obj");
-		player.morph.loadMesh("meshes/PyroboyAnim1.obj");
-		player.morph.loadTexture(TextureType::Diffuse, "textures/Model Textures/pyroboy_flipped.png");
-		player.morph.loadTexture(TextureType::Specular, "textures/noSpecular.png");
-		 run1.loadFromFile("meshes/PyroboyAnim1.obj");
-		 run2.loadFromFile("meshes/PyroboyAnim2.obj");
-		 run3.loadFromFile("meshes/PyroboyAnim3.obj");
-		 run4.loadFromFile("meshes/PyroboyAnim4.obj");
-		 run5.loadFromFile("meshes/PyroboyAnim5.obj");
-		 run6.loadFromFile("meshes/PyroboyAnim6.obj");
-		 run7.loadFromFile("meshes/PyroboyAnim7.obj");
-		 run8.loadFromFile("meshes/PyroboyAnim8.obj");
-		 run9.loadFromFile("meshes/PyroboyAnim9.obj");
-		run10.loadFromFile("meshes/PyroboyAnim10.obj");
-		run11.loadFromFile("meshes/PyroboyAnim11.obj");
-		run12.loadFromFile("meshes/PyroboyAnim12.obj");
-		run13.loadFromFile("meshes/PyroboyAnim13.obj");
-		run14.loadFromFile("meshes/PyroboyAnim14.obj");
-		run15.loadFromFile("meshes/PyroboyAnim15.obj");
-		run16.loadFromFile("meshes/PyroboyAnim16.obj");
-		run17.loadFromFile("meshes/PyroboyAnim17.obj");
-		run18.loadFromFile("meshes/PyroboyAnim18.obj");
-		run19.loadFromFile("meshes/PyroboyAnim19.obj");
-		run20.loadFromFile("meshes/PyroboyAnim20.obj");
-		run21.loadFromFile("meshes/PyroboyAnim21.obj");
-		run22.loadFromFile("meshes/PyroboyAnim22.obj");
-		run23.loadFromFile("meshes/PyroboyAnim23.obj");
-		run24.loadFromFile("meshes/PyroboyAnim24.obj");
-		run25.loadFromFile("meshes/PyroboyAnim25.obj");
-		run26.loadFromFile("meshes/PyroboyAnim26.obj");
+	player.morph.loadMesh("meshes/PyroboyAnim1.obj");
+	player.morph.loadTexture(TextureType::Diffuse, "textures/Model Textures/pyroboy_flipped.png");
+	player.morph.loadTexture(TextureType::Specular, "textures/noSpecular.png");
+	
+	// Load in animation Frames
+	run1.loadFromFile("meshes/PyroboyAnim1.obj");
+	run2.loadFromFile("meshes/PyroboyAnim2.obj");
+	run3.loadFromFile("meshes/PyroboyAnim3.obj");
+	run4.loadFromFile("meshes/PyroboyAnim4.obj");
+	run5.loadFromFile("meshes/PyroboyAnim5.obj");
+	run6.loadFromFile("meshes/PyroboyAnim6.obj");
+	run7.loadFromFile("meshes/PyroboyAnim7.obj");
+	run8.loadFromFile("meshes/PyroboyAnim8.obj");
+	run9.loadFromFile("meshes/PyroboyAnim9.obj");
+	run10.loadFromFile("meshes/PyroboyAnim10.obj");
+	run11.loadFromFile("meshes/PyroboyAnim11.obj");
+	run12.loadFromFile("meshes/PyroboyAnim12.obj");
+	run13.loadFromFile("meshes/PyroboyAnim13.obj");
+	run14.loadFromFile("meshes/PyroboyAnim14.obj");
+	run15.loadFromFile("meshes/PyroboyAnim15.obj");
+	run16.loadFromFile("meshes/PyroboyAnim16.obj");
+	run17.loadFromFile("meshes/PyroboyAnim17.obj");
+	run18.loadFromFile("meshes/PyroboyAnim18.obj");
+	run19.loadFromFile("meshes/PyroboyAnim19.obj");
+	run20.loadFromFile("meshes/PyroboyAnim20.obj");
+	run21.loadFromFile("meshes/PyroboyAnim21.obj");
+	run22.loadFromFile("meshes/PyroboyAnim22.obj");
+	run23.loadFromFile("meshes/PyroboyAnim23.obj");
+	run24.loadFromFile("meshes/PyroboyAnim24.obj");
+	run25.loadFromFile("meshes/PyroboyAnim25.obj");
+	run26.loadFromFile("meshes/PyroboyAnim26.obj");
 		
 	//for (int i = 0; i <= 25; i++)
 	//{
@@ -1681,12 +1712,12 @@ void Game::updateAlerts()
 		{
 			if (alertTimer <= 2.f)
 			{
-				otherUI["playerAlert"]->shouldDraw = true;
+				curPUIShouldDraw = false;
 			}
 
 			else if (alertTimer <= 4.f)
 			{
-				otherUI["playerAlert"]->shouldDraw = false;				
+				curPUIShouldDraw = true;
 			}
 
 			else { alertTimer = 0.f; }
@@ -1696,52 +1727,30 @@ void Game::updateAlerts()
 		{
 			if (alertTimer <= 2.f)
 			{
-				otherUI["treeAlert"]->shouldDraw = true;
+				curTUIShouldDraw = false;
 			}
 
 			else if (alertTimer <= 4.f)
 			{
-				otherUI["treeAlert"]->shouldDraw = false;
+				curTUIShouldDraw = true;
 			}
 
 			else { alertTimer = 0.f; }
 		}
 	}
 
-	else { alertTimer = 0.f; }
+	else 
+	{
+		curPUIShouldDraw = true;
+		curTUIShouldDraw = true;
+		alertTimer = 0.f; 
+	}
 	std::cout << alertTimer << std::endl;
 }
 
 void Game::update()
 {
-	ash.transform = ash.translate * ash.rotate * glm::scale(glm::mat4(), glm::vec3(ash.scale));
-	barrel.transform = barrel.translate * barrel.rotate * glm::scale(glm::mat4(), glm::vec3(barrel.scale));
-	bridge.transform = bridge.translate * bridge.rotate * glm::scale(glm::mat4(), glm::vec3(bridge.scale));
-	brokentower.transform = brokentower.translate * brokentower.rotate * glm::scale(glm::mat4(), glm::vec3(brokentower.scale));
-	cactus.transform = cactus.translate * cactus.rotate * glm::scale(glm::mat4(), glm::vec3(cactus.scale));
-	fseast.transform = fseast.translate * fseast.rotate * glm::scale(glm::mat4(), glm::vec3(fseast.scale));
-	fsnortheast.transform = fsnortheast.translate * fsnortheast.rotate * glm::scale(glm::mat4(), glm::vec3(fsnortheast.scale));
-	fssoutheast.transform = fssoutheast.translate * fssoutheast.rotate * glm::scale(glm::mat4(), glm::vec3(fssoutheast.scale));
-	fwood.transform = fwood.translate * fwood.rotate * glm::scale(glm::mat4(), glm::vec3(fwood.scale));
-	gate.transform = gate.translate * gate.rotate * glm::scale(glm::mat4(), glm::vec3(gate.scale));
-	hill.transform = hill.translate * hill.rotate * glm::scale(glm::mat4(), glm::vec3(hill.scale));
-	hroof.transform = hroof.translate * hroof.rotate * glm::scale(glm::mat4(), glm::vec3(hroof.scale));
-	hsand.transform = hsand.translate * hsand.rotate * glm::scale(glm::mat4(), glm::vec3(hsand.scale));
-	hwalls.transform = hwalls.translate * hwalls.rotate * glm::scale(glm::mat4(), glm::vec3(hwalls.scale));
-	hwindows.transform = hwindows.translate * hwindows.rotate * glm::scale(glm::mat4(), glm::vec3(hwindows.scale));
-	hwood.transform = hwood.translate * hwood.rotate * glm::scale(glm::mat4(), glm::vec3(hwood.scale));
-	hpath1.transform = hpath1.translate * hpath1.rotate * glm::scale(glm::mat4(), glm::vec3(hpath1.scale));
-	hpath2.transform = hpath2.translate * hpath2.rotate * glm::scale(glm::mat4(), glm::vec3(hpath2.scale));
-	lamp.transform = lamp.translate * lamp.rotate * glm::scale(glm::mat4(), glm::vec3(lamp.scale));
-	pipe.transform = pipe.translate * pipe.rotate * glm::scale(glm::mat4(), glm::vec3(pipe.scale));
-	plane.transform = plane.translate * plane.rotate * glm::scale(glm::mat4(), glm::vec3(plane.scale));
-	planegrass.transform = planegrass.translate * planegrass.rotate * glm::scale(glm::mat4(), glm::vec3(planegrass.scale));
-	planeroad.transform = planeroad.translate * planeroad.rotate * glm::scale(glm::mat4(), glm::vec3(planeroad.scale));
-	rocks.transform = rocks.translate * rocks.rotate * glm::scale(glm::mat4(), glm::vec3(rocks.scale));
-	torch.transform = torch.translate * torch.rotate * glm::scale(glm::mat4(), glm::vec3(torch.scale));
-	water.transform = water.translate * water.rotate * glm::scale(glm::mat4(), glm::vec3(water.scale));
-	watertower.transform = watertower.translate * watertower.rotate * glm::scale(glm::mat4(), glm::vec3(watertower.scale));
-	wirepole.transform = wirepole.translate * wirepole.rotate * glm::scale(glm::mat4(), glm::vec3(wirepole.scale));
+	
 	if (!pause)
 	{
 
@@ -2317,23 +2326,23 @@ void Game::drawHUD()
 	// draw ui that's set to true
 	for (auto itr = playerUI.begin(); itr != playerUI.end(); itr++)
 	{
-		if (itr->second->shouldDraw)
+		if (itr->second->shouldDraw && curPUIShouldDraw)
 			itr->second->draw(noLight, glm::mat4(1.0f), cameraOrtho, pointLights, directionalLight);
 	}
 	for (auto itr = treeUI.begin(); itr != treeUI.end(); itr++)
 	{
-		if (itr->second->shouldDraw)
+		if (itr->second->shouldDraw && curTUIShouldDraw)
 			itr->second->draw(noLight, glm::mat4(1.0f), cameraOrtho, pointLights, directionalLight);
 	}
 
 	//std::cout << t << std::endl;
 	if (t >= 5) { otherUI["protect"]->shouldDraw = false; }
 
-	for (auto itr = otherUI.begin(); itr != otherUI.end(); itr++)
-	{
-		if (itr->second->shouldDraw == true)
-			itr->second->draw(noLight, glm::mat4(1.0f), cameraOrtho, pointLights, directionalLight);
-	}
+	//for (auto itr = otherUI.begin(); itr != otherUI.end(); itr++)
+	//{
+	//	if (itr->second->shouldDraw == true)
+	//		itr->second->draw(noLight, glm::mat4(1.0f), cameraOrtho, pointLights, directionalLight);
+	//}
 
 	glDisable(GL_BLEND);
 	glEnable(GL_DEPTH_TEST);

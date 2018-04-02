@@ -179,6 +179,9 @@ public:
 	bool shooting = false, pause = false, treeDead = false, playerDead = false;
 	bool treeDamaged = false, playerDamaged = false;
 
+	bool curPUIShouldDraw = true; // current player ui should draw
+	bool curTUIShouldDraw = true;
+
 	SoundEngine se;
 	FMOD_RESULT      dialogueresult, menu, result, attack, blast, scroll, selection, start1res, start2res, enemy1result, enemy2result, enemy3result, treefeedback1result, treefeedback2result;
 	FMOD::Sound     *dialoguesound, *sound, *menumusic, *game, *scrollsound, *selectsound, *shot, *attacksound, *start1sound, *start2sound, *enemydialogue1, *enemydialogue2, *enemydialogue3, *treesound1, *treesound2;
