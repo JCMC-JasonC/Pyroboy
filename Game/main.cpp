@@ -65,6 +65,10 @@ void TimerCallbackFunction(int value)
 	{
 		game->gameOverUpdate();
 	}
+	else if (game->state == GameStates::TUTORIAL)
+	{
+		game->gameOverUpdate();
+	}
 	else
 	{
 		game->update();
