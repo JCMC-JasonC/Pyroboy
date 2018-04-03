@@ -93,27 +93,60 @@ void Enemy::animate(float dt)
 	if (m_pLocalMorphTime >= 1) {
 		m_pLocalMorphTime = 0;
 
-		if (nextFrame == enemyMesh.size() - 1) {
-			currentFrame = 0;
-			nextFrame = 1;
+		if (!isAttacking)
+		{
+			if (nextFrame == enemyMesh.size() - 1) {
+				currentFrame = 0;
+				nextFrame = 1;
+			}
+			else {
+				currentFrame = nextFrame;
+				nextFrame += 1;
+			}
 		}
-		else {
-			currentFrame = nextFrame;
-			nextFrame += 1;
+		else
+		{
+			if (nextFrame == enemyAttackMesh.size() - 1) {
+				currentFrame = 0;
+				nextFrame = 1;
+			}
+			else {
+				currentFrame = nextFrame;
+				nextFrame += 1;
+			}
 		}
 	}
 
-	for (int i = 0; i < enemyMesh[0].unpackedVertexData.size(); i++) {
-		morph.mesh.unpackedVertexData[i] = Math::lerp(enemyMesh[currentFrame].unpackedVertexData[i]
-			, enemyMesh[nextFrame].unpackedVertexData[i], m_pLocalMorphTime);
+	if (!isAttacking)
+	{
+		for (int i = 0; i < enemyMesh[0].unpackedVertexData.size(); i++) {
+			morph.mesh.unpackedVertexData[i] = Math::lerp(enemyMesh[currentFrame].unpackedVertexData[i]
+				, enemyMesh[nextFrame].unpackedVertexData[i], m_pLocalMorphTime);
 
-		morph.mesh.unpackedNormalData[i] = Math::lerp(enemyMesh[currentFrame].unpackedNormalData[i]
-			, enemyMesh[nextFrame].unpackedNormalData[i], m_pLocalMorphTime);
+			morph.mesh.unpackedNormalData[i] = Math::lerp(enemyMesh[currentFrame].unpackedNormalData[i]
+				, enemyMesh[nextFrame].unpackedNormalData[i], m_pLocalMorphTime);
 
+		}
+		for (int i = 0; i < enemyMesh[0].unpackedTextureData.size(); i++) {
+			morph.mesh.unpackedTextureData[i] = Math::lerp(enemyMesh[currentFrame].unpackedTextureData[i]
+				, enemyMesh[nextFrame].unpackedTextureData[i], m_pLocalMorphTime);
+		}
 	}
-	for (int i = 0; i < enemyMesh[0].unpackedTextureData.size(); i++) {
-		morph.mesh.unpackedTextureData[i] = Math::lerp(enemyMesh[currentFrame].unpackedTextureData[i]
-			, enemyMesh[nextFrame].unpackedTextureData[i], m_pLocalMorphTime);
+
+	else
+	{
+		for (int i = 0; i < enemyAttackMesh[0].unpackedVertexData.size(); i++) {
+			morph.mesh.unpackedVertexData[i] = Math::lerp(enemyAttackMesh[currentFrame].unpackedVertexData[i]
+				, enemyAttackMesh[nextFrame].unpackedVertexData[i], m_pLocalMorphTime);
+
+			morph.mesh.unpackedNormalData[i] = Math::lerp(enemyAttackMesh[currentFrame].unpackedNormalData[i]
+				, enemyAttackMesh[nextFrame].unpackedNormalData[i], m_pLocalMorphTime);
+
+		}
+		for (int i = 0; i < enemyAttackMesh[0].unpackedTextureData.size(); i++) {
+			morph.mesh.unpackedTextureData[i] = Math::lerp(enemyAttackMesh[currentFrame].unpackedTextureData[i]
+				, enemyAttackMesh[nextFrame].unpackedTextureData[i], m_pLocalMorphTime);
+		}
 	}
 	morph.mesh.update();
 }

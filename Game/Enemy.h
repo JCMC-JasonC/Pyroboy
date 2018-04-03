@@ -34,10 +34,13 @@ public:
 
 	glm::vec3 nForce;
 	std::vector<Mesh> enemyMesh;
+	std::vector<Mesh> enemyAttackMesh;
 	GameObject morph;
 
 	int currentFrame = 0, nextFrame = 1;
 	float m_pLocalMorphTime;
+
+	bool isAttacking = false;
 
 private:
 	float e_health;

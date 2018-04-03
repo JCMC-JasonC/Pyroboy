@@ -1219,12 +1219,52 @@ void Game::initializeGame()
 	e_run38.loadFromFile("meshes/Enemy/Alien (38).obj");
 	e_run39.loadFromFile("meshes/Enemy/Alien (39).obj");
 
+	// Frames
+	e_attack1.loadFromFile("meshes/Enemy/Attack (1).obj");
+	e_attack2.loadFromFile("meshes/Enemy/Attack (2).obj");
+	e_attack3.loadFromFile("meshes/Enemy/Attack (3).obj");
+	e_attack4.loadFromFile("meshes/Enemy/Attack (4).obj");
+	e_attack5.loadFromFile("meshes/Enemy/Attack (5).obj");
+	e_attack6.loadFromFile("meshes/Enemy/Attack (6).obj");
+	e_attack7.loadFromFile("meshes/Enemy/Attack (7).obj");
+	e_attack8.loadFromFile("meshes/Enemy/Attack (8).obj");
+	e_attack9.loadFromFile("meshes/Enemy/Attack (9).obj");
+	e_attack10.loadFromFile("meshes/Enemy/Attack (10).obj");
+	e_attack11.loadFromFile("meshes/Enemy/Attack (11).obj");
+	e_attack12.loadFromFile("meshes/Enemy/Attack (12).obj");
+	e_attack13.loadFromFile("meshes/Enemy/Attack (13).obj");
+	e_attack14.loadFromFile("meshes/Enemy/Attack (14).obj");
+	e_attack15.loadFromFile("meshes/Enemy/Attack (15).obj");
+	e_attack16.loadFromFile("meshes/Enemy/Attack (16).obj");
+	e_attack17.loadFromFile("meshes/Enemy/Attack (17).obj");
+	e_attack18.loadFromFile("meshes/Enemy/Attack (18).obj");
+	e_attack19.loadFromFile("meshes/Enemy/Attack (19).obj");
+	e_attack20.loadFromFile("meshes/Enemy/Attack (20).obj");
+	e_attack21.loadFromFile("meshes/Enemy/Attack (21).obj");
+	e_attack22.loadFromFile("meshes/Enemy/Attack (22).obj");
+	e_attack23.loadFromFile("meshes/Enemy/Attack (23).obj");
+	e_attack24.loadFromFile("meshes/Enemy/Attack (24).obj");
+	e_attack25.loadFromFile("meshes/Enemy/Attack (25).obj");
+	e_attack26.loadFromFile("meshes/Enemy/Attack (26).obj");
+	e_attack27.loadFromFile("meshes/Enemy/Attack (27).obj");
+	e_attack28.loadFromFile("meshes/Enemy/Attack (28).obj");
+	e_attack29.loadFromFile("meshes/Enemy/Attack (29).obj");
+	e_attack30.loadFromFile("meshes/Enemy/Attack (30).obj");
+	e_attack31.loadFromFile("meshes/Enemy/Attack (31).obj");
+	e_attack32.loadFromFile("meshes/Enemy/Attack (32).obj");
+	e_attack33.loadFromFile("meshes/Enemy/Attack (33).obj");
+	e_attack34.loadFromFile("meshes/Enemy/Attack (34).obj");
+	e_attack35.loadFromFile("meshes/Enemy/Attack (35).obj");
+	e_attack36.loadFromFile("meshes/Enemy/Attack (36).obj");
+	e_attack37.loadFromFile("meshes/Enemy/Attack (37).obj");
+	e_attack38.loadFromFile("meshes/Enemy/Attack (38).obj");
+
 	//set enemies health and damage, respectively
 	//aliens
 	for (int i = 0; i < (enemies.size()/2)/2; i++)
 	{
 		enemies[i]->morph.loadMesh("meshes/Enemy/Alien (1).obj");
-		enemies[i]->morph.loadTexture(TextureType::Diffuse, "textures/Model Textures/alien_PNG.png");
+		enemies[i]->morph.loadTexture(TextureType::Diffuse, "textures/Model Textures/Enemy_Alien_Diffuse.png");
 		enemies[i]->morph.loadTexture(TextureType::Specular, "textures/noSpecular.png");
 
 		enemies[i]->enemyMesh.push_back(e_run1);
@@ -1266,6 +1306,45 @@ void Game::initializeGame()
 		enemies[i]->enemyMesh.push_back(e_run37);
 		enemies[i]->enemyMesh.push_back(e_run38);
 		enemies[i]->enemyMesh.push_back(e_run39);
+
+		enemies[i]->enemyAttackMesh.push_back(e_attack1);
+		enemies[i]->enemyAttackMesh.push_back(e_attack2);
+		enemies[i]->enemyAttackMesh.push_back(e_attack3);
+		enemies[i]->enemyAttackMesh.push_back(e_attack4);
+		enemies[i]->enemyAttackMesh.push_back(e_attack5);
+		enemies[i]->enemyAttackMesh.push_back(e_attack6);
+		enemies[i]->enemyAttackMesh.push_back(e_attack7);
+		enemies[i]->enemyAttackMesh.push_back(e_attack8);
+		enemies[i]->enemyAttackMesh.push_back(e_attack9);
+		enemies[i]->enemyAttackMesh.push_back(e_attack10);
+		enemies[i]->enemyAttackMesh.push_back(e_attack11);
+		enemies[i]->enemyAttackMesh.push_back(e_attack12);
+		enemies[i]->enemyAttackMesh.push_back(e_attack13);
+		enemies[i]->enemyAttackMesh.push_back(e_attack14);
+		enemies[i]->enemyAttackMesh.push_back(e_attack15);
+		enemies[i]->enemyAttackMesh.push_back(e_attack16);
+		enemies[i]->enemyAttackMesh.push_back(e_attack17);
+		enemies[i]->enemyAttackMesh.push_back(e_attack18);
+		enemies[i]->enemyAttackMesh.push_back(e_attack19);
+		enemies[i]->enemyAttackMesh.push_back(e_attack20);
+		enemies[i]->enemyAttackMesh.push_back(e_attack21);
+		enemies[i]->enemyAttackMesh.push_back(e_attack22);
+		enemies[i]->enemyAttackMesh.push_back(e_attack23);
+		enemies[i]->enemyAttackMesh.push_back(e_attack24);
+		enemies[i]->enemyAttackMesh.push_back(e_attack25);
+		enemies[i]->enemyAttackMesh.push_back(e_attack26);
+		enemies[i]->enemyAttackMesh.push_back(e_attack27);
+		enemies[i]->enemyAttackMesh.push_back(e_attack28);
+		enemies[i]->enemyAttackMesh.push_back(e_attack29);
+		enemies[i]->enemyAttackMesh.push_back(e_attack30);
+		enemies[i]->enemyAttackMesh.push_back(e_attack31);
+		enemies[i]->enemyAttackMesh.push_back(e_attack32);
+		enemies[i]->enemyAttackMesh.push_back(e_attack33);
+		enemies[i]->enemyAttackMesh.push_back(e_attack34);
+		enemies[i]->enemyAttackMesh.push_back(e_attack35);
+		enemies[i]->enemyAttackMesh.push_back(e_attack36);
+		enemies[i]->enemyAttackMesh.push_back(e_attack37);
+		enemies[i]->enemyAttackMesh.push_back(e_attack38);
 
 		enemies[i]->morph.scale = 1.2f;
 		enemies[i]->setProperty(50.f, 1.f);
@@ -1525,6 +1604,7 @@ void Game::TreeWasAttacked(Enemy* _x, glm::vec3 pos)
 {
 	if (_x->inArea(glm::vec3(0.f, 0.f, 0.), objType::T_OBJ))
 	{
+		_x->isAttacking = true;
 		tree_health -= _x->getAttack();
 		//std::cout << tree_health << std::endl;
 		//if ((int)tree_health %100==0)
@@ -1556,6 +1636,7 @@ void Game::TreeWasAttacked(Enemy* _x, glm::vec3 pos)
 	}
 	if (_x->inArea(pos, objType::P_OBJ)) // player taking damage
 	{
+		_x->isAttacking = true;
 		player_health -= _x->getAttack(); 
 		//std::cout << player_health << std::endl;
 
@@ -1565,6 +1646,10 @@ void Game::TreeWasAttacked(Enemy* _x, glm::vec3 pos)
 				playerDead = true;
 				
 		}
+	}
+	if (!_x->inArea(pos, objType::P_OBJ) && !_x->inArea(glm::vec3(0.f, 0.f, 0.), objType::T_OBJ))
+	{
+		_x->isAttacking = false;
 	}
 }
 void Game::createBullet(glm::vec3 pos, glm::vec3 dir)
