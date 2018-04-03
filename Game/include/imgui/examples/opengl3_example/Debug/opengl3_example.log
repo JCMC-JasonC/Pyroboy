@@ -1,0 +1,29 @@
+﻿Build started 5/4/2017 2:40:04 PM.
+     1>Project "C:\Dropbox\mge2\sdks\imgui\examples\opengl3_example\opengl3_example.vcxproj" on node 2 (Build target(s)).
+     1>InitializeBuildStatus:
+         Touching "C:\Dropbox\mge2\sdks\imgui\examples\opengl3_example\Debug\opengl3_example.tlog\unsuccessfulbuild".
+       ClCompile:
+         C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\bin\CL.exe /c /IC:\Dropbox\mge2\sdks\imgui\examples\\libs\glfw\include /IC:\Dropbox\mge2\sdks\imgui\examples\\libs\gl3w /I..\.. /ZI /nologo /W4 /WX- /Od /Oy- /D _MBCS /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"C:\Dropbox\mge2\sdks\imgui\examples\opengl3_example\Debug\\" /Fd"C:\Dropbox\mge2\sdks\imgui\examples\opengl3_example\Debug\vc140.pdb" /Gd /TP /analyze- /errorReport:prompt main.cpp
+         main.cpp
+         All outputs are up-to-date.
+       Link:
+         C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Dropbox\mge2\sdks\imgui\examples\opengl3_example\Debug\opengl3_example.exe" /INCREMENTAL /NOLOGO /LIBPATH:"C:\Dropbox\mge2\sdks\imgui\examples\\libs\glfw\lib-vc2010-32" opengl32.lib glfw3.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /NODEFAULTLIB:msvcrt.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:\Dropbox\mge2\sdks\imgui\examples\opengl3_example\Debug\opengl3_example.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Dropbox\mge2\sdks\imgui\examples\opengl3_example\Debug\opengl3_example.lib" /MACHINE:X86 C:\Dropbox\mge2\sdks\imgui\examples\opengl3_example\Debug\imgui.obj
+         C:\Dropbox\mge2\sdks\imgui\examples\opengl3_example\Debug\imgui_demo.obj
+         C:\Dropbox\mge2\sdks\imgui\examples\opengl3_example\Debug\imgui_draw.obj
+         C:\Dropbox\mge2\sdks\imgui\examples\opengl3_example\Debug\gl3w.obj
+         C:\Dropbox\mge2\sdks\imgui\examples\opengl3_example\Debug\imgui_impl_glfw_gl3.obj
+         C:\Dropbox\mge2\sdks\imgui\examples\opengl3_example\Debug\main.obj
+     1>glfw3.lib(init.obj) : warning LNK4217: locally defined symbol _vsnprintf imported in function __glfwInputError
+     1>MSVCRTD.lib(vsnprintf.obj) : warning LNK4049: locally defined symbol _vsnprintf imported
+     1>glfw3.lib(context.obj) : warning LNK4217: locally defined symbol _sscanf imported in function _parseVersionString
+     1>MSVCRTD.lib(vsnprintf.obj) : warning LNK4049: locally defined symbol __vsnprintf imported
+         opengl3_example.vcxproj -> C:\Dropbox\mge2\sdks\imgui\examples\opengl3_example\Debug\opengl3_example.exe
+         opengl3_example.vcxproj -> C:\Dropbox\mge2\sdks\imgui\examples\opengl3_example\Debug\opengl3_example.pdb (Full PDB)
+       FinalizeBuildStatus:
+         Deleting file "C:\Dropbox\mge2\sdks\imgui\examples\opengl3_example\Debug\opengl3_example.tlog\unsuccessfulbuild".
+         Touching "C:\Dropbox\mge2\sdks\imgui\examples\opengl3_example\Debug\opengl3_example.tlog\opengl3_example.lastbuildstate".
+     1>Done Building Project "C:\Dropbox\mge2\sdks\imgui\examples\opengl3_example\opengl3_example.vcxproj" (Build target(s)).
+
+Build succeeded.
+
+Time Elapsed 00:00:00.93
