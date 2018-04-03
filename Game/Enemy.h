@@ -17,8 +17,9 @@ public:
 
 	void update(float dt);
 	void seek(glm::vec3 &pos);
-	void draw(ShaderProgram &shader, glm::mat4 &cameraTransform, glm::mat4 &cameraProjection, std::vector<Light> &pointLights,Light &directionalLight);
-	
+	void draw(ShaderProgram &shader, glm::mat4 &cameraTransform, glm::mat4 &cameraProjection, std::vector<Light> &pointLights, Light &directionalLight);
+	void animate(float dt);
+
 	void setBool(bool b);
 	bool getBool()
 	{
@@ -32,12 +33,22 @@ public:
 	glm::vec3 acceleration;
 
 	glm::vec3 nForce;
+	std::vector<Mesh> enemyMesh;
+	std::vector<Mesh> enemyAttackMesh;
+	GameObject morph, attack;
+
+	int currentFrame = 0, nextFrame = 1;
+	int currentFrame1 = 0, nextFrame1 = 1;
+	float m_pLocalMorphTime;
+
+	bool isAttacking = false;
+
 private:
 	float e_health;
 	float e_damage;
 
 	//glm::vec3 nForce = glm::vec3(1.f,1.f,1.f);
 
-	bool collided=false;
+	bool collided = false;
 
 };

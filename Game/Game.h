@@ -110,6 +110,18 @@ public:
 	glm::vec4 bulletLocation= glm::vec4(0.f);
 	Mesh  insectMesh, trapMesh, run1,run2,run3,run4,run5,run6,run7,run8,run9,run10,run11,run12,run13,run14,run15,run16,run17,run18,run19
 		,run20,run21,run22,run23,run24,run25,run26;
+
+	// Enemy running meshes :<
+	Mesh e_run1, e_run2, e_run3, e_run4, e_run5, e_run6, e_run7, e_run8, e_run9, e_run10, e_run11, e_run12, e_run13, e_run14, e_run15,
+		e_run16, e_run17, e_run18, e_run19, e_run20, e_run21, e_run22, e_run23, e_run24, e_run25, e_run26, e_run27, e_run28,
+		e_run29, e_run30, e_run31, e_run32, e_run33, e_run34, e_run35, e_run36, e_run37, e_run38, e_run39;
+
+	// Enemy attack	 meshes :<
+	Mesh e_attack1, e_attack2, e_attack3, e_attack4, e_attack5, e_attack6, e_attack7, e_attack8, e_attack9, e_attack10, e_attack11, e_attack12, 
+		e_attack13, e_attack14, e_attack15, e_attack16, e_attack17, e_attack18, e_attack19, e_attack20, e_attack21, e_attack22, e_attack23,
+		e_attack24, e_attack25, e_attack26, e_attack27, e_attack28, e_attack29, e_attack30, e_attack31, e_attack32, e_attack33, e_attack34, 
+		e_attack35, e_attack36, e_attack37, e_attack38;
+
 	Mesh bulletMesh, alienMesh, heartMesh, uiMesh;
 	Texture fenceTex, p_healthTex, t_healthTex, uiTex, ui2Tex,smoke;
 
