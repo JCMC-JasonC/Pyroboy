@@ -39,6 +39,29 @@ void GameObject::drawWithShadows(ShaderProgram &shader, glm::mat4 &cameraTransfo
 
 	shader.unbind();
 }
+void GameObject::sendPointLightUniforms(ShaderProgram &shader, glm::mat4 &cameraTransform, std::vector<Light> &pointLights)
+{
+	for (int i = 0; i < pointLights.size(); i++)
+	{
+		std::string prefix = "pointLights[" + std::to_string(i) + "].";
+		shader.sendUniform(prefix + "position", cameraTransform * pointLights[i].positionOrDirection);
+		shader.sendUniform(prefix + "ambient", pointLights[i].ambient);
+		shader.sendUniform(prefix + "diffuse", pointLights[i].diffuse);
+		shader.sendUniform(prefix + "specular", pointLights[i].specular);
+		shader.sendUniform(prefix + "specularExponent", pointLights[i].specularExponent);
+		shader.sendUniform(prefix + "constantAttenuation", pointLights[i].constantAttenuation);
+		shader.sendUniform(prefix + "linearAttenuation", pointLights[i].linearAttenuation);
+		shader.sendUniform(prefix + "quadraticAttenuation", pointLights[i].quadraticAttenuation);
+	}
+}
+void GameObject::sendDirectionalLightUniforms(ShaderProgram &shader, glm::mat4 &cameraTransform, Light &directionalLight)
+{
+	shader.sendUniform("directionalLight.direction", cameraTransform * directionalLight.positionOrDirection);
+	shader.sendUniform("directionalLight.ambient", directionalLight.ambient);
+	shader.sendUniform("directionalLight.diffuse", directionalLight.diffuse);
+	shader.sendUniform("directionalLight.specular", directionalLight.specular);
+	shader.sendUniform("directionalLight.specularExponent", directionalLight.specularExponent);
+}
 void GameObject::draw(ShaderProgram &shader, glm::mat4 &cameraTransform, glm::mat4 &cameraProjection
 	, std::vector<Light> &pointLights, Light &directionalLight)
 {
@@ -52,23 +75,8 @@ void GameObject::draw(ShaderProgram &shader, glm::mat4 &cameraTransform, glm::ma
 	shader.sendUniform("material.hue", mat.hue);
 	shader.sendUniform("material.specularExponent", mat.specularExponent);
 
-	for (int i = 0; i < pointLights.size(); i++)
-	{
-		std::string prefix = "pointLights[" + std::to_string(i) + "].";
-		shader.sendUniform(prefix + "position", cameraTransform * pointLights[i].positionOrDirection);
-		shader.sendUniform(prefix + "ambient", pointLights[i].ambient);
-		shader.sendUniform(prefix + "diffuse", pointLights[i].diffuse);
-		shader.sendUniform(prefix + "specular", pointLights[i].specular);
-		shader.sendUniform(prefix + "specularExponent", pointLights[i].specularExponent);
-		shader.sendUniform(prefix + "constantAttenuation", pointLights[i].constantAttenuation);
-		shader.sendUniform(prefix + "linearAttenuation", pointLights[i].linearAttenuation);
-		shader.sendUniform(prefix + "quadraticAttenuation", pointLights[i].quadraticAttenuation);
-	}
-	shader.sendUniform("directionalLight.direction", cameraTransform * directionalLight.positionOrDirection);
-	shader.sendUniform("directionalLight.ambient", directionalLight.ambient);
-	shader.sendUniform("directionalLight.diffuse", directionalLight.diffuse);
-	shader.sendUniform("directionalLight.specular", directionalLight.specular);
-	shader.sendUniform("directionalLight.specularExponent", directionalLight.specularExponent);
+	sendPointLightUniforms(shader, cameraTransform, pointLights);
+	sendDirectionalLightUniforms(shader, cameraTransform, directionalLight);
 
 	glActiveTexture(GL_TEXTURE0);
 	mat.diffuse.bind();

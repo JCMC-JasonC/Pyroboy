@@ -49,6 +49,8 @@ public:
 	
 	bool shouldDraw = true; // Used for UI elements to decide which ones to draw
 
+	void sendPointLightUniforms(ShaderProgram &shader, glm::mat4 &cameraTransform, std::vector<Light> &pointLights);
+	void sendDirectionalLightUniforms(ShaderProgram &shader, glm::mat4 &cameraTransform, Light &directionalLight);
 	virtual void loadMesh(const std::string &meshFile);
 	virtual void loadTexture(TextureType type, const std::string &texFile);
 	virtual void draw(ShaderProgram &shader, glm::mat4 &cameraTransform, glm::mat4 &cameraProjection

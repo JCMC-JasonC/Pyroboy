@@ -19,6 +19,7 @@
 #include <map>
 #include <memory>
 #include <queue>
+#include<imgui\imgui_impl.h>
 
 #define WINDOW_WIDTH 1920
 #define WINDOW_HEIGHT 1020
@@ -64,6 +65,7 @@ public:
 	void drawFboAttachmentToBackBuffer(FrameBufferObject& fbo, int colorAttachment, glm::vec4 clearColor = glm::vec4(0.0));
 	void drawScene();
 	void drawSceneWithShadows(ShaderProgram &shader, bool isShadowMap);
+	void drawHealth();
 
 
 	GameStates getState() { return state; }
@@ -111,6 +113,7 @@ public:
 
 	float healthCounter=0.f, bulletTime = 0.f, bloomThreshold= 0.01f;
 	int numTraps = 0, counter, treeHeartCounter;
+	int pass = 300;
 
 	float alertTimer = 0.f;
 
@@ -131,7 +134,7 @@ public:
 
 	std::vector<glm::vec3> positions;
 	std::vector<Light> pointLights;
-	Light directionalLight;
+	Light directionalLight, originalP1, originalD;
 
 	ShaderProgram noLight;
 	ShaderProgram phongNoTexture;
@@ -175,6 +178,7 @@ public:
 
 	bool shooting = false, pause = false, treeDead = false, playerDead = false;
 	bool treeDamaged = false, playerDamaged = false;
+	bool debug = false, light= true;
 
 	SoundEngine se;
 	FMOD_RESULT      result,blast;

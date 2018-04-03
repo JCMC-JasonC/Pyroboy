@@ -115,6 +115,16 @@ void Game::startUp()
 	light1.linearAttenuation = 0.1f;
 	light1.quadraticAttenuation = 0.01f;
 
+	originalP1.positionOrDirection = glm::vec4(0.f, 10.f, -1.f, 1.f);
+	originalP1.originalPosition = light1.positionOrDirection;
+	originalP1.ambient = glm::vec3(0.06f, 0.1f, 0.06f);
+	originalP1.diffuse = glm::vec3(0.9f);
+	originalP1.specular = glm::vec3(0.5f);
+	originalP1.specularExponent = 50.f;
+	originalP1.constantAttenuation = 1.f;
+	originalP1.linearAttenuation = 0.1f;
+	originalP1.quadraticAttenuation = 0.01f;
+
 	pointLights.push_back(light1);
 
 	directionalLight.positionOrDirection = glm::vec4(-1.f, -1.f, 11.f, 0.f);
@@ -123,9 +133,15 @@ void Game::startUp()
 	directionalLight.specular - glm::vec3(1.0f);
 	directionalLight.specularExponent = 50.f;
 
+	originalD.positionOrDirection = glm::vec4(-1.f, -1.f, 11.f, 0.f);
+	originalD.ambient = glm::vec3(0.08f);
+	originalD.diffuse = glm::vec3(0.7f);
+	originalD.specular - glm::vec3(1.0f);
+	originalD.specularExponent = 50.f;
+
 	lightProjection = glm::ortho(-10.f, 10.f, -10.f,10.f, near_plane, far_plane);
 	//lightProjection = glm::perspective(150.f, (float)WINDOW_WIDTH / (float)WINDOW_HEIGHT, near_plane, far_plane);
-	lightView = glm::lookAt(glm::vec3(glm::vec4(-1.f, -1.f,300.f, 0.f)), glm::vec3(0.f), glm::vec3(0.f, 1.f, 0.f));//unsure if up is 1 or -1
+	lightView = glm::lookAt(glm::vec3(glm::vec4(1.f, 1.f, 300.f, 0.f)), glm::vec3(0.f), glm::vec3(0.f, -1.f, 0.f));//unsure if up is 1 or -1
 	lightSpaceMatrix = lightProjection * lightView;
 
 	startupBack.loadMesh("meshes/background.obj");
@@ -509,13 +525,13 @@ void Game::drawSceneWithShadows(ShaderProgram &shader, bool isShadowMap)
 	{
 		shader.sendUniform("near_plane", near_plane);
 		shader.sendUniform("far_plane", far_plane);
-		depthMapFBO.bindDepthTextureForSampling(GL_TEXTURE0);
+		sceneBuffer.bindDepthTextureForSampling(GL_TEXTURE0);
 	}
 	else
 	{
 		sceneBuffer.bindTextureForSampling(0, GL_TEXTURE0);
-		depthMapFBO.bindDepthTextureForSampling(GL_TEXTURE1);
-		shader.sendUniform("lightPos", glm::vec3(glm::vec4(-1.f, -1.f, 300.f, 0.f)));
+		sceneBuffer.bindDepthTextureForSampling(GL_TEXTURE1);
+		shader.sendUniform("lightPos", glm::vec3(1.f, 1.f, 300.f));
 		//shader.sendUniformMat4("view", glm::value_ptr(emptyMat), false);
 	}
 }
@@ -556,8 +572,9 @@ void Game::brightPass()
 	//player.draw(phong, cameraTransform, cameraProjection, pointLights, directionalLight);
 	//tree.draw(phong, cameraTransform, cameraProjection, pointLights, directionalLight);
 
-	drawScene();
+	//drawScene();
 	//drawHUD();
+	drawHealth();
 	sceneBuffer.bindTextureForSampling(0, GL_TEXTURE0);
 
 
@@ -591,7 +608,6 @@ void Game::blurBrightPass()
 
 	meshes["quad"]->draw();
 
-	int pass = 300; // pass 30 times
 	for (int i = 0; i < pass; i++) {
 		buffer.bindFrameBufferForDrawing();
 		blurBuffer.bindTextureForSampling(0, GL_TEXTURE0);
@@ -1749,6 +1765,26 @@ void Game::switchUIToDraw(GameObject::Ptr curUI, uiType type)
 
 void Game::drawHUD()
 {
+	drawHealth();
+	glDisable(GL_DEPTH_TEST);
+	glViewport(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT); // position and size of viewport
+	glEnable(GL_BLEND); // Allows Transparency
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	cameraOrtho = glm::ortho(0.0f, (float)WINDOW_WIDTH, 0.0f, (float)WINDOW_HEIGHT, -1000.0f, 1000.0f);
+	//std::cout << t << std::endl;
+	if (t >= 5) { otherUI["protect"]->shouldDraw = false; }
+
+	for (auto itr = otherUI.begin(); itr != otherUI.end(); itr++)
+	{
+		if (itr->second->shouldDraw == true)
+			itr->second->draw(noLight, glm::mat4(1.0f), cameraOrtho, pointLights, directionalLight);
+	}
+
+	glDisable(GL_BLEND);
+	glEnable(GL_DEPTH_TEST);
+}
+void Game::drawHealth()
+{
 	glDisable(GL_DEPTH_TEST);
 	glViewport(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT); // position and size of viewport
 	glEnable(GL_BLEND); // Allows Transparency
@@ -1769,7 +1805,7 @@ void Game::drawHUD()
 	else if (player_health <= player_start_health * 0.8) { switchUIToDraw(playerUI["playerHP8"], PLAYER); }
 	else if (player_health <= player_start_health * 0.9) { switchUIToDraw(playerUI["playerHP9"], PLAYER); }
 	else if (player_health <= player_start_health * 1) { switchUIToDraw(playerUI["playerHP10"], PLAYER); }
-	
+
 	// same thing with tree
 	//std::cout << "tree health: " << tree_health << std::endl;
 	if (tree_health <= tree_start_health * 0.1) { switchUIToDraw(treeUI["treeHP1"], TREE); }
@@ -1782,7 +1818,7 @@ void Game::drawHUD()
 	else if (tree_health <= tree_start_health * 0.8) { switchUIToDraw(treeUI["treeHP8"], TREE); }
 	else if (tree_health <= tree_start_health * 0.9) { switchUIToDraw(treeUI["treeHP9"], TREE); }
 	else if (tree_health <= tree_start_health * 1) { switchUIToDraw(treeUI["treeHP10"], TREE); }
-	
+
 	// draw ui that's set to true
 	for (auto itr = playerUI.begin(); itr != playerUI.end(); itr++)
 	{
@@ -1795,20 +1831,13 @@ void Game::drawHUD()
 			itr->second->draw(noLight, glm::mat4(1.0f), cameraOrtho, pointLights, directionalLight);
 	}
 
-	//std::cout << t << std::endl;
-	if (t >= 5) { otherUI["protect"]->shouldDraw = false; }
-
-	for (auto itr = otherUI.begin(); itr != otherUI.end(); itr++)
-	{
-		if (itr->second->shouldDraw == true)
-			itr->second->draw(noLight, glm::mat4(1.0f), cameraOrtho, pointLights, directionalLight);
-	}
-
 	glDisable(GL_BLEND);
 	glEnable(GL_DEPTH_TEST);
 }
 void Game::draw()
 {
+	internal::StartUI(WINDOW_WIDTH, WINDOW_HEIGHT);
+
 	//glClearColor(0.5, 0.5, 0.5, 0);	
 	glClearColor(.4f, .2f, 0, 1);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -1821,6 +1850,7 @@ void Game::draw()
 	drawScene();
 
 	sceneBuffer.unbindFrameBuffer(WINDOW_WIDTH, WINDOW_HEIGHT);
+
 	//For shadows
 	//cull front
 	//render to depth map
@@ -1834,16 +1864,16 @@ void Game::draw()
 	//send uniforms
 	//bind depth texture
 	//render scene
-	
+
 	glCullFace(GL_FRONT);
-	depthMapFBO.bindFrameBufferForDrawing();
-	depthMapFBO.clearFrameBuffer(glm::vec4(0));
+	sceneBuffer.bindFrameBufferForDrawing();
+	sceneBuffer.clearFrameBuffer(glm::vec4(0));
 	drawScene();
 	drawSceneWithShadows(*materials["depthMap"], false);
 	/*depthMap.bind();
 	depthMapFBO.bindDepthTextureForSampling(GL_TEXTURE0);*/
 	//meshes["quad"]->draw();
-	depthMapFBO.unbindFrameBuffer(WINDOW_WIDTH, WINDOW_HEIGHT);
+	sceneBuffer.unbindFrameBuffer(WINDOW_WIDTH, WINDOW_HEIGHT);
 	glCullFace(GL_BACK);
 
 	sceneBuffer.bindFrameBufferForDrawing();
@@ -1859,7 +1889,7 @@ void Game::draw()
 	//
 	sceneBuffer.unbindFrameBuffer(WINDOW_WIDTH, WINDOW_HEIGHT);
 	sceneBuffer.unbindTexture(GL_TEXTURE0);
-	depthMapFBO.unbindTexture(GL_TEXTURE1);
+	sceneBuffer.unbindTexture(GL_TEXTURE1);
 
 	brightPass(); // Implement this function!
 	blurBrightPass(); // Implement this function!
@@ -1879,6 +1909,63 @@ void Game::draw()
 	blurBuffer.unbindTexture(GL_TEXTURE0);
 	//drawFboAttachmentToBackBuffer(sceneBuffer, 0);
 	//drawFboAttachmentToBackBuffer(buffer, 0);
+
+	if (debug)
+	{
+		if (ImGui::CollapsingHeader("Lighting", 0))
+		{
+			if (ImGui::Button("Lighting"))
+			{
+				light = !light;
+				if (light)
+				{
+					directionalLight.ambient  = originalD.ambient;
+					directionalLight.diffuse  = originalD.diffuse;
+					directionalLight.specular = originalD.specular;
+					player.sendDirectionalLightUniforms(phong, cameraTransform, directionalLight);
+
+					for (int i = 0; i < pointLights.size(); i++)
+					{
+						pointLights[i].ambient  = originalP1.ambient;
+						pointLights[i].diffuse  = originalP1.diffuse;
+						pointLights[i].specular = originalP1.specular;
+					}
+					player.sendPointLightUniforms(phong, cameraTransform, pointLights);
+				}
+				else
+				{
+					directionalLight.ambient  = glm::vec3(0);
+					directionalLight.diffuse  = glm::vec3(0);
+					directionalLight.specular = glm::vec3(0);
+					player.sendDirectionalLightUniforms(phong, cameraTransform, directionalLight);
+
+					for (int i = 0; i < pointLights.size(); i++)
+					{
+						pointLights[i].ambient  = glm::vec3(0);
+						pointLights[i].diffuse  = glm::vec3(0);
+						pointLights[i].specular = glm::vec3(0);
+					}
+					player.sendPointLightUniforms(phong, cameraTransform, pointLights);
+				}
+			}
+		}
+		if(ImGui::CollapsingHeader("Post-Processing", 0))
+		{
+			if (ImGui::CollapsingHeader("Bloom", 0))
+			{
+				ImGui::SliderFloat("Bloom Threshold", &bloomThreshold, 0.01f, 1.f, "%.2f", 1.f);
+				//std::cout << bloomThreshold << std::endl;
+				ImGui::SliderInt("Blur passes", &pass, 1, 1000);
+			}
+			if (ImGui::CollapsingHeader("Shadows", 0))
+			{
+
+			}
+		}
+		tree_health = tree_start_health;
+		player_health = player_start_health;
+	}
+	internal::EndUI();
 	glutSwapBuffers();
 
 }
@@ -1889,7 +1976,26 @@ void Game::keyboardDown(unsigned char key, int mouseX, int mouseY)
 	glm::vec3 playerLocation = glm::vec3(player.translate*
 		glm::vec4(glm::vec3(1.f, 1.f, 1.f), 1.0));
 
+	ImGuiIO& io = ImGui::GetIO();
+	io.KeysDown[(int)key] = true;
+	io.AddInputCharacter((int)key); // this is what makes keyboard input work in imgui
 
+									// This is what makes the backspace button work
+	int keyModifier = glutGetModifiers();
+	switch (keyModifier)
+	{
+	/*case GLUT_ACTIVE_SHIFT:
+		io.KeyShift = true;
+		break;
+
+	case GLUT_ACTIVE_CTRL:
+		io.KeyCtrl = true;
+		break;
+
+	case GLUT_ACTIVE_ALT:
+		io.KeyAlt = true;
+		break;*/
+	}
 	switch (key) 
 	{
 	case 27://esc
@@ -1943,7 +2049,9 @@ void Game::keyboardDown(unsigned char key, int mouseX, int mouseY)
 		sKeyDown = true;	
 		isDown = true;
 		break;
-
+	case 'i':
+		debug = !debug;
+		break;
 	case 'd':
 		dKeyDown = true;
 		isRight = true;
@@ -1986,6 +2094,27 @@ void Game::keyboardDown(unsigned char key, int mouseX, int mouseY)
 }
 void Game::keyboardUp(unsigned char key, int mouseX, int mouseY)
 {
+	ImGuiIO& io = ImGui::GetIO();
+	io.KeysDown[key] = false;
+
+	int keyModifier = glutGetModifiers();
+	io.KeyShift = false;
+	io.KeyCtrl = false;
+	io.KeyAlt = false;
+	switch (keyModifier)
+	{
+	/*case GLUT_ACTIVE_SHIFT:
+		io.KeyShift = true;
+		break;
+
+	case GLUT_ACTIVE_CTRL:
+		io.KeyCtrl = true;
+		break;
+
+	case GLUT_ACTIVE_ALT:
+		io.KeyAlt = true;
+		break;*/
+	}
 	switch (key)
 	{
 	case 'r':
@@ -2073,6 +2202,8 @@ void Game::mouseClicked(int button, int state, int x, int y)
 
 	mousePositionFlipped.x = x;
 	mousePositionFlipped.y = WINDOW_HEIGHT - y;
+	ImGui::GetIO().MouseDown[0] = !state;
+
 	if (state == GLUT_DOWN) {
 		switch (button) {
 		case GLUT_LEFT_BUTTON:
@@ -2094,5 +2225,5 @@ void Game::mouseMoved(int x, int y)
 
 	mousePositionFlipped.x = x;
 	mousePositionFlipped.y = WINDOW_HEIGHT - y;
-
+	ImGui::GetIO().MousePos = ImVec2((float)x, (float)y);
 }

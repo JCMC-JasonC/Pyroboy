@@ -28,6 +28,9 @@
     <Filter Include="Source Files\Graphics">
       <UniqueIdentifier>{7356642c-07c2-4bff-bf4d-79be35535ea2}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\ImGUI">
+      <UniqueIdentifier>{bf2837f4-ffa9-4b54-87ad-84762428bbb7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -89,6 +92,18 @@
     </ClCompile>
     <ClCompile Include="ParticleEmitterSoA.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="include\imgui\imgui.cpp">
+      <Filter>Source Files\ImGUI</Filter>
+    </ClCompile>
+    <ClCompile Include="include\imgui\imgui_demo.cpp">
+      <Filter>Source Files\ImGUI</Filter>
+    </ClCompile>
+    <ClCompile Include="include\imgui\imgui_draw.cpp">
+      <Filter>Source Files\ImGUI</Filter>
+    </ClCompile>
+    <ClCompile Include="include\imgui\imgui_impl.cpp">
+      <Filter>Source Files\ImGUI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -154,6 +169,24 @@
     </ClInclude>
     <ClInclude Include="Camera.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\imgui\imgui.h">
+      <Filter>Source Files\ImGUI</Filter>
+    </ClInclude>
+    <ClInclude Include="include\imgui\imgui_impl.h">
+      <Filter>Source Files\ImGUI</Filter>
+    </ClInclude>
+    <ClInclude Include="include\imgui\imgui_internal.h">
+      <Filter>Source Files\ImGUI</Filter>
+    </ClInclude>
+    <ClInclude Include="include\imgui\stb_rect_pack.h">
+      <Filter>Source Files\ImGUI</Filter>
+    </ClInclude>
+    <ClInclude Include="include\imgui\stb_textedit.h">
+      <Filter>Source Files\ImGUI</Filter>
+    </ClInclude>
+    <ClInclude Include="include\imgui\stb_truetype.h">
+      <Filter>Source Files\ImGUI</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

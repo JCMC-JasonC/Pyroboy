@@ -132,6 +132,7 @@ int main(int argc, char **argv)
 	glutSpecialUpFunc(SpecialInputCallbackFunctionUp);
 	glutIdleFunc(updateGame);
 	
+	internal::InitImGUI();
 	game = new Game();
 	
 	game->startUp();
