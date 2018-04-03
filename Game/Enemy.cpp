@@ -82,6 +82,40 @@ void Enemy::update(float dt)
 	velocity = velocity + acceleration * dt;
 	position = position + velocity * dt;
 }
+
+void Enemy::animate(float dt)
+{
+	m_pLocalMorphTime += dt * 50.f;
+
+	//change frames when W/A/S/D is pressed
+	if (m_pLocalMorphTime >= 1) {
+		m_pLocalMorphTime = 0;
+
+		if (nextFrame == e_mesh.size() - 1) {
+			currentFrame = 0;
+			nextFrame = 1;
+		}
+		else {
+			currentFrame = nextFrame;
+			nextFrame += 1;
+		}
+	}
+
+	for (int i = 0; i < e_mesh[0].unpackedVertexData.size(); i++) {
+		morph.mesh.unpackedVertexData[i] = Math::lerp(e_mesh[currentFrame].unpackedVertexData[i] 
+			, e_mesh[nextFrame].unpackedVertexData[i], m_pLocalMorphTime);
+
+		morph.mesh.unpackedNormalData[i] = Math::lerp(e_mesh[currentFrame].unpackedNormalData[i]
+			, e_mesh[nextFrame].unpackedNormalData[i], m_pLocalMorphTime);
+
+	}
+	for (int i = 0; i < e_mesh[0].unpackedTextureData.size(); i++) {
+		morph.mesh.unpackedTextureData[i] = Math::lerp(e_mesh[currentFrame].unpackedTextureData[i]
+			, e_mesh[nextFrame].unpackedTextureData[i], m_pLocalMorphTime);
+	}
+	morph.mesh.update();
+}
+
 void Enemy::seek(glm::vec3 &pos)
 {
 	glm::vec3 desired = pos - position;

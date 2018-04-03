@@ -1126,6 +1126,7 @@ void Game::initializeGame()
 
 	//ENEMY POSITIONS
 	enemy.position = glm::vec3 (-400.f,  0.f,   -2.f);
+	enemy.position = glm::vec3 (-400.f,  0.f,   -2.f);
 	enemy2.position = glm::vec3( 100.f, -400.f, -2.f);
 	enemy3.position = glm::vec3(-250.f,  100.f, -2.f);
 	enemy4.position = glm::vec3( 0.f,   -350.f, -2.f);
@@ -1247,7 +1248,7 @@ void Game::initializeGame()
 
 	//set enemies health and damage, respectively
 	//aliens
-	for (int i = 0; i < (enemies.size()/2)/2; i++)
+	for (int i = 1; i < (enemies.size()/2)/2; i++)
 	{
 		enemies[i]->loadMesh("meshes/GDW_AlienNew.obj");
 		enemies[i]->loadTexture(TextureType::Diffuse, "textures/Model Textures/alien_PNG.png");
@@ -1275,8 +1276,97 @@ void Game::initializeGame()
 		enemies[i]->setProperty(10.f, 1.f);
 	}
 
-	//load textures
-	//FENCE POSITIONS
+	// Animations GLHF
+
+	enemies[0]->morph.loadMesh("meshes/Enemy/Alien (1).obj");
+	player.morph.loadTexture(TextureType::Diffuse, "textures/Model Textures/alien_PNG.png");
+	player.morph.loadTexture(TextureType::Specular, "textures/noSpecular.png");
+
+	// Frames
+	e_run1.loadFromFile("meshes/Enemy/Alien (1).obj");
+	e_run2.loadFromFile("meshes/Enemy/Alien (2).obj");
+	e_run3.loadFromFile("meshes/Enemy/Alien (3).obj");
+	e_run4.loadFromFile("meshes/Enemy/Alien (4).obj");
+	e_run5.loadFromFile("meshes/Enemy/Alien (5).obj");
+	e_run6.loadFromFile("meshes/Enemy/Alien (6).obj");
+	e_run7.loadFromFile("meshes/Enemy/Alien (7).obj");
+	e_run8.loadFromFile("meshes/Enemy/Alien (8).obj");
+	e_run9.loadFromFile("meshes/Enemy/Alien (9).obj");
+	e_run10.loadFromFile("meshes/Enemy/Alien (10).obj");
+	e_run11.loadFromFile("meshes/Enemy/Alien (11).obj");
+	e_run12.loadFromFile("meshes/Enemy/Alien (12).obj");
+	e_run13.loadFromFile("meshes/Enemy/Alien (13).obj");
+	e_run14.loadFromFile("meshes/Enemy/Alien (14).obj");
+	e_run15.loadFromFile("meshes/Enemy/Alien (15).obj");
+	e_run16.loadFromFile("meshes/Enemy/Alien (16).obj");
+	e_run17.loadFromFile("meshes/Enemy/Alien (17).obj");
+	e_run18.loadFromFile("meshes/Enemy/Alien (18).obj");
+	e_run19.loadFromFile("meshes/Enemy/Alien (19).obj");
+	e_run20.loadFromFile("meshes/Enemy/Alien (20).obj");
+	e_run21.loadFromFile("meshes/Enemy/Alien (21).obj");
+	e_run22.loadFromFile("meshes/Enemy/Alien (22).obj");
+	e_run23.loadFromFile("meshes/Enemy/Alien (23).obj");
+	e_run24.loadFromFile("meshes/Enemy/Alien (24).obj");
+	e_run25.loadFromFile("meshes/Enemy/Alien (25).obj");
+	e_run26.loadFromFile("meshes/Enemy/Alien (26).obj");
+	e_run27.loadFromFile("meshes/Enemy/Alien (27).obj");
+	e_run28.loadFromFile("meshes/Enemy/Alien (28).obj");
+	e_run29.loadFromFile("meshes/Enemy/Alien (29).obj");
+	e_run30.loadFromFile("meshes/Enemy/Alien (30).obj");
+	e_run31.loadFromFile("meshes/Enemy/Alien (31).obj");
+	e_run32.loadFromFile("meshes/Enemy/Alien (32).obj");
+	e_run33.loadFromFile("meshes/Enemy/Alien (33).obj");
+	e_run34.loadFromFile("meshes/Enemy/Alien (34).obj");
+	e_run35.loadFromFile("meshes/Enemy/Alien (35).obj");
+	e_run36.loadFromFile("meshes/Enemy/Alien (36).obj");
+	e_run37.loadFromFile("meshes/Enemy/Alien (37).obj");
+	e_run38.loadFromFile("meshes/Enemy/Alien (38).obj");
+	e_run39.loadFromFile("meshes/Enemy/Alien (39).obj");
+
+	enemies[0]->e_mesh.push_back(e_run1);
+	enemies[0]->e_mesh.push_back(e_run2);
+	enemies[0]->e_mesh.push_back(e_run3);
+	enemies[0]->e_mesh.push_back(e_run4);
+	enemies[0]->e_mesh.push_back(e_run5);
+	enemies[0]->e_mesh.push_back(e_run6);
+	enemies[0]->e_mesh.push_back(e_run7);
+	enemies[0]->e_mesh.push_back(e_run8);
+	enemies[0]->e_mesh.push_back(e_run9);
+	enemies[0]->e_mesh.push_back(e_run10);
+	enemies[0]->e_mesh.push_back(e_run11);
+	enemies[0]->e_mesh.push_back(e_run12);
+	enemies[0]->e_mesh.push_back(e_run13);
+	enemies[0]->e_mesh.push_back(e_run14);
+	enemies[0]->e_mesh.push_back(e_run15);
+	enemies[0]->e_mesh.push_back(e_run16);
+	enemies[0]->e_mesh.push_back(e_run17);
+	enemies[0]->e_mesh.push_back(e_run18);
+	enemies[0]->e_mesh.push_back(e_run19);
+	enemies[0]->e_mesh.push_back(e_run20);
+	enemies[0]->e_mesh.push_back(e_run21);
+	enemies[0]->e_mesh.push_back(e_run22);
+	enemies[0]->e_mesh.push_back(e_run23);
+	enemies[0]->e_mesh.push_back(e_run24);
+	enemies[0]->e_mesh.push_back(e_run25);
+	enemies[0]->e_mesh.push_back(e_run26);
+	enemies[0]->e_mesh.push_back(e_run27);
+	enemies[0]->e_mesh.push_back(e_run28);
+	enemies[0]->e_mesh.push_back(e_run29);
+	enemies[0]->e_mesh.push_back(e_run30);
+	enemies[0]->e_mesh.push_back(e_run31);
+	enemies[0]->e_mesh.push_back(e_run32);
+	enemies[0]->e_mesh.push_back(e_run33);
+	enemies[0]->e_mesh.push_back(e_run34);
+	enemies[0]->e_mesh.push_back(e_run35);
+	enemies[0]->e_mesh.push_back(e_run36);
+	enemies[0]->e_mesh.push_back(e_run37);
+	enemies[0]->e_mesh.push_back(e_run38);
+	enemies[0]->e_mesh.push_back(e_run39);
+
+	enemies[0]->loadTexture(TextureType::Diffuse, "textures/Model Textures/alien_PNG.png");
+	enemies[0]->loadTexture(TextureType::Specular, "textures/noSpecular.png");
+	enemies[0]->scale = 1.2f;
+	enemies[0]->setProperty(50.f, 1.f);
 
 	// BG Stuff
 	background.scale = 2.0f;
@@ -1284,8 +1374,6 @@ void Game::initializeGame()
 	background.translate = glm::translate(background.translate, background.position);
 	background.rotate = glm::rotate(background.rotate, -glm::pi<float>() / 2.f, glm::vec3(1.f, 0.f, 0.f));
 	background.rotate = glm::rotate(background.rotate, -0.002f, glm::vec3(1.f, 0.f, 0.f));
-	//background.rotate = glm::rotate(background.rotate, -glm::pi<float>(), glm::vec3(0.f, 1.f, 0.f));
-	//background.rotate = glm::rotate(background.rotate, glm::pi<float>() / 2.f, glm::vec3(1.f, 0.f, 0.f));
 	background.transform = background.translate * background.rotate * glm::scale(glm::mat4(), glm::vec3(background.scale));
 	 
 	pauseback.scale = 10.f;
@@ -1704,47 +1792,40 @@ void Game::updateAlerts()
 {
 	std::cout << "Tree: " << tree_health << std::endl;
 	std::cout << "Player: " << player_health << std::endl;
-	if (playerDamaged || treeDamaged)
+	alertTimer += dt;
+
+	if (playerDamaged == true)
 	{
-		alertTimer += dt;
-
-		if (playerDamaged == true)
+		if (alertTimer <= 0.5f)
 		{
-			if (alertTimer <= 0.5f)
-			{
-				curPUIShouldDraw = true;
-			}
-
-			else if (alertTimer <= 1.f)
-			{
-				curPUIShouldDraw = false;
-			}
-
-			else { alertTimer = 0.f; }
+			curPUIShouldDraw = true;
 		}
 
-		if (treeDamaged == true)
+		else if (alertTimer <= 1.f)
 		{
-			if (alertTimer <= 0.5f)
-			{
-				curTUIShouldDraw = true;
-			}
-
-			else if (alertTimer <= 1.f)
-			{
-				curTUIShouldDraw = false;
-			}
-
-			else { alertTimer = 0.f; }
+			curPUIShouldDraw = false;
 		}
-	}
 
-	else 
-	{
-		curPUIShouldDraw = true;
-		curTUIShouldDraw = true;
-		alertTimer = 0.f; 
+		else { alertTimer = 0.f; }
 	}
+	else { curPUIShouldDraw = true;}
+
+	if (treeDamaged == true)
+	{
+		if (alertTimer <= 0.5f)
+		{
+			curTUIShouldDraw = true;
+		}
+
+		else if (alertTimer <= 1.f)
+		{
+			curTUIShouldDraw = false;
+		}
+
+		else { alertTimer = 0.f; }
+	}
+	else { curTUIShouldDraw = true; }
+
 	std::cout << alertTimer << std::endl;
 }
 
@@ -2115,7 +2196,7 @@ void Game::update()
 			}
 			enemies[i]->transform = enemies[i]->translate * enemies[i]->rotate * glm::scale(glm::mat4(), glm::vec3(enemies[i]->scale));
 		}
-
+		enemies[0]->animate(deltaTime);
 		glm::vec3 lookAtMouse = mousePositionFlipped - playerLocation;
 		//cos theta = (a dot b)/ |a||b| // player is a, mouse is b
 		float b = glm::length(lookAtMouse);

@@ -1,5 +1,6 @@
 #pragma once
 #include "GameObject.h"
+#include "AnimationMath.h"
 #include<glm\glm.hpp>
 
 class Enemy : public GameObject
@@ -15,7 +16,12 @@ public:
 	float getAttack();
 	bool inArea(glm::vec3 &_pos, objType type);
 
+	int currentFrame = 0, nextFrame = 1;
+	float m_pLocalMorphTime;
+
 	void update(float dt);
+	void animate(float dt);
+	GameObject morph;
 	void seek(glm::vec3 &pos);
 	void draw(ShaderProgram &shader, glm::mat4 &cameraTransform, glm::mat4 &cameraProjection, std::vector<Light> &pointLights,Light &directionalLight);
 	
@@ -30,6 +36,8 @@ public:
 	glm::vec3 position;
 	glm::vec3 velocity;
 	glm::vec3 acceleration;
+
+	std::vector<Mesh> e_mesh;
 
 	glm::vec3 nForce;
 private:
