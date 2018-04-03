@@ -131,6 +131,10 @@
     <ClCompile Include="FrameBufferObject.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GameObject.cpp" />
+    <ClCompile Include="include\imgui\imgui.cpp" />
+    <ClCompile Include="include\imgui\imgui_demo.cpp" />
+    <ClCompile Include="include\imgui\imgui_draw.cpp" />
+    <ClCompile Include="include\imgui\imgui_impl.cpp" />
     <ClCompile Include="Light.cpp" />
     <ClCompile Include="LUT.cpp" />
     <ClCompile Include="main.cpp" />
@@ -155,6 +159,12 @@
     <ClInclude Include="FrameBufferObject.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="GameObject.h" />
+    <ClInclude Include="include\imgui\imgui.h" />
+    <ClInclude Include="include\imgui\imgui_impl.h" />
+    <ClInclude Include="include\imgui\imgui_internal.h" />
+    <ClInclude Include="include\imgui\stb_rect_pack.h" />
+    <ClInclude Include="include\imgui\stb_textedit.h" />
+    <ClInclude Include="include\imgui\stb_truetype.h" />
     <ClInclude Include="Light.h" />
     <ClInclude Include="LUT.h" />
     <ClInclude Include="Material.h" />

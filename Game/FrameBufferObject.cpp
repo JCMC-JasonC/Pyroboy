@@ -38,8 +38,6 @@ void FrameBufferObject::createDepthBuffer(unsigned int fboWidth, unsigned int fb
 
 	glBindFramebuffer(GL_FRAMEBUFFER, handle);
 	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, depthTexHandle, 0);
-	glDrawBuffer(GL_NONE);
-	glReadBuffer(GL_NONE);
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
@@ -91,13 +89,27 @@ void FrameBufferObject::createFrameBuffer(unsigned int fboWidth, unsigned int fb
 	// An FBO can have a single depth map
 	if (useDepth)
 	{
-		glGenTextures(1, &depthTexHandle);
+		/*glGenTextures(1, &depthTexHandle);
 		glBindTexture(GL_TEXTURE_2D, depthTexHandle);
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT24, width, height, 0, GL_DEPTH_COMPONENT, GL_UNSIGNED_INT, 0);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
+		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, depthTexHandle, 0);*/
+
+		glGenTextures(1, &depthTexHandle);
+		glBindTexture(GL_TEXTURE_2D, depthTexHandle);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, width, height, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
+		float borderColor[] = { 1.0f, 1.0f,1.0f,1.0f };
+		glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, borderColor);
+
+		//glBindFramebuffer(GL_FRAMEBUFFER, handle);
 		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, depthTexHandle, 0);
+		//glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	}
 
 	// Set up which layout location in the fragment shader goes to which

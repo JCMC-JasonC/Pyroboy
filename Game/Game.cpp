@@ -96,12 +96,12 @@ void Game::startUp()
 	materials["unlitTexture"] = std::make_shared<ShaderProgram>();
 	materials["unlitTexture"]->load("shaders/default_v.glsl", "shaders/unlitTexture_f.glsl");
 
-	/*materials["depthMap"] = std::make_shared<ShaderProgram>();
+	materials["depthMap"] = std::make_shared<ShaderProgram>();
 	materials["depthMap"]->load("shaders/depthMap_v.glsl", "shaders/depthMap_f.glsl");
 
 	materials["shadows"] = std::make_shared<ShaderProgram>();
 	materials["shadows"]->load("shaders/shadows_v.glsl", "shaders/shadows_f.glsl");
-	*/
+	
 	//LIGHTING
 	Light light1;
 
@@ -115,6 +115,16 @@ void Game::startUp()
 	light1.linearAttenuation = 0.1f;
 	light1.quadraticAttenuation = 0.01f;
 
+	originalP1.positionOrDirection = glm::vec4(0.f, 10.f, -1.f, 1.f);
+	originalP1.originalPosition = light1.positionOrDirection;
+	originalP1.ambient = glm::vec3(0.06f, 0.1f, 0.06f);
+	originalP1.diffuse = glm::vec3(0.9f);
+	originalP1.specular = glm::vec3(0.5f);
+	originalP1.specularExponent = 50.f;
+	originalP1.constantAttenuation = 1.f;
+	originalP1.linearAttenuation = 0.1f;
+	originalP1.quadraticAttenuation = 0.01f;
+
 	pointLights.push_back(light1);
 
 	directionalLight.positionOrDirection = glm::vec4(-1.f, -1.f, 11.f, 0.f);
@@ -123,9 +133,15 @@ void Game::startUp()
 	directionalLight.specular - glm::vec3(1.0f);
 	directionalLight.specularExponent = 50.f;
 
-	//lightProjection = glm::ortho(-10.f, 10.f, -10.f,10.f, near_plane, far_plane);
-	lightProjection = glm::perspective(150.f, (float)WINDOW_WIDTH / (float)WINDOW_HEIGHT, near_plane, far_plane);
-	lightView = glm::lookAt(glm::vec3(directionalLight.positionOrDirection), glm::vec3(0.f), glm::vec3(0.f, -1.f, 0.f));//unsure if up is 1 or -1
+	originalD.positionOrDirection = glm::vec4(-1.f, -1.f, 11.f, 0.f);
+	originalD.ambient = glm::vec3(0.08f);
+	originalD.diffuse = glm::vec3(0.7f);
+	originalD.specular - glm::vec3(1.0f);
+	originalD.specularExponent = 50.f;
+
+	lightProjection = glm::ortho(-10.f, 10.f, -10.f,10.f, near_plane, far_plane);
+	//lightProjection = glm::perspective(150.f, (float)WINDOW_WIDTH / (float)WINDOW_HEIGHT, near_plane, far_plane);
+	lightView = glm::lookAt(glm::vec3(glm::vec4(1.f, 1.f, 300.f, 0.f)), glm::vec3(0.f), glm::vec3(0.f, -1.f, 0.f));//unsure if up is 1 or -1
 	lightSpaceMatrix = lightProjection * lightView;
 
 	startupBack.loadMesh("meshes/background.obj");
@@ -492,34 +508,63 @@ std::shared_ptr<Mesh> Game::createQuadMesh()
 
 	return quadMesh;
 }
-//void Game::drawSceneWithShadows(ShaderProgram &shader, bool isShadowMap) 
-//{
-//	background.drawWithShadows(shader, cameraTransform, cameraProjection, lightSpaceMatrix, isShadowMap);
-//	tree.drawWithShadows(shader, cameraTransform, cameraProjection, lightSpaceMatrix, isShadowMap);
-//	for (int i = 0; i < enemies.size(); i++)
-//	{
-//		if (!enemies[i]->getBool())
-//			enemies[i]->drawWithShadows(shader, cameraTransform, cameraProjection, lightSpaceMatrix, isShadowMap);
-//	}
-//	player.drawWithShadows(shader, cameraTransform, cameraProjection, lightSpaceMatrix, isShadowMap);
-//	for (int i = 0; i < bullets.size(); i++)
-//	{
-//		bullets[i]->drawWithShadows(shader, cameraTransform, cameraProjection, lightSpaceMatrix, isShadowMap);
-//	}
-//	if (!isShadowMap)
-//	{
-//		shader.sendUniform("near_plane", near_plane);
-//		shader.sendUniform("far_plane", far_plane);
-//		depthMapFBO.bindDepthTextureForSampling(GL_TEXTURE0);
-//	}
-//	else
-//	{
-//		sceneBuffer.bindTextureForSampling(0, GL_TEXTURE0);
-//		depthMapFBO.bindDepthTextureForSampling(GL_TEXTURE1);
-//		shader.sendUniform("lightPos", glm::vec3(directionalLight.positionOrDirection));
-//		//shader.sendUniformMat4("view", glm::value_ptr(emptyMat), false);
-//	}
-//}
+void Game::drawSceneWithShadows(ShaderProgram &shader, bool isShadowMap) 
+{
+	//background.drawWithShadows(shader, cameraTransform, cameraProjection, lightSpaceMatrix, isShadowMap);
+	ash			.drawWithShadows(shader, cameraTransform, cameraProjection, lightSpaceMatrix, isShadowMap);
+	barrel		.drawWithShadows(shader, cameraTransform, cameraProjection, lightSpaceMatrix, isShadowMap);
+	bridge		.drawWithShadows(shader, cameraTransform, cameraProjection, lightSpaceMatrix, isShadowMap);
+	brokentower .drawWithShadows(shader, cameraTransform, cameraProjection, lightSpaceMatrix, isShadowMap);
+	cactus		.drawWithShadows(shader, cameraTransform, cameraProjection, lightSpaceMatrix, isShadowMap);
+	fseast		.drawWithShadows(shader, cameraTransform, cameraProjection, lightSpaceMatrix, isShadowMap);
+	fsnortheast .drawWithShadows(shader, cameraTransform, cameraProjection, lightSpaceMatrix, isShadowMap);
+	fssoutheast .drawWithShadows(shader, cameraTransform, cameraProjection, lightSpaceMatrix, isShadowMap);
+	fwood		.drawWithShadows(shader, cameraTransform, cameraProjection, lightSpaceMatrix, isShadowMap);
+	gate		.drawWithShadows(shader, cameraTransform, cameraProjection, lightSpaceMatrix, isShadowMap);
+	hill		.drawWithShadows(shader, cameraTransform, cameraProjection, lightSpaceMatrix, isShadowMap);
+	hroof		.drawWithShadows(shader, cameraTransform, cameraProjection, lightSpaceMatrix, isShadowMap);
+	hsand		.drawWithShadows(shader, cameraTransform, cameraProjection, lightSpaceMatrix, isShadowMap);
+	hwalls		.drawWithShadows(shader, cameraTransform, cameraProjection, lightSpaceMatrix, isShadowMap);
+	hwindows	.drawWithShadows(shader, cameraTransform, cameraProjection, lightSpaceMatrix, isShadowMap);
+	hwood		.drawWithShadows(shader, cameraTransform, cameraProjection, lightSpaceMatrix, isShadowMap);
+	hpath1		.drawWithShadows(shader, cameraTransform, cameraProjection, lightSpaceMatrix, isShadowMap);
+	hpath2		.drawWithShadows(shader, cameraTransform, cameraProjection, lightSpaceMatrix, isShadowMap);
+	lamp		.drawWithShadows(shader, cameraTransform, cameraProjection, lightSpaceMatrix, isShadowMap);
+	pipe		.drawWithShadows(shader, cameraTransform, cameraProjection, lightSpaceMatrix, isShadowMap);
+	plane		.drawWithShadows(shader, cameraTransform, cameraProjection, lightSpaceMatrix, isShadowMap);
+	planegrass	.drawWithShadows(shader, cameraTransform, cameraProjection, lightSpaceMatrix, isShadowMap);
+	planeroad	.drawWithShadows(shader, cameraTransform, cameraProjection, lightSpaceMatrix, isShadowMap);
+	rocks		.drawWithShadows(shader, cameraTransform, cameraProjection, lightSpaceMatrix, isShadowMap);
+	torch		.drawWithShadows(shader, cameraTransform, cameraProjection, lightSpaceMatrix, isShadowMap);
+	tree.drawWithShadows(shader, cameraTransform, cameraProjection, lightSpaceMatrix, isShadowMap);
+	for (int i = 0; i < enemies.size(); i++)
+	{
+		if (!enemies[i]->getBool())
+			enemies[i]->drawWithShadows(shader, cameraTransform, cameraProjection, lightSpaceMatrix, isShadowMap);
+	}
+	player.drawWithShadows(shader, cameraTransform, cameraProjection, lightSpaceMatrix, isShadowMap);
+	for (int i = 0; i < bulletQ.size(); i++)
+	{
+		tempBullet = bulletQ.front();
+		tempBullet->draw(phong, cameraTransform, cameraProjection, pointLights, directionalLight);
+
+		bulletQ.pop();
+		bulletQ.push(tempBullet);
+	}
+	if (!isShadowMap)
+	{
+		shader.sendUniform("near_plane", near_plane);
+		shader.sendUniform("far_plane", far_plane);
+		sceneBuffer.bindDepthTextureForSampling(GL_TEXTURE0);
+	}
+	else
+	{
+		sceneBuffer.bindTextureForSampling(0, GL_TEXTURE0);
+		sceneBuffer.bindDepthTextureForSampling(GL_TEXTURE1);
+		shader.sendUniform("lightPos", glm::vec3(1.f, 1.f, 300.f));
+		//shader.sendUniformMat4("view", glm::value_ptr(emptyMat), false);
+	}
+}
 void Game::drawScene()
 {
 	ash.draw(phong, cameraTransform, cameraProjection, pointLights, directionalLight);
@@ -581,8 +626,9 @@ void Game::brightPass()
 	//player.draw(phong, cameraTransform, cameraProjection, pointLights, directionalLight);
 	//tree.draw(phong, cameraTransform, cameraProjection, pointLights, directionalLight);
 
-	drawScene();
+	//drawScene();
 	//drawHUD();
+	drawHealth();
 	sceneBuffer.bindTextureForSampling(0, GL_TEXTURE0);
 
 
@@ -616,7 +662,6 @@ void Game::blurBrightPass()
 
 	meshes["quad"]->draw();
 
-	int pass = 300; // pass 30 times
 	for (int i = 0; i < pass; i++) {
 		buffer.bindFrameBufferForDrawing();
 		blurBuffer.bindTextureForSampling(0, GL_TEXTURE0);
@@ -1702,8 +1747,8 @@ void Game::uiDraw()
 
 void Game::updateAlerts()
 {
-	std::cout << "Tree: " << tree_health << std::endl;
-	std::cout << "Player: " << player_health << std::endl;
+	/*std::cout << "Tree: " << tree_health << std::endl;
+	std::cout << "Player: " << player_health << std::endl;*/
 	if (playerDamaged || treeDamaged)
 	{
 		alertTimer += dt;
@@ -1738,7 +1783,6 @@ void Game::updateAlerts()
 			else { alertTimer = 0.f; }
 		}
 	}
-
 	else 
 	{
 		curPUIShouldDraw = true;
@@ -1746,6 +1790,8 @@ void Game::updateAlerts()
 		alertTimer = 0.f; 
 	}
 	std::cout << alertTimer << std::endl;
+	//else { alertTimer = 0.f; }
+	//std::cout << alertTimer << std::endl;
 }
 
 void Game::update()
@@ -1799,12 +1845,12 @@ void Game::update()
 			float ranPos = 1 + rand() % 5;
 
 			float randSpeed = 10.f + rand() % 30;
-			glm::mat4 rot;
-			//rot = glm::rotate(rot, (glm::pi<float>() / 1.f), glm::vec3(0.f, 1.f, 0.f));
-			//rot = glm::rotate(rot, (glm::pi<float>() / -2.f), glm::vec3(1.f, 0.f, 0.f));
-			//rot = glm::rotate(rot, (glm::pi<float>() / 1.f), glm::vec3(0.f, 0.f, 1.f));
-			//enemies.push_back(new Enemy(alienMesh, glm::vec3(50.f* ranPos, 50.f*ranPos, -2.f), rot, 1.2f, randSpeed, 30.f + (3.f * healthCounter), 1.f));
-			//enemies.push_back(new Enemy(insectMesh, glm::vec3(-50.f* ranPos, 50.f*ranPos, -2.f), rot, 2.f, randSpeed, 30.f + (3.f * healthCounter), 1.f));
+			glm::mat4 rot = glm::mat4();
+			/*rot = glm::rotate(rot, (glm::pi<float>() / 1.f), glm::vec3(0.f, 1.f, 0.f));
+			rot = glm::rotate(rot, (glm::pi<float>() / -2.f), glm::vec3(1.f, 0.f, 0.f));
+			rot = glm::rotate(rot, (glm::pi<float>() / 1.f), glm::vec3(0.f, 0.f, 1.f));*/
+			enemies.push_back(new Enemy(alienMesh, glm::vec3(50.f* ranPos, 50.f*ranPos, -2.f), rot, 1.2f, randSpeed, 30.f + (3.f * healthCounter), 1.f));
+			enemies.push_back(new Enemy(insectMesh, glm::vec3(-50.f* ranPos, 50.f*ranPos, -2.f), rot, 2.f, randSpeed, 30.f + (3.f * healthCounter), 1.f));
 			t = 0.f;
 			healthCounter++;
 		}
@@ -2213,7 +2259,6 @@ void Game::update()
 
 		cameraTransform = originalCameraTransform * player.originalTranslate;
 		cameraTransform[1] = -cameraTransform[1];
-
 		emitter.update(deltaTime);
 
 		if (treeDead|| playerDead)
@@ -2289,6 +2334,26 @@ void Game::switchUIToDraw(GameObject::Ptr curUI, uiType type)
 
 void Game::drawHUD()
 {
+	drawHealth();
+	glDisable(GL_DEPTH_TEST);
+	glViewport(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT); // position and size of viewport
+	glEnable(GL_BLEND); // Allows Transparency
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	cameraOrtho = glm::ortho(0.0f, (float)WINDOW_WIDTH, 0.0f, (float)WINDOW_HEIGHT, -1000.0f, 1000.0f);
+	//std::cout << t << std::endl;
+	if (t >= 5) { otherUI["protect"]->shouldDraw = false; }
+
+	for (auto itr = otherUI.begin(); itr != otherUI.end(); itr++)
+	{
+		if (itr->second->shouldDraw == true)
+			itr->second->draw(noLight, glm::mat4(1.0f), cameraOrtho, pointLights, directionalLight);
+	}
+
+	glDisable(GL_BLEND);
+	glEnable(GL_DEPTH_TEST);
+}
+void Game::drawHealth()
+{
 	glDisable(GL_DEPTH_TEST);
 	glViewport(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT); // position and size of viewport
 	glEnable(GL_BLEND); // Allows Transparency
@@ -2309,7 +2374,7 @@ void Game::drawHUD()
 	else if (player_health <= player_start_health * 0.8) { switchUIToDraw(playerUI["playerHP8"], PLAYER); }
 	else if (player_health <= player_start_health * 0.9) { switchUIToDraw(playerUI["playerHP9"], PLAYER); }
 	else if (player_health <= player_start_health * 1) { switchUIToDraw(playerUI["playerHP10"], PLAYER); }
-	
+
 	// same thing with tree
 	//std::cout << "tree health: " << tree_health << std::endl;
 	if (tree_health <= tree_start_health * 0.1) { switchUIToDraw(treeUI["treeHP1"], TREE); }
@@ -2322,7 +2387,7 @@ void Game::drawHUD()
 	else if (tree_health <= tree_start_health * 0.8) { switchUIToDraw(treeUI["treeHP8"], TREE); }
 	else if (tree_health <= tree_start_health * 0.9) { switchUIToDraw(treeUI["treeHP9"], TREE); }
 	else if (tree_health <= tree_start_health * 1) { switchUIToDraw(treeUI["treeHP10"], TREE); }
-	
+
 	// draw ui that's set to true
 	for (auto itr = playerUI.begin(); itr != playerUI.end(); itr++)
 	{
@@ -2349,6 +2414,8 @@ void Game::drawHUD()
 }
 void Game::draw()
 {
+	internal::StartUI(WINDOW_WIDTH, WINDOW_HEIGHT);
+
 	//glClearColor(0.5, 0.5, 0.5, 0);	
 	glClearColor(.4f, .2f, 0, 1);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -2361,6 +2428,7 @@ void Game::draw()
 	drawScene();
 
 	sceneBuffer.unbindFrameBuffer(WINDOW_WIDTH, WINDOW_HEIGHT);
+
 	//For shadows
 	//cull front
 	//render to depth map
@@ -2374,30 +2442,32 @@ void Game::draw()
 	//send uniforms
 	//bind depth texture
 	//render scene
-	
-	//glCullFace(GL_FRONT);
-	//depthMapFBO.bindFrameBufferForDrawing();
-	//depthMapFBO.clearFrameBuffer(glm::vec4(0));
-	//drawScene();
-	//drawSceneWithShadows(*materials["depthMap"], false);
-	//meshes["quad"]->draw();
-	//depthMapFBO.unbindFrameBuffer(WINDOW_WIDTH, WINDOW_HEIGHT);
-	//glCullFace(GL_BACK);
 
-	//sceneBuffer.bindFrameBufferForDrawing();
-	//sceneBuffer.clearFrameBuffer(glm::vec4(0));
+	glCullFace(GL_FRONT);
+	sceneBuffer.bindFrameBufferForDrawing();
+	sceneBuffer.clearFrameBuffer(glm::vec4(0));
+	drawScene();
+	drawSceneWithShadows(*materials["depthMap"], false);
+	/*depthMap.bind();
+	depthMapFBO.bindDepthTextureForSampling(GL_TEXTURE0);*/
+	//meshes["quad"]->draw();
+	sceneBuffer.unbindFrameBuffer(WINDOW_WIDTH, WINDOW_HEIGHT);
+	glCullFace(GL_BACK);
+
+	sceneBuffer.bindFrameBufferForDrawing();
+	sceneBuffer.clearFrameBuffer(glm::vec4(0));
 	//drawScene();
-	//drawSceneWithShadows(*materials["shadows"], true);
-	////meshes["quad"]->draw();
+	drawSceneWithShadows(*materials["shadows"], true);
+	//meshes["quad"]->draw();
 
 	///*if (temp >= player.playerMesh.size())
 	//	temp = 0;
 	//meshes["player" + std::to_string(temp)]->draw();
 	//temp++;*/
 	//
-	//sceneBuffer.unbindFrameBuffer(WINDOW_WIDTH, WINDOW_HEIGHT);
-	//sceneBuffer.unbindTexture(GL_TEXTURE0);
-	//depthMapFBO.unbindTexture(GL_TEXTURE1);
+	sceneBuffer.unbindFrameBuffer(WINDOW_WIDTH, WINDOW_HEIGHT);
+	sceneBuffer.unbindTexture(GL_TEXTURE0);
+	sceneBuffer.unbindTexture(GL_TEXTURE1);
 
 	brightPass(); // Implement this function!
 	blurBrightPass(); // Implement this function!
@@ -2416,45 +2486,65 @@ void Game::draw()
 	sceneBuffer.unbindTexture(GL_TEXTURE1);
 	blurBuffer.unbindTexture(GL_TEXTURE0);
 
-	player.draw(phong, cameraTransform, cameraProjection, pointLights, directionalLight);
-	ash.draw(phong, cameraTransform, cameraProjection, pointLights, directionalLight);
-	barrel.draw(phong, cameraTransform, cameraProjection, pointLights, directionalLight);
-	bridge.draw(phong, cameraTransform, cameraProjection, pointLights, directionalLight);
-	brokentower.draw(phong, cameraTransform, cameraProjection, pointLights, directionalLight);
-	cactus.draw(phong, cameraTransform, cameraProjection, pointLights, directionalLight);
-	fseast.draw(phong, cameraTransform, cameraProjection, pointLights, directionalLight);
-	fsnortheast.draw(phong, cameraTransform, cameraProjection, pointLights, directionalLight);
-	fssoutheast.draw(phong, cameraTransform, cameraProjection, pointLights, directionalLight);
-	fwood.draw(phong, cameraTransform, cameraProjection, pointLights, directionalLight);
-	gate.draw(phong, cameraTransform, cameraProjection, pointLights, directionalLight);
-	hill.draw(phong, cameraTransform, cameraProjection, pointLights, directionalLight);
-	hroof.draw(phong, cameraTransform, cameraProjection, pointLights, directionalLight);
-	hsand.draw(phong, cameraTransform, cameraProjection, pointLights, directionalLight);
-	hwalls.draw(phong, cameraTransform, cameraProjection, pointLights, directionalLight);
-	hwindows.draw(phong, cameraTransform, cameraProjection, pointLights, directionalLight);
-	hwood.draw(phong, cameraTransform, cameraProjection, pointLights, directionalLight);
-	hpath1.draw(phong, cameraTransform, cameraProjection, pointLights, directionalLight);
-	hpath2.draw(phong, cameraTransform, cameraProjection, pointLights, directionalLight);
-	lamp.draw(phong, cameraTransform, cameraProjection, pointLights, directionalLight);
-	pipe.draw(phong, cameraTransform, cameraProjection, pointLights, directionalLight);
-	plane.draw(phong, cameraTransform, cameraProjection, pointLights, directionalLight);
-	planegrass.draw(phong, cameraTransform, cameraProjection, pointLights, directionalLight);
-	planeroad.draw(phong, cameraTransform, cameraProjection, pointLights, directionalLight);
-	rocks.draw(phong, cameraTransform, cameraProjection, pointLights, directionalLight);
-	torch.draw(phong, cameraTransform, cameraProjection, pointLights, directionalLight);
-	tree.draw(phong, cameraTransform, cameraProjection, pointLights, directionalLight);
-	for (int i = 0; i < enemies.size(); i++)
-	{
-		if (!enemies[i]->getBool())
-			enemies[i]->draw(phong, cameraTransform, cameraProjection, pointLights, directionalLight);
-	}
-	water.draw(phong, cameraTransform, cameraProjection, pointLights, directionalLight);
-	watertower.draw(phong, cameraTransform, cameraProjection, pointLights, directionalLight);
-	wirepole.draw(phong, cameraTransform, cameraProjection, pointLights, directionalLight);
-
-
 	//drawFboAttachmentToBackBuffer(sceneBuffer, 0);
 	//drawFboAttachmentToBackBuffer(buffer, 0);
+
+	if (debug)
+	{
+		if (ImGui::CollapsingHeader("Lighting", 0))
+		{
+			if (ImGui::Button("Lighting"))
+			{
+				light = !light;
+				if (light)
+				{
+					directionalLight.ambient  = originalD.ambient;
+					directionalLight.diffuse  = originalD.diffuse;
+					directionalLight.specular = originalD.specular;
+					player.sendDirectionalLightUniforms(phong, cameraTransform, directionalLight);
+
+					for (int i = 0; i < pointLights.size(); i++)
+					{
+						pointLights[i].ambient  = originalP1.ambient;
+						pointLights[i].diffuse  = originalP1.diffuse;
+						pointLights[i].specular = originalP1.specular;
+					}
+					player.sendPointLightUniforms(phong, cameraTransform, pointLights);
+				}
+				else
+				{
+					directionalLight.ambient  = glm::vec3(0);
+					directionalLight.diffuse  = glm::vec3(0);
+					directionalLight.specular = glm::vec3(0);
+					player.sendDirectionalLightUniforms(phong, cameraTransform, directionalLight);
+
+					for (int i = 0; i < pointLights.size(); i++)
+					{
+						pointLights[i].ambient  = glm::vec3(0);
+						pointLights[i].diffuse  = glm::vec3(0);
+						pointLights[i].specular = glm::vec3(0);
+					}
+					player.sendPointLightUniforms(phong, cameraTransform, pointLights);
+				}
+			}
+		}
+		if(ImGui::CollapsingHeader("Post-Processing", 0))
+		{
+			if (ImGui::CollapsingHeader("Bloom", 0))
+			{
+				ImGui::SliderFloat("Bloom Threshold", &bloomThreshold, 0.01f, 1.f, "%.2f", 1.f);
+				//std::cout << bloomThreshold << std::endl;
+				ImGui::SliderInt("Blur passes", &pass, 1, 1000);
+			}
+			if (ImGui::CollapsingHeader("Shadows", 0))
+			{
+
+			}
+		}
+		tree_health = tree_start_health;
+		player_health = player_start_health;
+	}
+	internal::EndUI();
 	glutSwapBuffers();
 
 }
@@ -2465,7 +2555,26 @@ void Game::keyboardDown(unsigned char key, int mouseX, int mouseY)
 	glm::vec3 playerLocation = glm::vec3(player.translate*
 		glm::vec4(glm::vec3(1.f, 1.f, 1.f), 1.0));
 
+	ImGuiIO& io = ImGui::GetIO();
+	io.KeysDown[(int)key] = true;
+	io.AddInputCharacter((int)key); // this is what makes keyboard input work in imgui
 
+									// This is what makes the backspace button work
+	int keyModifier = glutGetModifiers();
+	switch (keyModifier)
+	{
+	/*case GLUT_ACTIVE_SHIFT:
+		io.KeyShift = true;
+		break;
+
+	case GLUT_ACTIVE_CTRL:
+		io.KeyCtrl = true;
+		break;
+
+	case GLUT_ACTIVE_ALT:
+		io.KeyAlt = true;
+		break;*/
+	}
 	switch (key) 
 	{
 	case 27://esc
@@ -2526,7 +2635,9 @@ void Game::keyboardDown(unsigned char key, int mouseX, int mouseY)
 		sKeyDown = true;	
 		isDown = true;
 		break;
-
+	case 'i':
+		debug = !debug;
+		break;
 	case 'd':
 		dKeyDown = true;
 		isRight = true;
@@ -2596,6 +2707,27 @@ void Game::keyboardDown(unsigned char key, int mouseX, int mouseY)
 }
 void Game::keyboardUp(unsigned char key, int mouseX, int mouseY)
 {
+	ImGuiIO& io = ImGui::GetIO();
+	io.KeysDown[key] = false;
+
+	int keyModifier = glutGetModifiers();
+	io.KeyShift = false;
+	io.KeyCtrl = false;
+	io.KeyAlt = false;
+	switch (keyModifier)
+	{
+	/*case GLUT_ACTIVE_SHIFT:
+		io.KeyShift = true;
+		break;
+
+	case GLUT_ACTIVE_CTRL:
+		io.KeyCtrl = true;
+		break;
+
+	case GLUT_ACTIVE_ALT:
+		io.KeyAlt = true;
+		break;*/
+	}
 	switch (key)
 	{
 	case 'r':
@@ -2683,6 +2815,8 @@ void Game::mouseClicked(int button, int state, int x, int y)
 
 	mousePositionFlipped.x = x;
 	mousePositionFlipped.y = WINDOW_HEIGHT - y;
+	ImGui::GetIO().MouseDown[0] = !state;
+
 	if (state == GLUT_DOWN) {
 		switch (button) {
 		case GLUT_LEFT_BUTTON:
@@ -2704,5 +2838,5 @@ void Game::mouseMoved(int x, int y)
 
 	mousePositionFlipped.x = x;
 	mousePositionFlipped.y = WINDOW_HEIGHT - y;
-
+	ImGui::GetIO().MousePos = ImVec2((float)x, (float)y);
 }

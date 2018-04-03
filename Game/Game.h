@@ -19,9 +19,10 @@
 #include <map>
 #include <memory>
 #include <queue>
+#include<imgui\imgui_impl.h>
 
-#define WINDOW_WIDTH 1280
-#define WINDOW_HEIGHT 720
+#define WINDOW_WIDTH 1920
+#define WINDOW_HEIGHT 1020
 #define FRAME_PER_SECOND 60
 
 enum GameStates {
@@ -64,6 +65,7 @@ public:
 	void drawFboAttachmentToBackBuffer(FrameBufferObject& fbo, int colorAttachment, glm::vec4 clearColor = glm::vec4(0.0));
 	void drawScene();
 	void drawSceneWithShadows(ShaderProgram &shader, bool isShadowMap);
+	void drawHealth();
 
 
 	GameStates getState() { return state; }
@@ -80,10 +82,11 @@ public:
 	void createBullet(glm::vec3 pos, glm::vec3 dir);
 	void TreeWasAttacked(Enemy* _x, glm::vec3 pos);
 
-	int tree_start_health = 30000;
-	int player_start_health = 15000;
 	bool enemy1 = false, test = true;
 	float half_treehealth = 1500.f;
+
+	int tree_start_health = 3000;
+	int player_start_health = 1500;
 	float player_health;
 	float tree_health;
 	bool bulletsound = false;
@@ -114,6 +117,7 @@ public:
 
 	float healthCounter=0.f, bulletTime = 0.f, bloomThreshold= 0.01f;
 	int numTraps = 0, counter, treeHeartCounter;
+	int pass = 300;
 
 	float alertTimer = 0.f;
 
@@ -134,7 +138,7 @@ public:
 
 	std::vector<glm::vec3> positions;
 	std::vector<Light> pointLights;
-	Light directionalLight;
+	Light directionalLight, originalP1, originalD;
 
 	ShaderProgram noLight;
 	ShaderProgram phongNoTexture;
@@ -178,6 +182,7 @@ public:
 
 	bool shooting = false, pause = false, treeDead = false, playerDead = false;
 	bool treeDamaged = false, playerDamaged = false;
+	bool debug = false, light= true;
 
 	bool curPUIShouldDraw = true; // current player ui should draw
 	bool curTUIShouldDraw = true;

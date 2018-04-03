@@ -10,6 +10,8 @@ public:
 
 	void shoot();
 	void draw(ShaderProgram &shader, glm::mat4 &cameraTransform, glm::mat4 &cameraProjection, std::vector<Light> &pointLights, Light &directionalLight);
+	void drawWithShadows(ShaderProgram &shader, glm::mat4 &cameraTransform, glm::mat4 &cameraProjection
+		, glm::mat4 &lightSpaceMatrix, bool isShadowMap);
 	void update(float dt);
 	void animate(float dt);
 	int getCurrentFrame() { return currentFrame; }

@@ -23,21 +23,24 @@ void GameObject::drawWithShadows(ShaderProgram &shader, glm::mat4 &cameraTransfo
 		shader.sendUniformMat4("projection", glm::value_ptr(cameraProjection), false);
 	}
 
-}
-void GameObject::draw(ShaderProgram &shader, glm::mat4 &cameraTransform, glm::mat4 &cameraProjection
-	, std::vector<Light> &pointLights, Light &directionalLight)
-{
-	shader.bind();
-	shader.sendUniformMat4("uModel", glm::value_ptr(transform), false);
-	shader.sendUniformMat4("uView", glm::value_ptr(cameraTransform), false);
-	shader.sendUniformMat4("uProj", glm::value_ptr(cameraProjection), false);
-	
-	shader.sendUniform("material.diffuse", 0);
-	shader.sendUniform("material.specular", 1);
-	shader.sendUniform("material.normal", 2);
-	shader.sendUniform("material.hue", mat.hue);
-	shader.sendUniform("material.specularExponent", mat.specularExponent);
+	glActiveTexture(GL_TEXTURE0);
+	mat.diffuse.bind();
 
+	glActiveTexture(GL_TEXTURE1);
+	mat.specular.bind();
+
+	glBindVertexArray(mesh.vao);
+	glDrawArrays(GL_TRIANGLES, 0, mesh.getNumVertices());
+	glBindVertexArray(GL_NONE);
+
+	mat.specular.unbind();
+	glActiveTexture(GL_TEXTURE0);
+	mat.diffuse.unbind();
+
+	shader.unbind();
+}
+void GameObject::sendPointLightUniforms(ShaderProgram &shader, glm::mat4 &cameraTransform, std::vector<Light> &pointLights)
+{
 	for (int i = 0; i < pointLights.size(); i++)
 	{
 		std::string prefix = "pointLights[" + std::to_string(i) + "].";
@@ -50,11 +53,30 @@ void GameObject::draw(ShaderProgram &shader, glm::mat4 &cameraTransform, glm::ma
 		shader.sendUniform(prefix + "linearAttenuation", pointLights[i].linearAttenuation);
 		shader.sendUniform(prefix + "quadraticAttenuation", pointLights[i].quadraticAttenuation);
 	}
+}
+void GameObject::sendDirectionalLightUniforms(ShaderProgram &shader, glm::mat4 &cameraTransform, Light &directionalLight)
+{
 	shader.sendUniform("directionalLight.direction", cameraTransform * directionalLight.positionOrDirection);
 	shader.sendUniform("directionalLight.ambient", directionalLight.ambient);
 	shader.sendUniform("directionalLight.diffuse", directionalLight.diffuse);
 	shader.sendUniform("directionalLight.specular", directionalLight.specular);
 	shader.sendUniform("directionalLight.specularExponent", directionalLight.specularExponent);
+}
+void GameObject::draw(ShaderProgram &shader, glm::mat4 &cameraTransform, glm::mat4 &cameraProjection
+	, std::vector<Light> &pointLights, Light &directionalLight)
+{
+	shader.bind();
+	shader.sendUniformMat4("uModel", glm::value_ptr(transform), false);
+	shader.sendUniformMat4("uView", glm::value_ptr(cameraTransform), false);
+	shader.sendUniformMat4("uProj", glm::value_ptr(cameraProjection), false);
+	
+	shader.sendUniform("material.diffuse", 0);
+	shader.sendUniform("material.specular", 1);
+	shader.sendUniform("material.hue", mat.hue);
+	shader.sendUniform("material.specularExponent", mat.specularExponent);
+
+	sendPointLightUniforms(shader, cameraTransform, pointLights);
+	sendDirectionalLightUniforms(shader, cameraTransform, directionalLight);
 
 	glActiveTexture(GL_TEXTURE0);
 	mat.diffuse.bind();

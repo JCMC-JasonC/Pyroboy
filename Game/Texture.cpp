@@ -10,7 +10,31 @@ Texture::~Texture()
 {
 	unload();
 }
+void Texture::createTexture(int width, int height, GLenum target, GLenum filtering, GLenum edgeBehaviour
+	, GLenum internalFormat, GLenum textureFormat, GLenum dataType, void* newDataPtr)
+{
+	GLenum error = 0;
 
+	if (textObj)
+		unload();
+	glGenTextures(1, &textObj);
+	glBindTexture(target, textObj);
+	error = glGetError();
+
+	glTexParameteri(target, GL_TEXTURE_MIN_FILTER, filtering);
+	glTexParameteri(target, GL_TEXTURE_MAG_FILTER, filtering);
+	glTexParameteri(target, GL_TEXTURE_WRAP_S, edgeBehaviour);
+	glTexParameteri(target, GL_TEXTURE_WRAP_T, edgeBehaviour);
+	error = glGetError();
+
+	glTexImage2D(target, 0, internalFormat, width, height, 0, textureFormat, dataType, newDataPtr);
+	error = glGetError();
+
+	if (error != 0)
+		std::cout << "There was an error somewhere when creating texture. " << std::endl;
+
+	glBindTexture(target, 0);
+}
 void Texture::load(const std::string &file)
 {
 											//let soil decide/  dont want to reuse
