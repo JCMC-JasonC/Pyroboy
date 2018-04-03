@@ -1,8 +1,9 @@
 #include"Enemy.h"
+#include"AnimationMath.h"
 
 Enemy::Enemy()
 {
-	e_damage =2.3f;
+	e_damage = 2.3f;
 	e_health = 100.f;
 	velocity = glm::vec3(10.f);
 
@@ -12,7 +13,7 @@ Enemy::Enemy(Mesh _mesh, glm::vec3 pos, glm::mat4 rot, float _scale, float _spee
 	/*loadMesh(mesh);
 	loadTexture(TextureType::Diffuse, difTexture);
 	loadTexture(TextureType::Specular, specTexture);*/
-	mesh =_mesh;
+	mesh = _mesh;
 	position = pos;
 	scale = _scale;
 	speed = _speed;
@@ -71,9 +72,11 @@ void Enemy::setBool(bool b)
 }
 
 void Enemy::draw(ShaderProgram &shader, glm::mat4 &cameraTransform, glm::mat4 &cameraProjection
-	, std::vector<Light> &pointLights,Light &directionalLight)
+	, std::vector<Light> &pointLights, Light &directionalLight)
 {
-	GameObject::draw(shader, cameraTransform,cameraProjection,pointLights, directionalLight);
+	//GameObject::draw(shader, cameraTransform,cameraProjection,pointLights, directionalLight);
+	morph.transform = transform;
+	morph.draw(shader, cameraTransform, cameraProjection, pointLights, directionalLight);
 }
 
 void Enemy::update(float dt)
@@ -82,7 +85,6 @@ void Enemy::update(float dt)
 	velocity = velocity + acceleration * dt;
 	position = position + velocity * dt;
 }
-
 void Enemy::animate(float dt)
 {
 	m_pLocalMorphTime += dt * 50.f;
@@ -91,7 +93,7 @@ void Enemy::animate(float dt)
 	if (m_pLocalMorphTime >= 1) {
 		m_pLocalMorphTime = 0;
 
-		if (nextFrame == e_mesh.size() - 1) {
+		if (nextFrame == enemyMesh.size() - 1) {
 			currentFrame = 0;
 			nextFrame = 1;
 		}
@@ -101,21 +103,20 @@ void Enemy::animate(float dt)
 		}
 	}
 
-	for (int i = 0; i < e_mesh[0].unpackedVertexData.size(); i++) {
-		morph.mesh.unpackedVertexData[i] = Math::lerp(e_mesh[currentFrame].unpackedVertexData[i] 
-			, e_mesh[nextFrame].unpackedVertexData[i], m_pLocalMorphTime);
+	for (int i = 0; i < enemyMesh[0].unpackedVertexData.size(); i++) {
+		morph.mesh.unpackedVertexData[i] = Math::lerp(enemyMesh[currentFrame].unpackedVertexData[i]
+			, enemyMesh[nextFrame].unpackedVertexData[i], m_pLocalMorphTime);
 
-		morph.mesh.unpackedNormalData[i] = Math::lerp(e_mesh[currentFrame].unpackedNormalData[i]
-			, e_mesh[nextFrame].unpackedNormalData[i], m_pLocalMorphTime);
+		morph.mesh.unpackedNormalData[i] = Math::lerp(enemyMesh[currentFrame].unpackedNormalData[i]
+			, enemyMesh[nextFrame].unpackedNormalData[i], m_pLocalMorphTime);
 
 	}
-	for (int i = 0; i < e_mesh[0].unpackedTextureData.size(); i++) {
-		morph.mesh.unpackedTextureData[i] = Math::lerp(e_mesh[currentFrame].unpackedTextureData[i]
-			, e_mesh[nextFrame].unpackedTextureData[i], m_pLocalMorphTime);
+	for (int i = 0; i < enemyMesh[0].unpackedTextureData.size(); i++) {
+		morph.mesh.unpackedTextureData[i] = Math::lerp(enemyMesh[currentFrame].unpackedTextureData[i]
+			, enemyMesh[nextFrame].unpackedTextureData[i], m_pLocalMorphTime);
 	}
 	morph.mesh.update();
 }
-
 void Enemy::seek(glm::vec3 &pos)
 {
 	glm::vec3 desired = pos - position;

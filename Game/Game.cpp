@@ -562,7 +562,7 @@ void Game::drawScene()
 		bulletQ.pop();
 		bulletQ.push(tempBullet);
 	}
-
+	updateAlerts();
 	drawHUD();
 	//materials["particles"]->bind();
 	emitter.draw(player.transform, cameraTransform, cameraProjection);
@@ -964,6 +964,7 @@ void Game::initializeGame()
 	pauseback.loadTexture(TextureType::Specular, "textures/noSpecular.png");
 
 	bulletMesh.loadFromFile("meshes/cube.obj");
+
 	player.morph.loadMesh("meshes/PyroboyAnim1.obj");
 	player.morph.loadTexture(TextureType::Diffuse, "textures/Model Textures/pyroboy_flipped.png");
 	player.morph.loadTexture(TextureType::Specular, "textures/noSpecular.png");
@@ -1055,77 +1056,11 @@ void Game::initializeGame()
 
 	player.transform = player.translate * player.rotate *glm::scale(glm::mat4(), glm::vec3(player.scale));
 
-	heartMesh.loadFromFile("meshes/Health.obj");
-	p_healthTex.load("textures/Health.png");
-	t_healthTex.load("textures/Model Textures/testuv1.png");
-
-	for (int i = 0; i < 15; i++)
-	{
-		hearts.push_back(new UIGameObjects(heartMesh));
-	}
-	for (int i = 0; i < 20; i++)
-	{
-		treeHearts.push_back(new UIGameObjects(heartMesh));
-	}
-	//hearts.push_back(&HealthSprite);
-	//hearts.push_back(&HealthSprite2);
-	//hearts.push_back(&HealthSprite3);
-	//hearts.push_back(&HealthSprite4);
-	//hearts.push_back(&HealthSprite5);
-	//hearts.push_back(&HealthSprite6);
-
-	float heartpos[2];
-	heartpos[0] = 38.0f;
-	heartpos[1] = 36.0f;
-	for (int i = 0; i < hearts.size()-1; i++)
-	{
-	//	hearts[i]->loadMesh("meshes/Health.obj");
-		hearts[i]->loadTexture(TextureType::Diffuse, "textures/Health.png");
-		hearts[i]->loadTexture(TextureType::Specular, "textures/noSpecular.png");
-
-		if(i <=(hearts.size() - 1)/2)
-		hearts[i]->position=glm::vec3(-18.0f+(1.0f*i), heartpos[0] + player.position.y, -5.0f);
-		else
-		hearts[i]->position = glm::vec3(-19.0f + (1.0f*(i- (hearts.size() - 1) / 2)), heartpos[1] + player.position.y, -5.0f);
-
-		hearts[i]->translate = glm::translate(hearts[i]->translate, hearts[i]->position);
-		hearts[i]->rotate = glm::rotate(hearts[i]->rotate, glm::pi<float>() / 2.0f, glm::vec3(1.f, 0.f, 0.f));
-		hearts[i]->scale = 2.f;
-		hearts[i]->transform = hearts[i]->translate * hearts[i]->rotate * glm::scale(glm::mat4(), glm::vec3(hearts[i]->scale));
-		hearts[i]->originalTransform = hearts[i]->transform;
-	}
-
-	float treeHeartpos[2];
-	treeHeartpos[0] = 38.0f;
-	treeHeartpos[1] = 36.0f;
-	for (int i = 0; i < treeHearts.size() - 1; i++)
-	{
-			//hearts[i]->loadMesh("meshes/Health.obj");
-		treeHearts[i]->loadTexture(TextureType::Diffuse, "textures/Model Textures/testuv1.png");
-		treeHearts[i]->loadTexture(TextureType::Specular, "textures/noSpecular.png");
-
-		if (i <= (treeHearts.size() - 1) / 2)
-			treeHearts[i]->position = glm::vec3(19.f - (1.0f*i), treeHeartpos[0] + player.position.y, -5.0f);
-		else
-			treeHearts[i]->position = glm::vec3(20.f - (1.0f*(i - (treeHearts.size() - 1) / 2)), treeHeartpos[1] + player.position.y, -5.0f);
-
-		treeHearts[i]->translate = glm::translate(treeHearts[i]->translate, treeHearts[i]->position);
-		treeHearts[i]->rotate = glm::rotate(treeHearts[i]->rotate, glm::pi<float>() / 2.0f, glm::vec3(1.f, 0.f, 0.f));
-		treeHearts[i]->scale = 2.f;
-		treeHearts[i]->transform = treeHearts[i]->translate * treeHearts[i]->rotate * glm::scale(glm::mat4(), glm::vec3(treeHearts[i]->scale));
-		treeHearts[i]->originalTransform = treeHearts[i]->transform;
-	}
-	treeHeartCounter = treeHearts.size() - 1;
-	counter = hearts.size() - 1;
-
-	/*ui.translate = glm::translate(ui.translate, glm::vec3(0.f,0.f,-5.f));
-	ui2.translate = glm::translate(ui.translate, glm::vec3(0.f, 0.f, -5.f));*/
-
 	// Cleaning up block of UI code
 	initUIObjects();
 
 	//ENEMY POSITIONS
-	enemy.position = glm::vec3 (-400.f,  0.f,   -2.f);
+	enemy.position = glm::vec3 (-400.f,  0.f,   0.f);
 	enemy.position = glm::vec3 (-400.f,  0.f,   -2.f);
 	enemy2.position = glm::vec3( 100.f, -400.f, -2.f);
 	enemy3.position = glm::vec3(-250.f,  100.f, -2.f);
@@ -1243,45 +1178,6 @@ void Game::initializeGame()
 	enemies.push_back(&insect13);
 	enemies.push_back(&insect14);
 
-	alienMesh.loadFromFile("meshes/GDW_AlienNew.obj");
-	insectMesh.loadFromFile("meshes/GDW_ExpInsect.obj");
-
-	//set enemies health and damage, respectively
-	//aliens
-	for (int i = 1; i < (enemies.size()/2)/2; i++)
-	{
-		enemies[i]->loadMesh("meshes/GDW_AlienNew.obj");
-		enemies[i]->loadTexture(TextureType::Diffuse, "textures/Model Textures/alien_PNG.png");
-		enemies[i]->loadTexture(TextureType::Specular, "textures/noSpecular.png");
-		enemies[i]->scale = 1.2f;
-		enemies[i]->setProperty(50.f, 1.f);
-	}
-	//explosive insect v1
-	for (int i = (enemies.size() / 2) / 2; i < (enemies.size() / 2); i++)
-	{
-		enemies[i]->loadMesh("meshes/GDW_ExpInsect.obj");
-		enemies[i]->loadTexture(TextureType::Diffuse, "textures/Health.png");
-		enemies[i]->loadTexture(TextureType::Specular, "textures/noSpecular.png");
-		enemies[i]->scale = 1.8f;
-		enemies[i]->setProperty(50.f, 1.f);
-
-	}
-	//explosive insect v2
-	for (int i = (enemies.size() / 2); i < enemies.size(); i++)
-	{
-		enemies[i]->loadMesh("meshes/InsectPrototype.obj");
-		enemies[i]->loadTexture(TextureType::Diffuse, "textures/Model Textures/GDW_ExpInsectTexture.png");
-		enemies[i]->loadTexture(TextureType::Specular, "textures/noSpecular.png");
-		enemies[i]->scale=10.f;
-		enemies[i]->setProperty(10.f, 1.f);
-	}
-
-	// Animations GLHF
-
-	enemies[0]->morph.loadMesh("meshes/Enemy/Alien (1).obj");
-	player.morph.loadTexture(TextureType::Diffuse, "textures/Model Textures/alien_PNG.png");
-	player.morph.loadTexture(TextureType::Specular, "textures/noSpecular.png");
-
 	// Frames
 	e_run1.loadFromFile("meshes/Enemy/Alien (1).obj");
 	e_run2.loadFromFile("meshes/Enemy/Alien (2).obj");
@@ -1323,50 +1219,81 @@ void Game::initializeGame()
 	e_run38.loadFromFile("meshes/Enemy/Alien (38).obj");
 	e_run39.loadFromFile("meshes/Enemy/Alien (39).obj");
 
-	enemies[0]->e_mesh.push_back(e_run1);
-	enemies[0]->e_mesh.push_back(e_run2);
-	enemies[0]->e_mesh.push_back(e_run3);
-	enemies[0]->e_mesh.push_back(e_run4);
-	enemies[0]->e_mesh.push_back(e_run5);
-	enemies[0]->e_mesh.push_back(e_run6);
-	enemies[0]->e_mesh.push_back(e_run7);
-	enemies[0]->e_mesh.push_back(e_run8);
-	enemies[0]->e_mesh.push_back(e_run9);
-	enemies[0]->e_mesh.push_back(e_run10);
-	enemies[0]->e_mesh.push_back(e_run11);
-	enemies[0]->e_mesh.push_back(e_run12);
-	enemies[0]->e_mesh.push_back(e_run13);
-	enemies[0]->e_mesh.push_back(e_run14);
-	enemies[0]->e_mesh.push_back(e_run15);
-	enemies[0]->e_mesh.push_back(e_run16);
-	enemies[0]->e_mesh.push_back(e_run17);
-	enemies[0]->e_mesh.push_back(e_run18);
-	enemies[0]->e_mesh.push_back(e_run19);
-	enemies[0]->e_mesh.push_back(e_run20);
-	enemies[0]->e_mesh.push_back(e_run21);
-	enemies[0]->e_mesh.push_back(e_run22);
-	enemies[0]->e_mesh.push_back(e_run23);
-	enemies[0]->e_mesh.push_back(e_run24);
-	enemies[0]->e_mesh.push_back(e_run25);
-	enemies[0]->e_mesh.push_back(e_run26);
-	enemies[0]->e_mesh.push_back(e_run27);
-	enemies[0]->e_mesh.push_back(e_run28);
-	enemies[0]->e_mesh.push_back(e_run29);
-	enemies[0]->e_mesh.push_back(e_run30);
-	enemies[0]->e_mesh.push_back(e_run31);
-	enemies[0]->e_mesh.push_back(e_run32);
-	enemies[0]->e_mesh.push_back(e_run33);
-	enemies[0]->e_mesh.push_back(e_run34);
-	enemies[0]->e_mesh.push_back(e_run35);
-	enemies[0]->e_mesh.push_back(e_run36);
-	enemies[0]->e_mesh.push_back(e_run37);
-	enemies[0]->e_mesh.push_back(e_run38);
-	enemies[0]->e_mesh.push_back(e_run39);
+	//set enemies health and damage, respectively
+	//aliens
+	for (int i = 0; i < (enemies.size()/2)/2; i++)
+	{
+		enemies[i]->morph.loadMesh("meshes/Enemy/Alien (1).obj");
+		enemies[i]->morph.loadTexture(TextureType::Diffuse, "textures/Model Textures/alien_PNG.png");
+		enemies[i]->morph.loadTexture(TextureType::Specular, "textures/noSpecular.png");
 
-	enemies[0]->loadTexture(TextureType::Diffuse, "textures/Model Textures/alien_PNG.png");
-	enemies[0]->loadTexture(TextureType::Specular, "textures/noSpecular.png");
-	enemies[0]->scale = 1.2f;
-	enemies[0]->setProperty(50.f, 1.f);
+		enemies[i]->enemyMesh.push_back(e_run1);
+		enemies[i]->enemyMesh.push_back(e_run2);
+		enemies[i]->enemyMesh.push_back(e_run3);
+		enemies[i]->enemyMesh.push_back(e_run4);
+		enemies[i]->enemyMesh.push_back(e_run5);
+		enemies[i]->enemyMesh.push_back(e_run6);
+		enemies[i]->enemyMesh.push_back(e_run7);
+		enemies[i]->enemyMesh.push_back(e_run8);
+		enemies[i]->enemyMesh.push_back(e_run9);
+		enemies[i]->enemyMesh.push_back(e_run10);
+		enemies[i]->enemyMesh.push_back(e_run11);
+		enemies[i]->enemyMesh.push_back(e_run12);
+		enemies[i]->enemyMesh.push_back(e_run13);
+		enemies[i]->enemyMesh.push_back(e_run14);
+		enemies[i]->enemyMesh.push_back(e_run15);
+		enemies[i]->enemyMesh.push_back(e_run16);
+		enemies[i]->enemyMesh.push_back(e_run17);
+		enemies[i]->enemyMesh.push_back(e_run18);
+		enemies[i]->enemyMesh.push_back(e_run19);
+		enemies[i]->enemyMesh.push_back(e_run20);
+		enemies[i]->enemyMesh.push_back(e_run21);
+		enemies[i]->enemyMesh.push_back(e_run22);
+		enemies[i]->enemyMesh.push_back(e_run23);
+		enemies[i]->enemyMesh.push_back(e_run24);
+		enemies[i]->enemyMesh.push_back(e_run25);
+		enemies[i]->enemyMesh.push_back(e_run26);
+		enemies[i]->enemyMesh.push_back(e_run27);
+		enemies[i]->enemyMesh.push_back(e_run28);
+		enemies[i]->enemyMesh.push_back(e_run29);
+		enemies[i]->enemyMesh.push_back(e_run30);
+		enemies[i]->enemyMesh.push_back(e_run31);
+		enemies[i]->enemyMesh.push_back(e_run32);
+		enemies[i]->enemyMesh.push_back(e_run33);
+		enemies[i]->enemyMesh.push_back(e_run34);
+		enemies[i]->enemyMesh.push_back(e_run35);
+		enemies[i]->enemyMesh.push_back(e_run36);
+		enemies[i]->enemyMesh.push_back(e_run37);
+		enemies[i]->enemyMesh.push_back(e_run38);
+		enemies[i]->enemyMesh.push_back(e_run39);
+
+		enemies[i]->morph.scale = 1.2f;
+		enemies[i]->setProperty(50.f, 1.f);
+	}
+	//explosive insect v1
+	for (int i = (enemies.size() / 2) / 2; i < (enemies.size() / 2); i++)
+	{
+		enemies[i]->morph.loadMesh("meshes/GDW_ExpInsect.obj");
+		enemies[i]->morph.loadTexture(TextureType::Diffuse, "textures/Health.png");
+		enemies[i]->morph.loadTexture(TextureType::Specular, "textures/noSpecular.png");
+		enemies[i]->morph.scale = 1.8f;
+		enemies[i]->setProperty(50.f, 1.f);
+
+	}
+	//explosive insect v2
+	for (int i = (enemies.size() / 2); i < enemies.size(); i++)
+	{
+		enemies[i]->morph.loadMesh("meshes/InsectPrototype.obj");
+		enemies[i]->morph.loadTexture(TextureType::Diffuse, "textures/Model Textures/GDW_ExpInsectTexture.png");
+		enemies[i]->morph.loadTexture(TextureType::Specular, "textures/noSpecular.png");
+		enemies[i]->scale=10.f;
+		enemies[i]->setProperty(10.f, 1.f);
+	}
+
+	//enemies[0]->loadTexture(TextureType::Diffuse, "textures/Model Textures/alien_PNG.png");
+	//enemies[0]->loadTexture(TextureType::Specular, "textures/noSpecular.png");
+	//enemies[0]->scale = 1.2f;
+	//enemies[0]->setProperty(50.f, 1.f);
 
 	// BG Stuff
 	background.scale = 2.0f;
@@ -1641,17 +1568,9 @@ void Game::TreeWasAttacked(Enemy* _x, glm::vec3 pos)
 	}
 }
 void Game::createBullet(glm::vec3 pos, glm::vec3 dir)
-{
-	/*Bullet bullet;
-	bullet.loadMesh("meshes/cube.obj");
-	bullet.loadTexture(TextureType::Diffuse, "textures/testuv1.png");
-	bullet.loadTexture(TextureType::Specular, "textures/noSpecular.png");
-	bullet.speed = 1.f;
-	bullet.position = player.position;*/
-	
+{	
 	if (bulletTime < 0.01f)
 	{
-		//bullets.push_back(new Bullet(bulletMesh,pos,1.f, 100.f, 15.f, dir));
 		bulletQ.push(new Bullet(bulletMesh, pos, 1.f, 100.f, 15.f, dir));
 		bulletsound = true;
 		blast = se.system->playSound(shot, 0, false, &shotchannel);
@@ -1659,7 +1578,6 @@ void Game::createBullet(glm::vec3 pos, glm::vec3 dir)
 	else if(bulletTime > 0.4f)
 	{
 		bulletTime = 0.f;
-		//bullets.push_back(new Bullet(bulletMesh, pos, 1.f, 100.f, 15.f, dir));
 		bulletQ.push(new Bullet(bulletMesh, pos, 1.f, 100.f, 15.f, dir));
 		bulletsound = true;
 		blast = se.system->playSound(shot, 0, false, &shotchannel);
@@ -2049,7 +1967,6 @@ void Game::update()
 			enemy1result = se.system->playSound(enemydialogue1, 0, false, &dialoguechannel);
 		}
 
-		updateAlerts();
 		if (upKey)
 		{
 			createBullet(playerLocation, up);
@@ -2095,27 +2012,14 @@ void Game::update()
 			bulletQ.push(tempBullet);
 		}
 
-		//for (int i = 0; i < bullets.size(); i++)
-		//{
-		//	bullets[i]->update(deltaTime);
-		//	//bullets[i]->velocity = bullets[i]->direction * bullets[i]->speed;
-		//	bullets[i]->translate = glm::translate(glm::mat4(), bullets[i]->position);
-		//	bullets[i]->transform = bullets[i]->translate *bullets[i]->rotate * glm::scale(glm::mat4(), glm::vec3(bullets[i]->scale));
-		//
-		//	bulletLocation += bullets[i]->transform * glm::vec4(glm::vec3(0.f), 1.f);
-		//	if ((bullets[i]->position.x > 100.f || bullets[i]->position.x < -100.f) || (bullets[i]->position.y > 100.f || bullets[i]->position.y < -100.f))
-		//	{
-		//		//std::cout << glm::to_string(bullets[i]->position) << std::endl;
-		//		bullets.erase(bullets.begin() + i);
-		//		bulletLocation = glm::vec4(0.f);
-		//	}
-		//}
-
 		//enemies movement
 		for (int i = 0; i < enemies.size(); i++)
 		{
-			if (!enemies[i]->getBool())
+			if (!enemies[i]->getBool()) {
 				enemies[i]->update(deltaTime);
+				if (i >=0 && i < (enemies.size() / 2) / 2)
+					enemies[i]->animate(deltaTime);
+			}
 			// Check collision with player and tree
 			if (glm::length(enemies[i]->position - playerLocation) > 5.f && glm::length(enemies[i]->position - tree.position) > 13.f)
 			{
@@ -2196,7 +2100,7 @@ void Game::update()
 			}
 			enemies[i]->transform = enemies[i]->translate * enemies[i]->rotate * glm::scale(glm::mat4(), glm::vec3(enemies[i]->scale));
 		}
-		enemies[0]->animate(deltaTime);
+			
 		glm::vec3 lookAtMouse = mousePositionFlipped - playerLocation;
 		//cos theta = (a dot b)/ |a||b| // player is a, mouse is b
 		float b = glm::length(lookAtMouse);
@@ -2269,21 +2173,7 @@ void Game::update()
 		water.transform = water.translate * water.rotate * glm::scale(glm::mat4(), glm::vec3(water.scale));
 		watertower.transform = watertower.translate *watertower.rotate * glm::scale(glm::mat4(), glm::vec3(watertower.scale));
 		wirepole.transform = wirepole.translate * wirepole.rotate * glm::scale(glm::mat4(), glm::vec3(wirepole.scale));
-
-		/*for (int i = 0; i < fences.size(); i++)
-		{
-			fences[i]->transform = fences[i]->translate * fences[i]->rotate * glm::scale(glm::mat4(), glm::vec3(fences[i]->scale));
-		}*/
-
-		for (int i = 0; i < hearts.size(); i++)
-		{
-			hearts[i]->transform = player.translate * hearts[i]->originalTransform;
-		}
-		for (int i = 0; i < treeHearts.size(); i++)
-		{
-			treeHearts[i]->transform = player.translate * treeHearts[i]->originalTransform;
-		}
-		
+				
 		cameraTransform = glm::lookAt(cameraEye, cameraCtr, glm::vec3(0.f, -1.f, 0.f));
 		originalCameraTransform = cameraTransform;
 
@@ -2299,20 +2189,6 @@ void Game::update()
 
 		if (treeDead|| playerDead)
 		{
-			//tree_health = 3000.f;
-			//player_health = 1500.f;
-			treeHeartCounter = treeHearts.size() - 1;
-			counter = hearts.size() - 1;
-
-			for (int i = 0; i < treeHearts.size() - 1; i++)
-			{
-				treeHearts[i]->active = true;
-			}
-			for (int i = 0; i < hearts.size() - 1; i++)
-			{
-				hearts[i]->active = true;
-			}
-
 			cameraTransform = glm::lookAt(glm::vec3(0.f, 0.f, -25.f),
 				glm::vec3(0.f, 0.f, 0.f), glm::vec3(0.f, -1.f, 0.f));
 			originalCameraTransform = cameraTransform;
